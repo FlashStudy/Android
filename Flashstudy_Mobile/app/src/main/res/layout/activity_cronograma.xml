@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.CronogramaActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+        <TextView
+            android:id="@+id/txtCronograma"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/white"
+            android:text="Cronograma"
+            android:textSize="24sp"
+            app:fontFamily="@font/comfortaa_bold" />
+
+        <View
+            android:id="@+id/Divisor1"
+            android:layout_width="230dp"
+            android:layout_height="1dip"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/gray" />
+
+        <Button
+            android:id="@+id/btnEditar"
+            style="@android:style/Widget.DeviceDefault.Light.Button.Inset"
+            android:layout_width="wrap_content"
+            android:layout_height="31dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/verde"
+            android:text="Editar" />
+
+        ''''''
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="137dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/layout_bg"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:text="Português"
+                android:textAppearance="@style/AppTheme.lbl_black"
+                app:fontFamily="@font/comfortaa_bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button3"
+                    android:layout_width="150dp"
+                    android:layout_height="45dp"
+                    android:layout_weight="1"
+                    android:background="@color/verde"
+                    android:text="Editar" />
+
+                <Button
+                    android:id="@+id/button4"
+                    android:layout_width="145dp"
+                    android:layout_height="45dp"
+                    android:layout_weight="1"
+                    android:background="@color/vermelho"
+                    android:text="Excluir" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="137dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/layout_bg"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:text="Física"
+                android:textAppearance="@style/AppTheme.lbl_black"
+                app:fontFamily="@font/comfortaa_bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button7"
+                    android:layout_width="140dp"
+                    android:layout_height="45dp"
+                    android:layout_weight="1"
+                    android:background="@color/verde"
+                    android:text="Editar" />
+
+                <Button
+                    android:id="@+id/button8"
+                    android:layout_width="150dp"
+                    android:layout_height="45dp"
+                    android:layout_weight="1"
+                    android:background="@color/vermelho"
+                    android:text="Excluir" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="137dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/layout_bg"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:text="História"
+                android:textAppearance="@style/AppTheme.lbl_black"
+                app:fontFamily="@font/comfortaa_bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button7"
+                    android:layout_width="140dp"
+                    android:layout_height="45dp"
+                    android:layout_weight="1"
+                    android:background="@color/verde"
+                    android:text="Editar" />
+
+                <Button
+                    android:id="@+id/button8"
+                    android:layout_width="150dp"
+                    android:layout_height="45dp"
+                    android:layout_weight="1"
+                    android:background="@color/vermelho"
+                    android:text="Excluir" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

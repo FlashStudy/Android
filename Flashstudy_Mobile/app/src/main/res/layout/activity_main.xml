@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    tools:context="br.com.flashstudy.flashstudy_mobile.activities.MainActivity"
+    tools:layout_editor_absoluteY="25dp">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/comfortaa_regular"
+        android:text="@string/app_name"
+        android:textColor="@android:color/background_light"
+        android:textSize="36sp"
+        tools:targetApi="jelly_bean" />
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/txt_descricao_logo"
+        app:srcCompat="@drawable/favicon" />
+
+    <LinearLayout
+        android:layout_width="355dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="17dp"
+        tools:layout_editor_absoluteY="107dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/comfortaa_light"
+            android:text="@string/lbl_login"
+            android:textColor="@android:color/background_light"
+            android:textSize="24sp"
+            tools:targetApi="jelly_bean" />
+        <View
+            android:id="@+id/Divisor1"
+            android:layout_width="100dp"
+            android:layout_height="1dip"
+            android:layout_marginTop="3dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/gray" />
+        <TextView
+            android:id="@+id/lblEmail"
+            android:layout_width="72dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="11dp"
+            android:fontFamily="@font/comfortaa_light"
+            android:text="@string/lbl_email"
+            android:textColor="@android:color/background_light"
+            android:textSize="17sp"
+            tools:targetApi="jelly_bean" />
+
+        <EditText
+            android:id="@+id/txtEmail"
+            android:layout_width="345dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:ems="10"
+            android:hint="@string/hint_email"
+            android:inputType="textEmailAddress" />
+
+        <TextView
+            android:id="@+id/lblSenha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="11dp"
+            android:fontFamily="@font/comfortaa_light"
+            android:text="@string/lbl_senha"
+            android:textColor="@android:color/background_light"
+            android:textSize="17sp"
+            tools:targetApi="jelly_bean" />
+
+        <EditText
+            android:id="@+id/txtSenha"
+            android:layout_width="344dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="4dp"
+            android:ems="10"
+            android:hint="@string/hint_senha"
+            android:inputType="textPassword"
+            android:textColor="@android:color/background_light" />
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="25dp"
+            android:background="@color/colorSecondary"
+            android:text="@string/lbl_btn_entrar"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/txtCadLog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:text="@string/txt_cadastrarse"
+            android:textAllCaps="false"
+            android:textSize="12sp"
+            app:fontFamily="@font/comfortaa_bold" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

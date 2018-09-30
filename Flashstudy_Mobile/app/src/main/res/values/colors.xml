@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#ffffff</color>
+    <color name="gray">#e8e8e8</color>
+    <color name="winter">#0D4F63</color>
+    <color name="colorSecondary">#79CDCD</color>
+    <color name="gostei">#66CDAA</color>
+    <color name="deep_blue">#2C3E50</color>
+    <color name="colorPrimary">#012F46</color>
+    <color name="black">#000</color>
+    <color name="verde">#228B22</color>
+    <color name="vermelho">#A52A2A</color>
+</resources>

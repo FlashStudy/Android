@@ -1,0 +1,786 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 3,
+    "identityHash": "0732e0906665532fea6698b21e60f25e",
+    "entities": [
+      {
+        "tableName": "assunto",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER NOT NULL, `tema` TEXT NOT NULL, `disciplina_codigo` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, PRIMARY KEY(`codigo`), FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`disciplina_codigo`) REFERENCES `disciplina`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "codigo",
+            "columnName": "codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tema",
+            "columnName": "tema",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "disciplinaCodigo",
+            "columnName": "disciplina_codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usuarioCodigo",
+            "columnName": "usuario_codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "codigo"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_assunto_codigo",
+            "unique": true,
+            "columnNames": [
+              "codigo"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_assunto_codigo` ON `${TABLE_NAME}` (`codigo`)"
+          },
+          {
+            "name": "index_assunto_disciplina_codigo",
+            "unique": false,
+            "columnNames": [
+              "disciplina_codigo"
+            ],
+            "createSql": "CREATE  INDEX `index_assunto_disciplina_codigo` ON `${TABLE_NAME}` (`disciplina_codigo`)"
+          },
+          {
+            "name": "index_assunto_usuario_codigo",
+            "unique": false,
+            "columnNames": [
+              "usuario_codigo"
+            ],
+            "createSql": "CREATE  INDEX `index_assunto_usuario_codigo` ON `${TABLE_NAME}` (`usuario_codigo`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "usuario",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "usuario_codigo"
+            ],
+            "referencedColumns": [
+              "codigo"
+            ]
+          },
+          {
+            "table": "disciplina",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "disciplina_codigo"
+            ],
+            "referencedColumns": [
+              "codigo"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "ciclo",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER NOT NULL, `numero_de_materias` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, PRIMARY KEY(`codigo`), FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "codigo",
+            "columnName": "codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "numMaterias",
+            "columnName": "numero_de_materias",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usuarioCodigo",
+            "columnName": "usuario_codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "codigo"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_ciclo_codigo",
+            "unique": true,
+            "columnNames": [
+              "codigo"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_ciclo_codigo` ON `${TABLE_NAME}` (`codigo`)"
+          },
+          {
+            "name": "index_ciclo_usuario_codigo",
+            "unique": false,
+            "columnNames": [
+              "usuario_codigo"
+            ],
+            "createSql": "CREATE  INDEX `index_ciclo_usuario_codigo` ON `${TABLE_NAME}` (`usuario_codigo`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "usuario",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "usuario_codigo"
+            ],
+            "referencedColumns": [
+              "codigo"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "cronograma",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER NOT NULL, `inicio` TEXT NOT NULL, `fim` TEXT NOT NULL, `usuario_codigo` INTEGER NOT NULL, PRIMARY KEY(`codigo`), FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "codigo",
+            "columnName": "codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "inicio",
+            "columnName": "inicio",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fim",
+            "columnName": "fim",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usuarioCodigo",
+            "columnName": "usuario_codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "codigo"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_cronograma_codigo",
+            "unique": true,
+            "columnNames": [
+              "codigo"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_cronograma_codigo` ON `${TABLE_NAME}` (`codigo`)"
+          },
+          {
+            "name": "index_cronograma_usuario_codigo",
+            "unique": false,
+            "columnNames": [
+              "usuario_codigo"
+            ],
+            "createSql": "CREATE  INDEX `index_cronograma_usuario_codigo` ON `${TABLE_NAME}` (`usuario_codigo`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "usuario",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "usuario_codigo"
+            ],
+            "referencedColumns": [
+              "codigo"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "dia_da_semana",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER NOT NULL, `nome` TEXT NOT NULL, `usuario_codigo` INTEGER NOT NULL, `ciclo_codigo` INTEGER NOT NULL, PRIMARY KEY(`codigo`), FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`ciclo_codigo`) REFERENCES `ciclo`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "codigo",
+            "columnName": "codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nome",
+            "columnName": "nome",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usuarioCodigo",
+            "columnName": "usuario_codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cicloCodigo",
+            "columnName": "ciclo_codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "codigo"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_dia_da_semana_codigo",
+            "unique": true,
+            "columnNames": [
+              "codigo"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_dia_da_semana_codigo` ON `${TABLE_NAME}` (`codigo`)"
+          },
+          {
+            "name": "index_dia_da_semana_usuario_codigo",
+            "unique": false,
+            "columnNames": [
+              "usuario_codigo"
+            ],
+            "createSql": "CREATE  INDEX `index_dia_da_semana_usuario_codigo` ON `${TABLE_NAME}` (`usuario_codigo`)"
+          },
+          {
+            "name": "index_dia_da_semana_ciclo_codigo",
+            "unique": false,
+            "columnNames": [
+              "ciclo_codigo"
+            ],
+            "createSql": "CREATE  INDEX `index_dia_da_semana_ciclo_codigo` ON `${TABLE_NAME}` (`ciclo_codigo`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "usuario",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "usuario_codigo"
+            ],
+            "referencedColumns": [
+              "codigo"
+            ]
+          },
+          {
+            "table": "ciclo",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ciclo_codigo"
+            ],
+            "referencedColumns": [
+              "codigo"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "disciplina",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER NOT NULL, `nome` TEXT NOT NULL, `usuario_codigo` INTEGER NOT NULL, `cronograma_codigo` INTEGER NOT NULL, PRIMARY KEY(`codigo`), FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`cronograma_codigo`) REFERENCES `cronograma`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "codigo",
+            "columnName": "codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nome",
+            "columnName": "nome",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usuarioCodigo",
+            "columnName": "usuario_codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cronogramaCodigo",
+            "columnName": "cronograma_codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "codigo"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_disciplina_codigo",
+            "unique": true,
+            "columnNames": [
+              "codigo"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_disciplina_codigo` ON `${TABLE_NAME}` (`codigo`)"
+          },
+          {
+            "name": "index_disciplina_usuario_codigo",
+            "unique": false,
+            "columnNames": [
+              "usuario_codigo"
+            ],
+            "createSql": "CREATE  INDEX `index_disciplina_usuario_codigo` ON `${TABLE_NAME}` (`usuario_codigo`)"
+          },
+          {
+            "name": "index_disciplina_cronograma_codigo",
+            "unique": false,
+            "columnNames": [
+              "cronograma_codigo"
+            ],
+            "createSql": "CREATE  INDEX `index_disciplina_cronograma_codigo` ON `${TABLE_NAME}` (`cronograma_codigo`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "usuario",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "usuario_codigo"
+            ],
+            "referencedColumns": [
+              "codigo"
+            ]
+          },
+          {
+            "table": "cronograma",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "cronograma_codigo"
+            ],
+            "referencedColumns": [
+              "codigo"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "flashcard",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `pergunta` TEXT NOT NULL, `resposta` TEXT NOT NULL, `nivel` TEXT NOT NULL, `titulo` TEXT NOT NULL, `publico` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, `disciplina_codigo` INTEGER NOT NULL, `assunto_codigo` INTEGER NOT NULL, `pasta_codigo` INTEGER NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`disciplina_codigo`) REFERENCES `disciplina`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`assunto_codigo`) REFERENCES `assunto`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`pasta_codigo`) REFERENCES `pasta`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "codigo",
+            "columnName": "codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pergunta",
+            "columnName": "pergunta",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "resposta",
+            "columnName": "resposta",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nivel",
+            "columnName": "nivel",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titulo",
+            "columnName": "titulo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "publico",
+            "columnName": "publico",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usuarioCodigo",
+            "columnName": "usuario_codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "disciplinaCodigo",
+            "columnName": "disciplina_codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "assuntoCodigo",
+            "columnName": "assunto_codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pastaCodigo",
+            "columnName": "pasta_codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "codigo"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_flashcard_codigo",
+            "unique": true,
+            "columnNames": [
+              "codigo"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_flashcard_codigo` ON `${TABLE_NAME}` (`codigo`)"
+          },
+          {
+            "name": "index_flashcard_usuario_codigo",
+            "unique": false,
+            "columnNames": [
+              "usuario_codigo"
+            ],
+            "createSql": "CREATE  INDEX `index_flashcard_usuario_codigo` ON `${TABLE_NAME}` (`usuario_codigo`)"
+          },
+          {
+            "name": "index_flashcard_disciplina_codigo",
+            "unique": false,
+            "columnNames": [
+              "disciplina_codigo"
+            ],
+            "createSql": "CREATE  INDEX `index_flashcard_disciplina_codigo` ON `${TABLE_NAME}` (`disciplina_codigo`)"
+          },
+          {
+            "name": "index_flashcard_assunto_codigo",
+            "unique": false,
+            "columnNames": [
+              "assunto_codigo"
+            ],
+            "createSql": "CREATE  INDEX `index_flashcard_assunto_codigo` ON `${TABLE_NAME}` (`assunto_codigo`)"
+          },
+          {
+            "name": "index_flashcard_pasta_codigo",
+            "unique": false,
+            "columnNames": [
+              "pasta_codigo"
+            ],
+            "createSql": "CREATE  INDEX `index_flashcard_pasta_codigo` ON `${TABLE_NAME}` (`pasta_codigo`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "usuario",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "usuario_codigo"
+            ],
+            "referencedColumns": [
+              "codigo"
+            ]
+          },
+          {
+            "table": "disciplina",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "disciplina_codigo"
+            ],
+            "referencedColumns": [
+              "codigo"
+            ]
+          },
+          {
+            "table": "assunto",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "assunto_codigo"
+            ],
+            "referencedColumns": [
+              "codigo"
+            ]
+          },
+          {
+            "table": "pasta",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "pasta_codigo"
+            ],
+            "referencedColumns": [
+              "codigo"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "horario",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER NOT NULL, `tempo` INTEGER NOT NULL, `disciplina_codigo` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, `dia_codigo` INTEGER NOT NULL, PRIMARY KEY(`codigo`), FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`disciplina_codigo`) REFERENCES `disciplina`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`dia_codigo`) REFERENCES `dia_da_semana`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "codigo",
+            "columnName": "codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tempo",
+            "columnName": "tempo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "disciplinaCodigo",
+            "columnName": "disciplina_codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usuarioCodigo",
+            "columnName": "usuario_codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "diaCodigo",
+            "columnName": "dia_codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "codigo"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_horario_codigo",
+            "unique": true,
+            "columnNames": [
+              "codigo"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_horario_codigo` ON `${TABLE_NAME}` (`codigo`)"
+          },
+          {
+            "name": "index_horario_usuario_codigo",
+            "unique": false,
+            "columnNames": [
+              "usuario_codigo"
+            ],
+            "createSql": "CREATE  INDEX `index_horario_usuario_codigo` ON `${TABLE_NAME}` (`usuario_codigo`)"
+          },
+          {
+            "name": "index_horario_disciplina_codigo",
+            "unique": false,
+            "columnNames": [
+              "disciplina_codigo"
+            ],
+            "createSql": "CREATE  INDEX `index_horario_disciplina_codigo` ON `${TABLE_NAME}` (`disciplina_codigo`)"
+          },
+          {
+            "name": "index_horario_dia_codigo",
+            "unique": false,
+            "columnNames": [
+              "dia_codigo"
+            ],
+            "createSql": "CREATE  INDEX `index_horario_dia_codigo` ON `${TABLE_NAME}` (`dia_codigo`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "usuario",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "usuario_codigo"
+            ],
+            "referencedColumns": [
+              "codigo"
+            ]
+          },
+          {
+            "table": "disciplina",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "disciplina_codigo"
+            ],
+            "referencedColumns": [
+              "codigo"
+            ]
+          },
+          {
+            "table": "dia_da_semana",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "dia_codigo"
+            ],
+            "referencedColumns": [
+              "codigo"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "pasta",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nome` TEXT NOT NULL, `usuario_codigo` INTEGER NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "codigo",
+            "columnName": "codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nome",
+            "columnName": "nome",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usuarioCodigo",
+            "columnName": "usuario_codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "codigo"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_pasta_codigo",
+            "unique": false,
+            "columnNames": [
+              "codigo"
+            ],
+            "createSql": "CREATE  INDEX `index_pasta_codigo` ON `${TABLE_NAME}` (`codigo`)"
+          },
+          {
+            "name": "index_pasta_usuario_codigo",
+            "unique": false,
+            "columnNames": [
+              "usuario_codigo"
+            ],
+            "createSql": "CREATE  INDEX `index_pasta_usuario_codigo` ON `${TABLE_NAME}` (`usuario_codigo`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "usuario",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "usuario_codigo"
+            ],
+            "referencedColumns": [
+              "codigo"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "usuario",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER NOT NULL, `nome` TEXT NOT NULL, `email` TEXT NOT NULL, `senha` TEXT NOT NULL, PRIMARY KEY(`codigo`))",
+        "fields": [
+          {
+            "fieldPath": "codigo",
+            "columnName": "codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nome",
+            "columnName": "nome",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "email",
+            "columnName": "email",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "senha",
+            "columnName": "senha",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "codigo"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_usuario_codigo",
+            "unique": true,
+            "columnNames": [
+              "codigo"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_usuario_codigo` ON `${TABLE_NAME}` (`codigo`)"
+          },
+          {
+            "name": "index_usuario_email",
+            "unique": true,
+            "columnNames": [
+              "email"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_usuario_email` ON `${TABLE_NAME}` (`email`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"0732e0906665532fea6698b21e60f25e\")"
+    ]
+  }
+}
