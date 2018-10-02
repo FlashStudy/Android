@@ -11,7 +11,7 @@ public class UsuarioOff {
 
     @NonNull
     @PrimaryKey
-    private int codigo;
+    private long codigo;
 
     @NonNull
     private String nome;
@@ -26,49 +26,53 @@ public class UsuarioOff {
     }
 
     @Ignore
-    public UsuarioOff(@NonNull String nome, @NonNull String email, @NonNull String senha) {
+    public UsuarioOff(@NonNull long codigo, @NonNull String nome, @NonNull String email, @NonNull String senha) {
+        this.codigo = codigo;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
     }
 
     @Ignore
-    public UsuarioOff(int codigo, String nome, String email, String senha) {
-        this.codigo = codigo;
+    public UsuarioOff(@NonNull String nome, @NonNull String email, @NonNull String senha) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
     }
 
-    public int getCodigo() {
+    @NonNull
+    public long getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(int codigo) {
+    public void setCodigo(@NonNull long codigo) {
         this.codigo = codigo;
     }
 
+    @NonNull
     public String getNome() {
         return nome;
     }
 
-    public void setNome(String nome) {
+    public void setNome(@NonNull String nome) {
         this.nome = nome;
     }
 
+    @NonNull
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(@NonNull String email) {
         this.email = email;
     }
 
+    @NonNull
     public String getSenha() {
         return senha;
     }
 
-    public void setSenha(String senha) {
+    public void setSenha(@NonNull String senha) {
         this.senha = senha;
     }
 

@@ -1,4 +1,4 @@
-package br.com.flashstudy.flashstudy_mobile.repository;
+package br.com.flashstudy.flashstudy_mobile.offline.repository;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -8,14 +8,11 @@ import java.util.List;
 
 import br.com.flashstudy.flashstudy_mobile.offline.database.AppDatabase;
 import br.com.flashstudy.flashstudy_mobile.offline.model.FlashcardOff;
-import br.com.flashstudy.flashstudy_mobile.online.clients.FlashcardRestClient;
-import br.com.flashstudy.flashstudy_mobile.online.model.Flashcard;
 
-public class FlashcardRepository {
-    private FlashcardRestClient flashcardRestClient = new FlashcardRestClient();
+public class FlashcardRepositoryOff {
     private Context context;
 
-    public List<FlashcardOff> listarFlashcards(int codigo, Context context) {
+    public List<FlashcardOff> listar(long codigo, Context context) {
         this.context = context;
         try {
             return new ListaFlashcardsAsync().execute(codigo).get();
@@ -45,13 +42,13 @@ public class FlashcardRepository {
         }
     }
 
-    private class ListaFlashcardsAsync extends AsyncTask<Integer, Void, List<FlashcardOff>> {
+    private class ListaFlashcardsAsync extends AsyncTask<Long, Void, List<FlashcardOff>> {
 
 
         @Override
-        protected List<FlashcardOff> doInBackground(Integer... integers) {
+        protected List<FlashcardOff> doInBackground(Long... longs) {
             try {
-                return AppDatabase.getAppDatabase(context).flashcardDao().getAllFlashcardsByUsuario(integers[0]);
+                return AppDatabase.getAppDatabase(context).flashcardDao().getAllFlashcardsByUsuario(longs[0]);
             } catch (Exception e) {
                 Log.i("ERRO NA CONSULTA", e.getMessage());
                 return null;
@@ -107,5 +104,3 @@ public class FlashcardRepository {
         }
     }
 }
-
-

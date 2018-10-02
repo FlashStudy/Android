@@ -28,7 +28,7 @@ public interface FlashcardDao {
 
     //Procura Flashcards de um Usuario
     @Query("SELECT * FROM flashcard WHERE usuario_codigo = :codigo ORDER BY codigo ASC")
-    List<FlashcardOff> getAllFlashcardsByUsuario(int codigo);
+    List<FlashcardOff> getAllFlashcardsByUsuario(long codigo);
 
     /*//Procura Flashcards de uma Disciplina de um Usuário
     @Query("SELECT * FROM flashcard WHERE disciplina_codigo = :codigoDisciplina AND usuario_codigo = :codigoUsuario ORDER BY codigo ASC")

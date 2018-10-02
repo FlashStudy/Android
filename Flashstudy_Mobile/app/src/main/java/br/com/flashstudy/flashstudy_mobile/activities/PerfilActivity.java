@@ -14,18 +14,22 @@ import java.util.List;
 
 import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.offline.model.UsuarioOff;
-import br.com.flashstudy.flashstudy_mobile.repository.UsuarioRepository;
+import br.com.flashstudy.flashstudy_mobile.offline.repository.UsuarioRepositoryOff;
+import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class PerfilActivity extends AppCompatActivity {
 
-    @BindViews({R.id.txtEmail, R.id.txtNome, R.id.txtSenha, R.id.txtConfirmeSenha})
+    @BindViews({R.id.txtNome, R.id.txtSenha, R.id.txtConfirmeSenha})
     List<EditText> campos;
 
     @BindViews({R.id.btnConfirmar, R.id.btnCancelar})
     List<Button> btns;
+
+    @BindView(R.id.txtEmail)
+    EditText txtEmail;
 
     UsuarioOff usuarioOff;
 
@@ -34,22 +38,22 @@ public class PerfilActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil);
 
-        int codigo = 0;
+        long codigo = 0;
 
         try {
             SharedPreferences sharedPreferences = getSharedPreferences("usuario", Context.MODE_PRIVATE);
-            codigo = sharedPreferences.getInt("codigo", 0);
+            codigo = sharedPreferences.getLong("codigo", 0);
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
-        UsuarioRepository usuarioRepository = new UsuarioRepository();
+        UsuarioRepositoryOff usuarioRepositoryOff = new UsuarioRepositoryOff();
 
-        usuarioOff = usuarioRepository.getLocaluserById(codigo, getApplicationContext());
+        usuarioOff = usuarioRepositoryOff.getLocaluserById(codigo, getApplicationContext());
 
         ButterKnife.bind(this);
         ButterKnife.apply(campos, ENABLED, false);
-
+        txtEmail.setText(usuarioOff.getEmail());
         resetaCampos();
     }
 
@@ -78,15 +82,17 @@ public class PerfilActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.btnCancelar)
-    public void cancelar(){
+    public void cancelar() {
         ButterKnife.apply(campos, ENABLED, false);
         ButterKnife.apply(btns, VISIBILITY, false);
         resetaCampos();
     }
 
-    private void resetaCampos(){
-        campos.get(0).setText(usuarioOff.getEmail());
-        campos.get(1).setText(usuarioOff.getNome());
-        campos.get(2).setText("");
-    };
+    private void resetaCampos() {
+        campos.get(0).setText(usuarioOff.getNome());
+        campos.get(1).setText("");
+        campos.get(1).setText("");
+    }
+
+    ;
 }

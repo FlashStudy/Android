@@ -22,35 +22,35 @@ public class CicloOff {
 
     @NonNull
     @PrimaryKey
-    private int codigo;
+    private long codigo;
 
     @Ignore
     private List<DiaDaSemanaOff> dias = new ArrayList<>();
 
     @NonNull
     @ColumnInfo(name = "numero_de_materias")
-    private int numMaterias;
+    private long numMaterias;
 
     @NonNull
     @ColumnInfo(name = "usuario_codigo")
-    private int usuarioCodigo;
+    private long usuarioCodigo;
 
     public CicloOff() {
     }
 
     @Ignore
-    public CicloOff(List<DiaDaSemanaOff> dias, @NonNull int numMaterias, @NonNull int usuarioCodigo) {
+    public CicloOff(List<DiaDaSemanaOff> dias, @NonNull long numMaterias, @NonNull long usuarioCodigo) {
         this.dias = dias;
         this.numMaterias = numMaterias;
         this.usuarioCodigo = usuarioCodigo;
     }
 
     @NonNull
-    public int getCodigo() {
+    public long getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(@NonNull int codigo) {
+    public void setCodigo(@NonNull long codigo) {
         this.codigo = codigo;
     }
 
@@ -63,20 +63,20 @@ public class CicloOff {
     }
 
     @NonNull
-    public int getNumMaterias() {
+    public long getNumMaterias() {
         return numMaterias;
     }
 
-    public void setNumMaterias(@NonNull int numMaterias) {
+    public void setNumMaterias(@NonNull long numMaterias) {
         this.numMaterias = numMaterias;
     }
 
     @NonNull
-    public int getUsuarioCodigo() {
+    public long getUsuarioCodigo() {
         return usuarioCodigo;
     }
 
-    public void setUsuarioCodigo(@NonNull int usuarioCodigo) {
+    public void setUsuarioCodigo(@NonNull long usuarioCodigo) {
         this.usuarioCodigo = usuarioCodigo;
     }
 

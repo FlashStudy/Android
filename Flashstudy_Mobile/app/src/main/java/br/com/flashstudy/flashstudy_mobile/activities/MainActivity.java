@@ -1,8 +1,10 @@
 package br.com.flashstudy.flashstudy_mobile.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +18,9 @@ import java.util.List;
 
 import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.offline.model.UsuarioOff;
-import br.com.flashstudy.flashstudy_mobile.repository.UsuarioRepository;
+import br.com.flashstudy.flashstudy_mobile.offline.repository.UsuarioRepositoryOff;
+import br.com.flashstudy.flashstudy_mobile.online.model.Usuario;
+import br.com.flashstudy.flashstudy_mobile.online.repository.UsuarioRepository;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -30,11 +34,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        int codigo = 0;
+        long codigo = 0;
 
         try {
             SharedPreferences sharedPreferences = getSharedPreferences("usuario", Context.MODE_PRIVATE);
-            codigo = sharedPreferences.getInt("codigo", 0);
+            codigo = sharedPreferences.getLong("codigo", 0);
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -42,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         if (codigo != 0) {
             Intent intent = new Intent(MainActivity.this, TelaPrincipalActivity.class);
             startActivity(intent);
+            finish();
         }
 
         setContentView(R.layout.activity_main);
@@ -57,32 +62,7 @@ public class MainActivity extends AppCompatActivity {
             usuarioOff.setEmail(campos.get(0).getText().toString());
             usuarioOff.setSenha(campos.get(1).getText().toString());
 
-            UsuarioRepository usuarioRepository = new UsuarioRepository();
-
-            try {
-                int res = usuarioRepository.login(usuarioOff, getApplicationContext());
-                if(res != 0){
-                    usuarioOff.setCodigo(res);
-
-                    SharedPreferences preferences = getSharedPreferences("usuario", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putInt("codigo", usuarioOff.getCodigo());
-                    editor.apply();
-
-                    Intent intent = new Intent(MainActivity.this, TelaPrincipalActivity.class);
-                    startActivity(intent);
-                }else{
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setTitle("AVISO!");
-                    builder.setMessage("Nenhum registro foi encontrado!");
-                    builder.setNeutralButton("OK", null);
-                    builder.show();
-                }
-                Toast.makeText(getApplicationContext(), String.valueOf(res), Toast.LENGTH_LONG).show();
-            } catch (Exception e) {
-                Log.i("ERRO NO LOGIN", e.getMessage());
-                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            }
+            login(usuarioOff);
 
         }
     }
@@ -130,5 +110,61 @@ public class MainActivity extends AppCompatActivity {
     private boolean isEmailValido(String email) {
         boolean resultado = (!isCampoVazio(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
         return resultado;
+    }
+
+    private void login(UsuarioOff usuarioOff) {
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Efetuando login, por favor espere...");
+        progressDialog.show();
+
+        UsuarioRepositoryOff usuarioRepositoryOff = new UsuarioRepositoryOff();
+        UsuarioRepository usuarioRepository = new UsuarioRepository();
+
+        try {
+            long codigo = usuarioRepositoryOff.login(usuarioOff, getApplicationContext());
+            if (codigo != 0) {
+
+                SharedPreferences preferences = getSharedPreferences("usuario", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putLong("codigo", codigo);
+                editor.apply();
+
+                Intent intent = new Intent(MainActivity.this, TelaPrincipalActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                UsuarioOff usuarioOff1 = usuarioRepository.login(new Usuario(usuarioOff.getEmail(), usuarioOff.getSenha()));
+
+                if (usuarioOff1 != null) {
+                    usuarioRepositoryOff.salvar(usuarioOff1, getApplicationContext());
+
+                    SharedPreferences preferences = getSharedPreferences("usuario", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putLong("codigo", usuarioOff1.getCodigo());
+                    editor.apply();
+
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                    }
+
+                    Intent intent = new Intent(MainActivity.this, TelaPrincipalActivity.class);
+                    startActivity(intent);
+                    finish();
+
+                } else {
+                    progressDialog.dismiss();
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+                    builder.setTitle("AVISO!");
+                    builder.setMessage("Nenhum registro foi encontrado!");
+                    builder.setNeutralButton("OK", null);
+                    builder.show();
+                }
+            }
+        } catch (Exception e) {
+            Log.i("ERRO NO LOGIN", e.getMessage());
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 }

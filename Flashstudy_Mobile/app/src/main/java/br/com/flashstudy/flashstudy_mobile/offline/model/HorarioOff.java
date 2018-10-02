@@ -26,28 +26,28 @@ public class HorarioOff {
 
     @NonNull
     @PrimaryKey
-    private int codigo;
+    private long codigo;
 
     @NonNull
-    private int tempo;
+    private long tempo;
 
     @NonNull
     @ColumnInfo(name = "disciplina_codigo")
-    private int disciplinaCodigo;
+    private long disciplinaCodigo;
 
     @NonNull
     @ColumnInfo(name = "usuario_codigo")
-    private int usuarioCodigo;
+    private long usuarioCodigo;
 
     @NonNull
     @ColumnInfo(name = "dia_codigo")
-    private int diaCodigo;
+    private long diaCodigo;
 
     public HorarioOff() {
     }
 
     @Ignore
-    public HorarioOff(@NonNull int tempo, @NonNull int disciplinaCodigo, @NonNull int usuarioCodigo, @NonNull int diaCodigo) {
+    public HorarioOff(@NonNull long tempo, @NonNull long disciplinaCodigo, @NonNull long usuarioCodigo, @NonNull long diaCodigo) {
         this.tempo = tempo;
         this.disciplinaCodigo = disciplinaCodigo;
         this.usuarioCodigo = usuarioCodigo;
@@ -55,47 +55,47 @@ public class HorarioOff {
     }
 
     @NonNull
-    public int getCodigo() {
+    public long getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(@NonNull int codigo) {
+    public void setCodigo(@NonNull long codigo) {
         this.codigo = codigo;
     }
 
     @NonNull
-    public int getTempo() {
+    public long getTempo() {
         return tempo;
     }
 
-    public void setTempo(@NonNull int tempo) {
+    public void setTempo(@NonNull long tempo) {
         this.tempo = tempo;
     }
 
     @NonNull
-    public int getDisciplinaCodigo() {
+    public long getDisciplinaCodigo() {
         return disciplinaCodigo;
     }
 
-    public void setDisciplinaCodigo(@NonNull int disciplinaCodigo) {
+    public void setDisciplinaCodigo(@NonNull long disciplinaCodigo) {
         this.disciplinaCodigo = disciplinaCodigo;
     }
 
     @NonNull
-    public int getUsuarioCodigo() {
+    public long getUsuarioCodigo() {
         return usuarioCodigo;
     }
 
-    public void setUsuarioCodigo(@NonNull int usuarioCodigo) {
+    public void setUsuarioCodigo(@NonNull long usuarioCodigo) {
         this.usuarioCodigo = usuarioCodigo;
     }
 
     @NonNull
-    public int getDiaCodigo() {
+    public long getDiaCodigo() {
         return diaCodigo;
     }
 
-    public void setDiaCodigo(@NonNull int diaCodigo) {
+    public void setDiaCodigo(@NonNull long diaCodigo) {
         this.diaCodigo = diaCodigo;
     }
 

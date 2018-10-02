@@ -31,5 +31,5 @@ public interface UsuarioDao {
     List<UsuarioOff> getUsuarios();
 
     @Query("SELECT * FROM usuario WHERE codigo = :codigo")
-    UsuarioOff getUsuarioById(int codigo);
+    UsuarioOff getUsuarioById(long codigo);
 }

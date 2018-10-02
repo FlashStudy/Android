@@ -25,7 +25,7 @@ public class DiaDaSemanaOff {
 
     @NonNull
     @PrimaryKey
-    private int codigo;
+    private long codigo;
 
     @NonNull
     private String nome;
@@ -35,28 +35,28 @@ public class DiaDaSemanaOff {
 
     @NonNull
     @ColumnInfo(name = "usuario_codigo")
-    private int usuarioCodigo;
+    private long usuarioCodigo;
 
     @NonNull
     @ColumnInfo(name = "ciclo_codigo")
-    private int cicloCodigo;
+    private long cicloCodigo;
 
     public DiaDaSemanaOff() {
     }
 
     @Ignore
-    public DiaDaSemanaOff(@NonNull String nome, @NonNull int usuarioCodigo, @NonNull int cicloCodigo) {
+    public DiaDaSemanaOff(@NonNull String nome, @NonNull long usuarioCodigo, @NonNull long cicloCodigo) {
         this.nome = nome;
         this.usuarioCodigo = usuarioCodigo;
         this.cicloCodigo = cicloCodigo;
     }
 
     @NonNull
-    public int getCodigo() {
+    public long getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(@NonNull int codigo) {
+    public void setCodigo(@NonNull long codigo) {
         this.codigo = codigo;
     }
 
@@ -78,20 +78,20 @@ public class DiaDaSemanaOff {
     }
 
     @NonNull
-    public int getUsuarioCodigo() {
+    public long getUsuarioCodigo() {
         return usuarioCodigo;
     }
 
-    public void setUsuarioCodigo(@NonNull int usuarioCodigo) {
+    public void setUsuarioCodigo(@NonNull long usuarioCodigo) {
         this.usuarioCodigo = usuarioCodigo;
     }
 
     @NonNull
-    public int getCicloCodigo() {
+    public long getCicloCodigo() {
         return cicloCodigo;
     }
 
-    public void setCicloCodigo(@NonNull int cicloCodigo) {
+    public void setCicloCodigo(@NonNull long cicloCodigo) {
         this.cicloCodigo = cicloCodigo;
     }
 

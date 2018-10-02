@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "25e2633c7b5e36ca0840dde624713e37",
+    "identityHash": "e7ed5158fef5542dc06e9342146d09ae",
     "entities": [
       {
         "tableName": "assunto",
@@ -439,6 +439,14 @@
               "codigo"
             ],
             "createSql": "CREATE UNIQUE INDEX `index_flashcard_codigo` ON `${TABLE_NAME}` (`codigo`)"
+          },
+          {
+            "name": "index_flashcard_usuario_codigo",
+            "unique": false,
+            "columnNames": [
+              "usuario_codigo"
+            ],
+            "createSql": "CREATE  INDEX `index_flashcard_usuario_codigo` ON `${TABLE_NAME}` (`usuario_codigo`)"
           }
         ],
         "foreignKeys": [
@@ -685,7 +693,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"25e2633c7b5e36ca0840dde624713e37\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e7ed5158fef5542dc06e9342146d09ae\")"
     ]
   }
 }

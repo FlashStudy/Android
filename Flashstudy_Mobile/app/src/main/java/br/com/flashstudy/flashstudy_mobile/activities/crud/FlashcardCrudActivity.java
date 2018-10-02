@@ -20,12 +20,7 @@ import java.util.List;
 
 import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.offline.model.FlashcardOff;
-import br.com.flashstudy.flashstudy_mobile.offline.model.UsuarioOff;
-import br.com.flashstudy.flashstudy_mobile.online.model.Flashcard;
-import br.com.flashstudy.flashstudy_mobile.online.model.Usuario;
-import br.com.flashstudy.flashstudy_mobile.repository.FlashcardRepository;
-import br.com.flashstudy.flashstudy_mobile.repository.UsuarioRepository;
-import butterknife.BindView;
+import br.com.flashstudy.flashstudy_mobile.offline.repository.FlashcardRepositoryOff;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 
@@ -34,7 +29,7 @@ public class FlashcardCrudActivity extends AppCompatActivity {
     @BindViews({R.id.txtTitulo, R.id.txtPergunta, R.id.txtResposta})
     List<EditText> campos;
 
-    private FlashcardRepository flashcardRepository = new FlashcardRepository();
+    private FlashcardRepositoryOff flashcardRepositoryOff = new FlashcardRepositoryOff();
 
     static final int SALVAR = Menu.FIRST;
     static final int DELETAR = Menu.FIRST + 1;
@@ -101,7 +96,10 @@ public class FlashcardCrudActivity extends AppCompatActivity {
                     flashcardOff.setTitulo(campos.get(0).getText().toString());
                     flashcardOff.setPergunta(campos.get(1).getText().toString());
                     flashcardOff.setResposta(campos.get(2).getText().toString());
-                    salvarFlashcard(flashcardOff);
+
+                    if(salvarFlashcard(flashcardOff)){
+                        finish();
+                    }
                     Toast.makeText(getApplicationContext(), "Flashcard salvo com sucesso", Toast.LENGTH_LONG).show();
                     return true;
                 }else{
@@ -116,7 +114,7 @@ public class FlashcardCrudActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         try {
-                            boolean result = flashcardRepository.deletar(flashcardOff, getApplicationContext());
+                            boolean result = flashcardRepositoryOff.deletar(flashcardOff, getApplicationContext());
                             if (result) {
                                 campos.get(0).setText("");
                                 campos.get(1).setText("");
@@ -163,11 +161,11 @@ public class FlashcardCrudActivity extends AppCompatActivity {
     private boolean salvarFlashcard(FlashcardOff flashcardOff) {
         try {
             SharedPreferences sharedPreferences = getSharedPreferences("usuario", Context.MODE_PRIVATE);
-            int codigo = sharedPreferences.getInt("codigo", 0);
+            long codigo = sharedPreferences.getLong("codigo", 0);
 
             flashcardOff.setUsuarioCodigo(codigo);
 
-            return flashcardRepository.salvar(flashcardOff, getApplicationContext());
+            return flashcardRepositoryOff.salvar(flashcardOff, getApplicationContext());
         } catch (Exception e) {
             Log.i("ERRO NA CONSULTA", e.getMessage());
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();

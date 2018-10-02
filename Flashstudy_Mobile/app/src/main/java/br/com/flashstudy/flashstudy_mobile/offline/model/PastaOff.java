@@ -20,14 +20,14 @@ public class PastaOff {
 
     @NonNull
     @PrimaryKey(autoGenerate = true)
-    private int codigo;
+    private long codigo;
 
     @NonNull
     private String nome;
 
     @NonNull
     @ColumnInfo(name = "usuario_codigo")
-    private int usuarioCodigo;
+    private long usuarioCodigo;
 
     @Ignore
     private List<FlashcardOff> flashcards = new ArrayList<>();
@@ -36,18 +36,18 @@ public class PastaOff {
     }
 
     @Ignore
-    public PastaOff(@NonNull String nome, @NonNull int usuarioCodigo, List<FlashcardOff> flashcards) {
+    public PastaOff(@NonNull String nome, @NonNull long usuarioCodigo, List<FlashcardOff> flashcards) {
         this.nome = nome;
         this.usuarioCodigo = usuarioCodigo;
         this.flashcards = flashcards;
     }
 
     @NonNull
-    public int getCodigo() {
+    public long getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(@NonNull int codigo) {
+    public void setCodigo(@NonNull long codigo) {
         this.codigo = codigo;
     }
 
@@ -61,11 +61,11 @@ public class PastaOff {
     }
 
     @NonNull
-    public int getUsuarioCodigo() {
+    public long getUsuarioCodigo() {
         return usuarioCodigo;
     }
 
-    public void setUsuarioCodigo(@NonNull int usuarioCodigo) {
+    public void setUsuarioCodigo(@NonNull long usuarioCodigo) {
         this.usuarioCodigo = usuarioCodigo;
     }
 

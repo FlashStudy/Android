@@ -34,12 +34,13 @@ import java.io.Serializable;
         foreignKeys = {@ForeignKey(entity = UsuarioOff.class,
                 parentColumns = "codigo",
                 childColumns = "usuario_codigo")},
-        indices = {@Index(value = {"codigo"}, unique = true)})
+        indices = {@Index(value = {"codigo"}, unique = true),
+                    @Index(value = {"usuario_codigo"})})
 public class FlashcardOff implements Serializable {
 
     @NonNull
     @PrimaryKey(autoGenerate = true)
-    private int codigo;
+    private long codigo;
 
     @NonNull
     private String pergunta;
@@ -58,24 +59,24 @@ public class FlashcardOff implements Serializable {
 
     @NonNull
     @ColumnInfo(name = "usuario_codigo")
-    private int usuarioCodigo;
+    private long usuarioCodigo;
 
     /*@NonNull
     @ColumnInfo(name = "disciplina_codigo")
-    private int disciplinaCodigo;
+    private long disciplinaCodigo;
 
     @NonNull
     @ColumnInfo(name = "assunto_codigo")
-    private int assuntoCodigo;
+    private long assuntoCodigo;
 
     @ColumnInfo(name = "pasta_codigo")
-    private int pastaCodigo;*/
+    private long pastaCodigo;*/
 
     public FlashcardOff() {
     }
 
     @Ignore
-    public FlashcardOff(@NonNull int codigo, @NonNull String pergunta, @NonNull String resposta, @NonNull String titulo) {
+    public FlashcardOff(@NonNull long codigo, @NonNull String pergunta, @NonNull String resposta, @NonNull String titulo) {
         this.codigo = codigo;
         this.pergunta = pergunta;
         this.resposta = resposta;
@@ -83,11 +84,11 @@ public class FlashcardOff implements Serializable {
     }
 
     @NonNull
-    public int getCodigo() {
+    public long getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(@NonNull int codigo) {
+    public void setCodigo(@NonNull long codigo) {
         this.codigo = codigo;
     }
 
@@ -137,37 +138,37 @@ public class FlashcardOff implements Serializable {
     }*/
 
     @NonNull
-    public int getUsuarioCodigo() {
+    public long getUsuarioCodigo() {
         return usuarioCodigo;
     }
 
-    public void setUsuarioCodigo(@NonNull int usuarioCodigo) {
+    public void setUsuarioCodigo(@NonNull long usuarioCodigo) {
         this.usuarioCodigo = usuarioCodigo;
     }
 
     /*@NonNull
-    public int getDisciplinaCodigo() {
+    public long getDisciplinaCodigo() {
         return disciplinaCodigo;
     }
 
-    public void setDisciplinaCodigo(@NonNull int disciplinaCodigo) {
+    public void setDisciplinaCodigo(@NonNull long disciplinaCodigo) {
         this.disciplinaCodigo = disciplinaCodigo;
     }
 
     @NonNull
-    public int getAssuntoCodigo() {
+    public long getAssuntoCodigo() {
         return assuntoCodigo;
     }
 
-    public void setAssuntoCodigo(@NonNull int assuntoCodigo) {
+    public void setAssuntoCodigo(@NonNull long assuntoCodigo) {
         this.assuntoCodigo = assuntoCodigo;
     }
 
-    public int getPastaCodigo() {
+    public long getPastaCodigo() {
         return pastaCodigo;
     }
 
-    public void setPastaCodigo(int pastaCodigo) {
+    public void setPastaCodigo(long pastaCodigo) {
         this.pastaCodigo = pastaCodigo;
     }
 

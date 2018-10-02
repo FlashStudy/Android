@@ -25,18 +25,18 @@ public class DisciplinaOff {
 
     @NonNull
     @PrimaryKey
-    private int codigo;
+    private long codigo;
 
     @NonNull
     private String nome;
 
     @NonNull
     @ColumnInfo(name = "usuario_codigo")
-    private int usuarioCodigo;
+    private long usuarioCodigo;
 
     @NonNull
     @ColumnInfo(name = "cronograma_codigo")
-    private int cronogramaCodigo;
+    private long cronogramaCodigo;
 
     @Ignore
     private List<AssuntoOff> assuntos = new ArrayList<>();
@@ -45,7 +45,7 @@ public class DisciplinaOff {
     }
 
     @Ignore
-    public DisciplinaOff(@NonNull String nome, @NonNull int usuarioCodigo, @NonNull int cronogramaCodigo, List<AssuntoOff> assuntos) {
+    public DisciplinaOff(@NonNull String nome, @NonNull long usuarioCodigo, @NonNull long cronogramaCodigo, List<AssuntoOff> assuntos) {
         this.nome = nome;
         this.usuarioCodigo = usuarioCodigo;
         this.cronogramaCodigo = cronogramaCodigo;
@@ -53,11 +53,11 @@ public class DisciplinaOff {
     }
 
     @NonNull
-    public int getCodigo() {
+    public long getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(@NonNull int codigo) {
+    public void setCodigo(@NonNull long codigo) {
         this.codigo = codigo;
     }
 
@@ -71,20 +71,20 @@ public class DisciplinaOff {
     }
 
     @NonNull
-    public int getUsuarioCodigo() {
+    public long getUsuarioCodigo() {
         return usuarioCodigo;
     }
 
-    public void setUsuarioCodigo(@NonNull int usuarioCodigo) {
+    public void setUsuarioCodigo(@NonNull long usuarioCodigo) {
         this.usuarioCodigo = usuarioCodigo;
     }
 
     @NonNull
-    public int getCronogramaCodigo() {
+    public long getCronogramaCodigo() {
         return cronogramaCodigo;
     }
 
-    public void setCronogramaCodigo(@NonNull int cronogramaCodigo) {
+    public void setCronogramaCodigo(@NonNull long cronogramaCodigo) {
         this.cronogramaCodigo = cronogramaCodigo;
     }
 

@@ -22,36 +22,36 @@ public class AssuntoOff {
 
     @NonNull
     @PrimaryKey
-    private int codigo;
+    private long codigo;
 
     @NonNull
     private String tema;
 
     @NonNull
     @ColumnInfo(name = "disciplina_codigo")
-    private int disciplinaCodigo;
+    private long disciplinaCodigo;
 
     @NonNull
     @ColumnInfo(name = "usuario_codigo")
-    private int usuarioCodigo;
+    private long usuarioCodigo;
 
 
     public AssuntoOff() {
     }
 
     @Ignore
-    public AssuntoOff(@NonNull String tema, @NonNull int disciplinaCodigo, @NonNull int usuarioCodigo) {
+    public AssuntoOff(@NonNull String tema, @NonNull long disciplinaCodigo, @NonNull long usuarioCodigo) {
         this.tema = tema;
         this.disciplinaCodigo = disciplinaCodigo;
         this.usuarioCodigo = usuarioCodigo;
     }
 
     @NonNull
-    public int getCodigo() {
+    public long getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(@NonNull int codigo) {
+    public void setCodigo(@NonNull long codigo) {
         this.codigo = codigo;
     }
 
@@ -65,20 +65,20 @@ public class AssuntoOff {
     }
 
     @NonNull
-    public int getDisciplinaCodigo() {
+    public long getDisciplinaCodigo() {
         return disciplinaCodigo;
     }
 
-    public void setDisciplinaCodigo(@NonNull int disciplinaCodigo) {
+    public void setDisciplinaCodigo(@NonNull long disciplinaCodigo) {
         this.disciplinaCodigo = disciplinaCodigo;
     }
 
     @NonNull
-    public int getUsuarioCodigo() {
+    public long getUsuarioCodigo() {
         return usuarioCodigo;
     }
 
-    public void setUsuarioCodigo(@NonNull int usuarioCodigo) {
+    public void setUsuarioCodigo(@NonNull long usuarioCodigo) {
         this.usuarioCodigo = usuarioCodigo;
     }
 

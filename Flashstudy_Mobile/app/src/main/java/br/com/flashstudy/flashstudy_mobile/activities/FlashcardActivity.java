@@ -10,20 +10,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.io.Serializable;
 import java.util.List;
 
 import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.activities.crud.FlashcardCrudActivity;
 import br.com.flashstudy.flashstudy_mobile.adapter.FlashcardListAdapter;
 import br.com.flashstudy.flashstudy_mobile.offline.model.FlashcardOff;
-import br.com.flashstudy.flashstudy_mobile.online.model.Flashcard;
-import br.com.flashstudy.flashstudy_mobile.repository.FlashcardRepository;
+import br.com.flashstudy.flashstudy_mobile.offline.repository.FlashcardRepositoryOff;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -62,18 +58,18 @@ public class FlashcardActivity extends AppCompatActivity {
     }
 
     public void populaTela(){
-        int codigo = 0;
+        long codigo = 0;
 
         try {
             SharedPreferences sharedPreferences = getSharedPreferences("usuario", Context.MODE_PRIVATE);
-            codigo = sharedPreferences.getInt("codigo", 0);
+            codigo = sharedPreferences.getLong("codigo", 0);
 
         } catch (Exception e) {
             Log.i("ERRO NA CONSULTA", e.getMessage());
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
-         flashcards = new FlashcardRepository().listarFlashcards(codigo, getApplicationContext());
+         flashcards = new FlashcardRepositoryOff().listar(codigo, getApplicationContext());
 
         if (flashcards != null) {
             listViewFlashcards.setAdapter(new FlashcardListAdapter(getApplicationContext(), flashcards));

@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.flashstudy.flashstudy_mobile.offline.model.UsuarioOff;
 import br.com.flashstudy.flashstudy_mobile.online.model.Usuario;
 
 public class UsuarioRestClient {
@@ -46,7 +47,7 @@ public class UsuarioRestClient {
         }
     }
 
-    public boolean login(Usuario usuario) {
+    public UsuarioOff login(Usuario usuario) {
         try {
             Map<String, String> values = new HashMap<>();
             values.put("email", usuario.getEmail());
@@ -63,9 +64,9 @@ public class UsuarioRestClient {
 
             Usuario usuario1 = (Usuario) restTemplate.postForEntity(BASE_URL + "login", entity, null).getBody();
             Log.i("retorno do usuario", usuario1.toString());
-            return true;
+            return new UsuarioOff(usuario1.getCodigo(), usuario1.getNome(), usuario1.getEmail(), usuario1.getSenha());
         } catch (Exception e) {
-            return false;
+            return null;
         }
     }
 

@@ -21,7 +21,7 @@ public class CronogramaOff {
 
     @NonNull
     @PrimaryKey
-    private int codigo;
+    private long codigo;
 
     @NonNull
     private String inicio;
@@ -31,7 +31,7 @@ public class CronogramaOff {
 
     @NonNull
     @ColumnInfo(name = "usuario_codigo")
-    private int usuarioCodigo;
+    private long usuarioCodigo;
 
     @Ignore
     private List<DisciplinaOff> disciplinas = new ArrayList<>();
@@ -40,18 +40,18 @@ public class CronogramaOff {
     }
 
     @Ignore
-    public CronogramaOff(@NonNull String inicio, @NonNull String fim, @NonNull int usuarioCodigo) {
+    public CronogramaOff(@NonNull String inicio, @NonNull String fim, @NonNull long usuarioCodigo) {
         this.inicio = inicio;
         this.fim = fim;
         this.usuarioCodigo = usuarioCodigo;
     }
 
     @NonNull
-    public int getCodigo() {
+    public long getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(@NonNull int codigo) {
+    public void setCodigo(@NonNull long codigo) {
         this.codigo = codigo;
     }
 
@@ -74,11 +74,11 @@ public class CronogramaOff {
     }
 
     @NonNull
-    public int getUsuarioCodigo() {
+    public long getUsuarioCodigo() {
         return usuarioCodigo;
     }
 
-    public void setUsuarioCodigo(@NonNull int usuarioCodigo) {
+    public void setUsuarioCodigo(@NonNull long usuarioCodigo) {
         this.usuarioCodigo = usuarioCodigo;
     }
 
