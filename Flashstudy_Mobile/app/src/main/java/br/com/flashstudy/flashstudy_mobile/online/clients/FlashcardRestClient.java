@@ -18,7 +18,7 @@ import br.com.flashstudy.flashstudy_mobile.online.model.Flashcard;
 
 public class FlashcardRestClient {
 
-    private String BASE_URL = "http://192.168.0.17:8000/flashcard/";
+    private String BASE_URL = "http://192.168.0.40:8000/flashcard/";
     private RestTemplate restTemplate = new RestTemplate();
 
     public List<Flashcard> findAll(Long codigo) {

@@ -25,5 +25,5 @@ public interface CronogramaDao {
 
     //Procura o Cronograma de um Usuario
     @Query("SELECT * FROM cronograma WHERE usuario_codigo = :codigo")
-    CronogramaOff getCronogramaByUsuario(int codigo);
+    CronogramaOff getCronogramaByUsuario(long codigo);
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import com.android.crud.model.Usuario;
 import com.android.crud.repository.UsuarioRepository;
 
+//Controller do Usuário
 @RestController
 @RequestMapping("usuario")
 public class UsuarioController {
@@ -33,7 +34,7 @@ public class UsuarioController {
 	}
 
 	// Cadastrar
-	@PostMapping(value = "/save", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@PostMapping(value = "/salvar", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody ResponseEntity<?> cadastro(@Valid @RequestBody Usuario usuario) {
 
 		return new ResponseEntity<>(usuarioRepository.save(usuario), HttpStatus.OK);

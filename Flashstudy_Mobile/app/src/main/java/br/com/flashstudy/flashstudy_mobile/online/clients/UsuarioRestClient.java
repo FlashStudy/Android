@@ -9,6 +9,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
@@ -19,16 +20,11 @@ import br.com.flashstudy.flashstudy_mobile.online.model.Usuario;
 
 public class UsuarioRestClient {
 
-    private String BASE_URL = "http://192.168.0.17:8000/usuario/";
+    private String BASE_URL = "http://192.168.0.40:8000/usuario/";
     private RestTemplate restTemplate = new RestTemplate();
 
-    public boolean cadastro(Usuario usuario) {
+    public UsuarioOff cadastro(Usuario usuario) {
         try {
-            Map<String, String> values = new HashMap<>();
-            values.put("nome", usuario.getNome());
-            values.put("email", usuario.getEmail());
-            values.put("senha", usuario.getSenha());
-
             JSONObject jsonObject = new JSONObject();
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -39,20 +35,18 @@ public class UsuarioRestClient {
 
             HttpEntity<String> entity = new HttpEntity<>(jsonObject.toString(), headers);
 
-            restTemplate.postForEntity(BASE_URL + "save", entity, null);
+            ResponseEntity<?> responseEntity = restTemplate.postForEntity(BASE_URL + "salvar", entity, Usuario.class);
 
-            return true;
+            usuario = (Usuario) responseEntity.getBody();
+
+            return new UsuarioOff(usuario.getCodigo(), usuario.getNome(), usuario.getEmail(), usuario.getSenha());
         } catch (Exception e) {
-            return false;
+            return null;
         }
     }
 
     public UsuarioOff login(Usuario usuario) {
         try {
-            Map<String, String> values = new HashMap<>();
-            values.put("email", usuario.getEmail());
-            values.put("senha", usuario.getSenha());
-
             JSONObject jsonObject = new JSONObject();
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -72,12 +66,6 @@ public class UsuarioRestClient {
 
     public boolean atualizar(Usuario usuario) {
         try {
-            Map<String, String> values = new HashMap<>();
-            values.put("codigo", String.valueOf(usuario.getCodigo()));
-            values.put("nome", usuario.getNome());
-            values.put("email", usuario.getEmail());
-            values.put("senha", usuario.getSenha());
-
             JSONObject jsonObject = new JSONObject();
 
             jsonObject.put("codigo", usuario.getCodigo());

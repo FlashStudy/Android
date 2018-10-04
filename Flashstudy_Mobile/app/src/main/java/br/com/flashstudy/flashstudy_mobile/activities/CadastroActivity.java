@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -79,7 +81,8 @@ public class CadastroActivity extends AppCompatActivity {
                                 usuario.setEmail(email);
                                 usuario.setSenha(senha);
 
-                                cadastrar(usuario);
+                                new Cadastrar().execute(usuario);
+
                             } catch (Exception e) {
                                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
                             }
@@ -99,40 +102,53 @@ public class CadastroActivity extends AppCompatActivity {
         }
     }
 
-    private void cadastrar(Usuario usuario){
-        ProgressDialog progressDialog = new ProgressDialog(getApplicationContext());
-        progressDialog.setMessage("Efetuando cadastro, por favor espere...");
-        progressDialog.show();
+    private boolean isCampoVazio(String valor) {
+        return (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
+    }
 
-        try {
-            UsuarioOff usuarioOff = usuarioRepository.salvar(usuario);
-            usuarioRepositoryOff.salvar(usuarioOff, getApplicationContext());
+    private boolean isEmailValido(String email) {
+        return (!isCampoVazio(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
+    }
 
-            SharedPreferences preferences = getSharedPreferences("usuario", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putLong("codigo", usuarioOff.getCodigo());
-            editor.apply();
 
-            if(progressDialog.isShowing()){
-                progressDialog.dismiss();
+    private class Cadastrar extends AsyncTask<Usuario, Void, Void> {
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(CadastroActivity.this);
+            progressDialog.setMessage("Efetuando cadastro");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Usuario... usuarios) {
+            try {
+
+                UsuarioOff usuarioOff = usuarioRepository.salvar(usuarios[0]);
+                usuarioRepositoryOff.salvar(usuarioOff, getApplicationContext());
+
+                SharedPreferences preferences = getSharedPreferences("usuario", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putLong("codigo", usuarioOff.getCodigo());
+                editor.apply();
+
+            } catch (Exception e) {
+                Log.i("ERRO NO CADASTRO", e.getMessage());
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            progressDialog.dismiss();
 
             Intent intent = new Intent(CadastroActivity.this, TelaPrincipalActivity.class);
             startActivity(intent);
             finish();
-
-        } catch (Exception e) {
-            Log.i("ERRO NO CADASTRO", e.getMessage());
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
-
-    private boolean isCampoVazio(String valor) {
-        return  (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
-    }
-
-    private boolean isEmailValido(String email) {
-        return  (!isCampoVazio(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
-    }
-
 }
