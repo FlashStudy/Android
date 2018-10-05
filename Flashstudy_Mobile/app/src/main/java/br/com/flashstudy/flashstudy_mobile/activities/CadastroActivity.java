@@ -8,19 +8,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
-import android.util.Patterns;
-import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.List;
 
 import br.com.flashstudy.flashstudy_mobile.R;
+import br.com.flashstudy.flashstudy_mobile.Util.Util;
 import br.com.flashstudy.flashstudy_mobile.offline.model.UsuarioOff;
 import br.com.flashstudy.flashstudy_mobile.offline.repository.UsuarioRepositoryOff;
 import br.com.flashstudy.flashstudy_mobile.online.model.Usuario;
@@ -59,16 +55,16 @@ public class CadastroActivity extends AppCompatActivity {
         String senha = campos.get(2).getText().toString();
         String confirmaSenha = campos.get(3).getText().toString();
 
-        if (res = isCampoVazio(nome)) {
+        if (res = Util.isCampoVazio(nome)) {
             campos.get(0).requestFocus();
         } else {
-            if (res = isCampoVazio(senha)) {
+            if (res = Util.isCampoVazio(senha)) {
                 campos.get(2).requestFocus();
             } else {
-                if (res = isCampoVazio(confirmaSenha)) {
+                if (res = Util.isCampoVazio(confirmaSenha)) {
                     campos.get(3).requestFocus();
                 } else {
-                    if (res = !isEmailValido(email)) {
+                    if (res = !Util.isEmailValido(email)) {
                         campos.get(1).requestFocus();
                     } else {
                         if (!senha.equals(confirmaSenha)) {
@@ -102,15 +98,6 @@ public class CadastroActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isCampoVazio(String valor) {
-        return (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
-    }
-
-    private boolean isEmailValido(String email) {
-        return (!isCampoVazio(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
-    }
-
-
     private class Cadastrar extends AsyncTask<Usuario, Void, Void> {
         ProgressDialog progressDialog;
 
@@ -125,18 +112,17 @@ public class CadastroActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Usuario... usuarios) {
             try {
-
                 UsuarioOff usuarioOff = usuarioRepository.salvar(usuarios[0]);
-                usuarioRepositoryOff.salvar(usuarioOff, getApplicationContext());
+                usuarioRepositoryOff.salvar(usuarioOff, CadastroActivity.this);
 
-                SharedPreferences preferences = getSharedPreferences("usuario", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putLong("codigo", usuarioOff.getCodigo());
-                editor.apply();
+                Util.setLocalUserCodigo(CadastroActivity.this, usuarioOff.getCodigo());
 
             } catch (Exception e) {
                 Log.i("ERRO NO CADASTRO", e.getMessage());
                 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+
+                progressDialog.dismiss();
+                cancel(true);
             }
 
             return null;

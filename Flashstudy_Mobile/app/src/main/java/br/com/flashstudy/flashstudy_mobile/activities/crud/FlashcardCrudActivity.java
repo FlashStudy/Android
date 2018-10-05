@@ -97,13 +97,13 @@ public class FlashcardCrudActivity extends AppCompatActivity {
                     flashcardOff.setPergunta(campos.get(1).getText().toString());
                     flashcardOff.setResposta(campos.get(2).getText().toString());
 
-                    if(salvarFlashcard(flashcardOff)){
+                    if (salvarFlashcard(flashcardOff)) {
                         finish();
                     }
                     Toast.makeText(getApplicationContext(), "Flashcard salvo com sucesso", Toast.LENGTH_LONG).show();
                     return true;
-                }else{
-                   return false;
+                } else {
+                    return false;
                 }
             case DELETAR:
                 AlertDialog.Builder dlg = new AlertDialog.Builder(this);
@@ -116,15 +116,11 @@ public class FlashcardCrudActivity extends AppCompatActivity {
                         try {
                             boolean result = flashcardRepositoryOff.deletar(flashcardOff, getApplicationContext());
                             if (result) {
-                                campos.get(0).setText("");
-                                campos.get(1).setText("");
-                                campos.get(2).setText("");
-
                                 Toast.makeText(getApplicationContext(), "Flashcard deletado com sucesso!", Toast.LENGTH_LONG).show();
+                                finish();
                             }
                         } catch (Exception e) {
-                            Toast.makeText(getApplicationContext(), "Houve um erroao deletar o flashcard!", Toast.LENGTH_LONG).show();
-
+                            Toast.makeText(getApplicationContext(), "Houve um erro ao deletar o flashcard!", Toast.LENGTH_LONG).show();
                         }
                     }
                 });

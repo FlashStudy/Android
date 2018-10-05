@@ -2,9 +2,11 @@ package br.com.flashstudy.flashstudy_mobile.activities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,26 +35,23 @@ public class PerfilActivity extends AppCompatActivity {
 
     UsuarioOff usuarioOff;
 
+    UsuarioRepositoryOff usuarioRepositoryOff = new UsuarioRepositoryOff();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil);
-
-        long codigo = 0;
-
         try {
-            SharedPreferences sharedPreferences = getSharedPreferences("usuario", Context.MODE_PRIVATE);
-            codigo = sharedPreferences.getLong("codigo", 0);
+            usuarioOff = new LocalUser().execute().get();
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            Log.i("ERRO NA CONSULTA", e.getMessage());
+            Toast.makeText(PerfilActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+            finish();
         }
-
-        UsuarioRepositoryOff usuarioRepositoryOff = new UsuarioRepositoryOff();
-
-        usuarioOff = usuarioRepositoryOff.getLocaluserById(codigo, getApplicationContext());
 
         ButterKnife.bind(this);
         ButterKnife.apply(campos, ENABLED, false);
+
         txtEmail.setText(usuarioOff.getEmail());
         resetaCampos();
     }
@@ -94,5 +93,20 @@ public class PerfilActivity extends AppCompatActivity {
         campos.get(1).setText("");
     }
 
-    ;
+    private class LocalUser extends AsyncTask<Void, Void, UsuarioOff> {
+
+        @Override
+        protected UsuarioOff doInBackground(Void... voids) {
+            try {
+                SharedPreferences sharedPreferences = getSharedPreferences("usuario", Context.MODE_PRIVATE);
+                long codigo = sharedPreferences.getLong("codigo", 0);
+
+                return usuarioRepositoryOff.getLocaluserById(codigo, PerfilActivity.this);
+            } catch (Exception e) {
+                Toast.makeText(PerfilActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+            return null;
+        }
+
+    }
 }
