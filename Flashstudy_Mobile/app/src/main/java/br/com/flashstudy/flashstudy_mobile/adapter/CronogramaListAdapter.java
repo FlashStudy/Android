@@ -7,21 +7,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.List;
 
 import br.com.flashstudy.flashstudy_mobile.R;
-import br.com.flashstudy.flashstudy_mobile.offline.model.FlashcardOff;
+import br.com.flashstudy.flashstudy_mobile.online.model.Disciplina;
 
-public class FlashcardListAdapter extends ArrayAdapter<FlashcardOff> {
+public class CronogramaListAdapter extends ArrayAdapter<Disciplina> {
 
-    private List<FlashcardOff> flashcards;
+    private List<Disciplina> disciplinas;
     private Context context;
 
-    public FlashcardListAdapter(@NonNull Context context, List<FlashcardOff> flashcards) {
-        super(context, R.layout.activity_flashcard, flashcards);
-        this.flashcards = flashcards;
+    public CronogramaListAdapter(@NonNull Context context, List<Disciplina> disciplinas) {
+        super(context, R.layout.activity_cronograma, disciplinas);
+        this.disciplinas = disciplinas;
         this.context = context;
     }
 
@@ -31,10 +32,10 @@ public class FlashcardListAdapter extends ArrayAdapter<FlashcardOff> {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(R.layout.one_text_layout, parent, false);
 
-        FlashcardOff flashcard = this.flashcards.get(position);
+        Disciplina disciplina = disciplinas.get(position);
 
-        TextView textViewTitulo = view.findViewById(R.id.textViewAtt1);
-        textViewTitulo.setText(flashcard.getTitulo());
+        TextView textViewNome = view.findViewById(R.id.textViewAtt1);
+        textViewNome.setText(disciplina.getNome());
 
         return view;
 

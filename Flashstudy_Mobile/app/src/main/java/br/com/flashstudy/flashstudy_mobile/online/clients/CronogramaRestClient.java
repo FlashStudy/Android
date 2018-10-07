@@ -5,8 +5,10 @@ import android.util.Log;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONObject;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -15,7 +17,7 @@ import br.com.flashstudy.flashstudy_mobile.online.model.Cronograma;
 
 public class CronogramaRestClient {
 
-    private String BASE_URL = "http://192.168.0.39:8000/cronograma/";
+    private String BASE_URL = "http://192.168.0.46:8000/cronograma/";
     private RestTemplate restTemplate = new RestTemplate();
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -40,6 +42,22 @@ public class CronogramaRestClient {
             return cronograma;
         } catch (Exception e) {
             Log.i("ERRO SERV CRONO", e.getMessage());
+            return null;
+        }
+    }
+
+    public Cronograma buscarPorUsuarioCodigo(long codigo){
+
+        try {
+            return restTemplate.exchange(
+                    BASE_URL + "atual/" + codigo,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<Cronograma>() {
+                    }
+            ).getBody();
+        } catch (Exception e) {
+            Log.i("ERRO REQUISIÇÃO", e.getMessage());
             return null;
         }
     }

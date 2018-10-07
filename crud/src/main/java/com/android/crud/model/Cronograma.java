@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -26,6 +27,8 @@ public class Cronograma implements java.io.Serializable {
 	private String fim;
 
 	@ManyToOne
+	@JoinColumn(name = "codigo_usuario")
+	@JsonBackReference
 	private Usuario usuario;
 
 	@ManyToMany(cascade = CascadeType.ALL)

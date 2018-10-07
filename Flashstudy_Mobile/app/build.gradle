@@ -65,4 +65,7 @@ dependencies {
     // Butter Knife
     implementation "com.jakewharton:butterknife:$butter_knife_version"
     annotationProcessor "com.jakewharton:butterknife-compiler:$butter_knife_version"
+
+    //Swipe ListView
+    implementation 'com.baoyz.swipemenulistview:library:1.3.0'
 }

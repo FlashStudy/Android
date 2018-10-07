@@ -53,4 +53,10 @@
     <string name="quinta_feira">Quinta-feira</string>
     <string name="sexta_feira">Sexta-feira</string>
     <string name="sabado">Sábado</string>
+    <string name="lbl_inicio">Início:</string>
+    <string name="lbl_fim">Fim:</string>
+    <string name="lbl_disciplina">Disciplina:</string>
+    <string name="hint_data">dd/MM/aaaa</string>
+    <string name="hint_materia">Matemática</string>
+    <string name="lbl_btn_add_disciplina">Adicionar Disciplina</string>
 </resources>

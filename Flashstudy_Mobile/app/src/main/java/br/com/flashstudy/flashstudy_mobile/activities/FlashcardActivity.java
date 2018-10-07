@@ -27,7 +27,7 @@ import butterknife.OnItemClick;
 
 public class FlashcardActivity extends AppCompatActivity {
 
-    @BindView(R.id.flashcard_dynamic_list)
+    @BindView(R.id.dynamic_list)
     public ListView listViewFlashcards;
 
     static final int FLASHCARDS = Menu.FIRST;
@@ -116,7 +116,7 @@ public class FlashcardActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    @OnItemClick(R.id.flashcard_dynamic_list)
+    @OnItemClick(R.id.dynamic_list)
     public void seleciona(int position){
         Intent intent = new Intent(FlashcardActivity.this, FlashcardCrudActivity.class);
         intent.putExtra("flashcard", flashcards.get(position));

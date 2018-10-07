@@ -4,6 +4,185 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activities.crud.CronogramaCrudActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/txtCronograma"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:text="@string/txt_cronograma"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                app:fontFamily="@font/comfortaa_bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/Divisor1"
+                android:layout_width="250dp"
+                android:layout_height="1dip"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/gray"
+                app:layout_constraintEnd_toEndOf="@+id/txtCronograma"
+                app:layout_constraintStart_toStartOf="@+id/txtCronograma"
+                app:layout_constraintTop_toBottomOf="@+id/txtCronograma" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="434dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="48dp"
+                android:background="@drawable/layout_bg"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/Divisor1">
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:layout_editor_absoluteY="64dp">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/lblInicio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/lbl_inicio"
+                            android:textAppearance="@style/AppTheme.lbl_black" />
+
+                        <EditText
+                            android:id="@+id/txtInicio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:autofillHints=""
+                            android:ems="10"
+                            android:hint="@string/hint_data"
+                            android:inputType="date"
+                            android:textAppearance="@style/AppTheme.lbl_black"
+                            android:textColor="@color/black"
+                            tools:targetApi="o" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/textView3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/lbl_fim"
+                            android:textAppearance="@style/AppTheme.lbl_black"
+                            app:fontFamily="@font/comfortaa_bold" />
+
+                        <EditText
+                            android:id="@+id/txtFim"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:autofillHints=""
+                            android:ems="10"
+                            android:hint="@string/hint_data"
+                            android:inputType="date"
+                            android:textAppearance="@style/AppTheme.lbl_black"
+                            android:textColor="@color/black"
+                            tools:targetApi="o" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/textView5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/lbl_disciplina"
+                            android:textAppearance="@style/AppTheme.lbl_black"
+                            app:fontFamily="@font/comfortaa_bold" />
+
+                        <EditText
+                            android:id="@+id/txtDisciplina"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:autofillHints=""
+                            android:ems="10"
+                            android:hint="@string/hint_materia"
+                            android:inputType="textPersonName"
+                            android:textAppearance="@style/AppTheme.lbl_black"
+                            android:textColor="@color/black"
+                            tools:targetApi="o" />
+                    </TableRow>
+
+                </TableLayout>
+
+                <Button
+                    android:id="@+id/btnAddMateria"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_btn_add_disciplina" />
+
+                <com.baoyz.swipemenulistview.SwipeMenuListView
+                    android:id="@+id/swipeMenuDisciplinas"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </com.baoyz.swipemenulistview.SwipeMenuListView>
+            </LinearLayout>
+
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/fab_margin"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@android:drawable/ic_menu_save" />
+        </android.support.constraint.ConstraintLayout>
+
+
+    </ScrollView>
+
 
 </android.support.constraint.ConstraintLayout>
