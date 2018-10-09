@@ -2,10 +2,14 @@ package br.com.flashstudy.flashstudy_mobile.Util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.widget.Toast;
+
+import br.com.flashstudy.flashstudy_mobile.offline.model.UsuarioOff;
+import br.com.flashstudy.flashstudy_mobile.offline.repository.UsuarioRepositoryOff;
 
 public class Util {
 
@@ -40,5 +44,9 @@ public class Util {
             Log.i("ERRO CODIGO LOCAL", e.getMessage());
         }
         return (long) 0;
+    }
+
+    public static UsuarioOff getLocalUser(Context context, long codigo){
+        return new UsuarioRepositoryOff().getLocaluserById(codigo, context);
     }
 }

@@ -60,4 +60,13 @@ public class Assunto implements Serializable {
         this.usuario = usuario;
     }
 
+    @Override
+    public String toString() {
+        return "Assunto{" +
+                "codigo=" + codigo +
+                ", tema='" + tema + '\'' +
+                ", disciplina=" + disciplina +
+                ", usuario=" + usuario +
+                '}';
+    }
 }

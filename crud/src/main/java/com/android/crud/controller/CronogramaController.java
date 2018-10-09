@@ -1,7 +1,6 @@
 package com.android.crud.controller;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,19 +35,21 @@ public class CronogramaController {
 	// Salva/atualiza o cronograma do usuário
 	@PostMapping(value = "/salvar", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public ResponseEntity<?> salvar(@RequestBody Cronograma cronograma) {
-
+		
+		System.out.println(cronograma.toString());
+		
 		Cronograma c = new Cronograma(cronograma.getCodigo(), cronograma.getInicio(), cronograma.getFim(),
 				cronograma.getUsuario());
 
-		c.setDisciplinas(new HashSet<>());
+		c.setDisciplinas(new ArrayList<>());
 
 		for (Disciplina disciplina : cronograma.getDisciplinas()) {
 			disciplina.setUsuario(cronograma.getUsuario());
 
-			Set<Assunto> assuntos = disciplina.getAssuntos();
+			List<Assunto> assuntos = disciplina.getAssuntos();
 
 			if (assuntos != null) {
-				disciplina.setAssuntos(new HashSet<>());
+				disciplina.setAssuntos(new ArrayList<>());
 				for (Assunto assunto : assuntos) {
 					disciplina.addAssunto(assunto);
 				}

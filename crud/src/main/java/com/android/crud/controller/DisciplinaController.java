@@ -1,6 +1,6 @@
 package com.android.crud.controller;
 
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,7 +33,7 @@ public class DisciplinaController {
 
 		Disciplina d = new Disciplina(disciplina.getCodigo(), disciplina.getNome(), disciplina.getUsuario());
 
-		Set<Assunto> assuntos = disciplina.getAssuntos();
+		List<Assunto> assuntos = disciplina.getAssuntos();
 
 		for (Assunto a : assuntos) {
 			a.setUsuario(disciplina.getUsuario());

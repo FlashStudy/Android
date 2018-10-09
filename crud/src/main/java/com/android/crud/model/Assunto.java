@@ -85,4 +85,12 @@ public class Assunto implements java.io.Serializable {
 		return 31;
 	}
 
+	@Override
+	public String toString() {
+		return "Assunto [codigo=" + codigo + ", tema=" + tema + ", disciplina=" + disciplina + ", usuario=" + usuario
+				+ "]";
+	}
+	
+	
+
 }
