@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e7ed5158fef5542dc06e9342146d09ae",
+    "identityHash": "976f9f501f12da10d21b19832fa14816",
     "entities": [
       {
         "tableName": "assunto",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER NOT NULL, `tema` TEXT NOT NULL, `disciplina_codigo` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, PRIMARY KEY(`codigo`), FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`disciplina_codigo`) REFERENCES `disciplina`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tema` TEXT NOT NULL, `disciplina_codigo` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`disciplina_codigo`) REFERENCES `disciplina`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "codigo",
@@ -37,7 +37,7 @@
           "columnNames": [
             "codigo"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [
           {
@@ -153,7 +153,7 @@
       },
       {
         "tableName": "cronograma",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER NOT NULL, `inicio` TEXT NOT NULL, `fim` TEXT NOT NULL, `usuario_codigo` INTEGER NOT NULL, PRIMARY KEY(`codigo`), FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `inicio` TEXT NOT NULL, `fim` TEXT NOT NULL, `usuario_codigo` INTEGER NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "codigo",
@@ -184,7 +184,7 @@
           "columnNames": [
             "codigo"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [
           {
@@ -220,7 +220,7 @@
       },
       {
         "tableName": "dia_da_semana",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER NOT NULL, `nome` TEXT NOT NULL, `usuario_codigo` INTEGER NOT NULL, `ciclo_codigo` INTEGER NOT NULL, PRIMARY KEY(`codigo`), FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`ciclo_codigo`) REFERENCES `ciclo`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nome` TEXT NOT NULL, `usuario_codigo` INTEGER NOT NULL, `ciclo_codigo` INTEGER NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`ciclo_codigo`) REFERENCES `ciclo`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "codigo",
@@ -251,7 +251,7 @@
           "columnNames": [
             "codigo"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [
           {
@@ -306,7 +306,7 @@
       },
       {
         "tableName": "disciplina",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER NOT NULL, `nome` TEXT NOT NULL, `usuario_codigo` INTEGER NOT NULL, `cronograma_codigo` INTEGER NOT NULL, PRIMARY KEY(`codigo`), FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`cronograma_codigo`) REFERENCES `cronograma`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nome` TEXT NOT NULL, `usuario_codigo` INTEGER NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "codigo",
@@ -325,19 +325,13 @@
             "columnName": "usuario_codigo",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "cronogramaCodigo",
-            "columnName": "cronograma_codigo",
-            "affinity": "INTEGER",
-            "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
             "codigo"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [
           {
@@ -355,14 +349,6 @@
               "usuario_codigo"
             ],
             "createSql": "CREATE  INDEX `index_disciplina_usuario_codigo` ON `${TABLE_NAME}` (`usuario_codigo`)"
-          },
-          {
-            "name": "index_disciplina_cronograma_codigo",
-            "unique": false,
-            "columnNames": [
-              "cronograma_codigo"
-            ],
-            "createSql": "CREATE  INDEX `index_disciplina_cronograma_codigo` ON `${TABLE_NAME}` (`cronograma_codigo`)"
           }
         ],
         "foreignKeys": [
@@ -372,17 +358,6 @@
             "onUpdate": "NO ACTION",
             "columns": [
               "usuario_codigo"
-            ],
-            "referencedColumns": [
-              "codigo"
-            ]
-          },
-          {
-            "table": "cronograma",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "cronograma_codigo"
             ],
             "referencedColumns": [
               "codigo"
@@ -465,7 +440,7 @@
       },
       {
         "tableName": "horario",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER NOT NULL, `tempo` INTEGER NOT NULL, `disciplina_codigo` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, `dia_codigo` INTEGER NOT NULL, PRIMARY KEY(`codigo`), FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`disciplina_codigo`) REFERENCES `disciplina`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`dia_codigo`) REFERENCES `dia_da_semana`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tempo` INTEGER NOT NULL, `disciplina_codigo` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, `dia_codigo` INTEGER NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`disciplina_codigo`) REFERENCES `disciplina`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`dia_codigo`) REFERENCES `dia_da_semana`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "codigo",
@@ -502,7 +477,7 @@
           "columnNames": [
             "codigo"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [
           {
@@ -693,7 +668,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e7ed5158fef5542dc06e9342146d09ae\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"976f9f501f12da10d21b19832fa14816\")"
     ]
   }
 }

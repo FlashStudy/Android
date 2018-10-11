@@ -8,6 +8,7 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +22,10 @@ import java.util.List;
         indices = { @Index(value = {"codigo"}, unique = true),
                     @Index(value = {"usuario_codigo"}),
                     @Index(value = {"ciclo_codigo"})})
-public class DiaDaSemanaOff {
+public class DiaDaSemanaOff implements Serializable {
 
     @NonNull
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private long codigo;
 
     @NonNull

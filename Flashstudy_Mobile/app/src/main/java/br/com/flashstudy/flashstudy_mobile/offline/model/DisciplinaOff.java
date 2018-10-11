@@ -8,23 +8,20 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity(tableName = "disciplina",
-        foreignKeys = { @ForeignKey(entity = UsuarioOff.class,
-                                    parentColumns = "codigo",
-                                    childColumns = "usuario_codigo"),
-                        @ForeignKey(entity = CronogramaOff.class,
-                                    parentColumns = "codigo",
-                                    childColumns = "cronograma_codigo")},
-        indices = { @Index(value = {"codigo"}, unique = true),
-                    @Index(value = {"usuario_codigo"}),
-                    @Index(value = {"cronograma_codigo"})})
-public class DisciplinaOff {
+        foreignKeys = {@ForeignKey(entity = UsuarioOff.class,
+                parentColumns = "codigo",
+                childColumns = "usuario_codigo")},
+        indices = {@Index(value = {"codigo"}, unique = true),
+                @Index(value = {"usuario_codigo"})})
+public class DisciplinaOff implements Serializable {
 
     @NonNull
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private long codigo;
 
     @NonNull
@@ -34,10 +31,6 @@ public class DisciplinaOff {
     @ColumnInfo(name = "usuario_codigo")
     private long usuarioCodigo;
 
-    @NonNull
-    @ColumnInfo(name = "cronograma_codigo")
-    private long cronogramaCodigo;
-
     @Ignore
     private List<AssuntoOff> assuntos = new ArrayList<>();
 
@@ -45,10 +38,17 @@ public class DisciplinaOff {
     }
 
     @Ignore
-    public DisciplinaOff(@NonNull String nome, @NonNull long usuarioCodigo, @NonNull long cronogramaCodigo, List<AssuntoOff> assuntos) {
+    public DisciplinaOff(@NonNull String nome, @NonNull long usuarioCodigo, List<AssuntoOff> assuntos) {
         this.nome = nome;
         this.usuarioCodigo = usuarioCodigo;
-        this.cronogramaCodigo = cronogramaCodigo;
+        this.assuntos = assuntos;
+    }
+
+    @Ignore
+    public DisciplinaOff(@NonNull long codigo, @NonNull String nome, @NonNull long usuarioCodigo) {
+        this.codigo = codigo;
+        this.nome = nome;
+        this.usuarioCodigo = usuarioCodigo;
         this.assuntos = assuntos;
     }
 
@@ -79,15 +79,6 @@ public class DisciplinaOff {
         this.usuarioCodigo = usuarioCodigo;
     }
 
-    @NonNull
-    public long getCronogramaCodigo() {
-        return cronogramaCodigo;
-    }
-
-    public void setCronogramaCodigo(@NonNull long cronogramaCodigo) {
-        this.cronogramaCodigo = cronogramaCodigo;
-    }
-
     public List<AssuntoOff> getAssuntos() {
         return assuntos;
     }
@@ -98,12 +89,6 @@ public class DisciplinaOff {
 
     @Override
     public String toString() {
-        return "DisciplinaOff{" +
-                "codigo=" + codigo +
-                ", nome='" + nome + '\'' +
-                ", usuarioCodigo=" + usuarioCodigo +
-                ", cronogramaCodigo=" + cronogramaCodigo +
-                ", assuntos=" + assuntos +
-                '}';
+        return nome;
     }
 }

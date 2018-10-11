@@ -18,6 +18,10 @@ public interface DisciplinaDao {
     @Insert
     void insert(DisciplinaOff disciplina);
 
+    //Insere uma lista
+    @Insert
+    void insert(List<DisciplinaOff> lis);
+
     //Deleta
     @Delete
     void delete(DisciplinaOff disciplina);
@@ -31,6 +35,6 @@ public interface DisciplinaDao {
     List<DisciplinaOff> getAllDisciplinas();
 
     //Procura as disciplinas de um Cronograma
-    @Query("SELECT * FROM disciplina WHERE cronograma_codigo = :codigo ORDER BY codigo ASC")
-    LiveData<List<DisciplinaOff>> getDisciplinaOffsByUsuario(int codigo);
+    @Query("SELECT * FROM disciplina WHERE usuario_codigo = :codigo ORDER BY codigo ASC")
+    List<DisciplinaOff> getDisciplinaOffsByUsuario(long codigo);
 }

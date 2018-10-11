@@ -1,13 +1,22 @@
 package br.com.flashstudy.flashstudy_mobile.activities;
 
-import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +25,10 @@ import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.Util.Util;
 import br.com.flashstudy.flashstudy_mobile.activities.crud.CronogramaCrudActivity;
 import br.com.flashstudy.flashstudy_mobile.activities.crud.DisciplinaCrudActivity;
-import br.com.flashstudy.flashstudy_mobile.adapter.CronogramaListAdapter;
-import br.com.flashstudy.flashstudy_mobile.online.model.Cronograma;
-import br.com.flashstudy.flashstudy_mobile.online.model.Disciplina;
-import br.com.flashstudy.flashstudy_mobile.online.repository.CronogramaRepository;
+import br.com.flashstudy.flashstudy_mobile.offline.model.CronogramaOff;
+import br.com.flashstudy.flashstudy_mobile.offline.model.DisciplinaOff;
+import br.com.flashstudy.flashstudy_mobile.offline.repository.CronogramaRepositoryOff;
+import br.com.flashstudy.flashstudy_mobile.offline.repository.DisciplinaRepositoryOff;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -27,14 +36,11 @@ import butterknife.OnItemClick;
 
 public class CronogramaActivity extends AppCompatActivity {
 
-    @BindView(R.id.dynamic_list)
-    public ListView listViewDisciplinas;
+    @BindView(R.id.swipeMenuDisciplinas)
+    SwipeMenuListView swipeMenuListView;
 
-    private Cronograma cronograma = new Cronograma();
-    private CronogramaRepository cronogramaRepository = new CronogramaRepository();
-
-    List<Disciplina> disciplinas = new ArrayList<>();
-
+    private CronogramaOff cronograma = new CronogramaOff();
+    List<DisciplinaOff> offs = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,21 +72,60 @@ public class CronogramaActivity extends AppCompatActivity {
         }
 
         if (cronograma != null) {
-            for (Disciplina d : cronograma.getDisciplinas()) {
-                disciplinas.add(d);
-            }
+            try {
+                cronograma.setDisciplinas(new BuscarDisciplinas().execute(cronograma.getCodigo()).get());
+                offs = cronograma.getDisciplinas();
 
-            listViewDisciplinas.setAdapter(new CronogramaListAdapter(CronogramaActivity.this, disciplinas));
+            } catch (Exception e) {
+                Toast.makeText(CronogramaActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                finish();
+            }
+            ArrayAdapter adapter = new ArrayAdapter(CronogramaActivity.this, android.R.layout.simple_list_item_1, offs);
+            swipeMenuListView.setAdapter(adapter);
+
+            SwipeMenuCreator creator = new SwipeMenuCreator() {
+
+                @Override
+                public void create(SwipeMenu menu) {
+                    // create "edit" item
+                    SwipeMenuItem editItem = new SwipeMenuItem(
+                            getApplicationContext());
+                    // set item background
+                    editItem.setBackground(new ColorDrawable(Color.rgb(13,
+                            79, 99)));
+                    // set item width
+                    editItem.setWidth(170);
+                    // set a icon
+                    editItem.setIcon(R.drawable.ic_edit);
+                    // add to menu
+                    menu.addMenuItem(editItem);
+
+                }
+            };
+
+            // set creator
+            swipeMenuListView.setMenuCreator(creator);
+
+            swipeMenuListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(final int position, SwipeMenu menu, int index) {
+                    switch (index) {
+
+                        //editar
+                        case 0:
+                            Intent intent = new Intent(CronogramaActivity.this, DisciplinaCrudActivity.class);
+                            intent.putExtra("disciplina", offs.get(position));
+                            startActivity(intent);
+                            break;
+                    }
+                    // false : close the menu; true : not close the menu
+                    return false;
+                }
+            });
+
         } else {
             Toast.makeText(getApplicationContext(), "Nenhum cronograma cadastrado!", Toast.LENGTH_LONG).show();
         }
-    }
-
-    @OnItemClick(R.id.dynamic_list)
-    public void seleciona(int position) {
-        Intent intent = new Intent(CronogramaActivity.this, DisciplinaCrudActivity.class);
-        intent.putExtra("disciplina", disciplinas.get(position));
-        startActivity(intent);
     }
 
     @OnClick(R.id.fab)
@@ -91,7 +136,7 @@ public class CronogramaActivity extends AppCompatActivity {
 
     }
 
-    private class BuscarCronograma extends AsyncTask<Void, Void, Cronograma> {
+    private class BuscarCronograma extends AsyncTask<Void, Void, CronogramaOff> {
         ProgressDialog progressDialog;
 
         @Override
@@ -103,11 +148,11 @@ public class CronogramaActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Cronograma doInBackground(Void... voids) {
+        protected CronogramaOff doInBackground(Void... voids) {
             long codigo = Util.getLocalUserCodigo(CronogramaActivity.this);
 
             try {
-                return cronogramaRepository.buscar(codigo);
+                return CronogramaRepositoryOff.buscarPorUsario(codigo, CronogramaActivity.this);
             } catch (Exception e) {
                 Toast.makeText(CronogramaActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 return null;
@@ -115,8 +160,21 @@ public class CronogramaActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Cronograma cronograma) {
+        protected void onPostExecute(CronogramaOff cronograma) {
             progressDialog.dismiss();
+        }
+    }
+
+    private class BuscarDisciplinas extends AsyncTask<Long, Void, List<DisciplinaOff>> {
+
+        @Override
+        protected List<DisciplinaOff> doInBackground(Long... longs) {
+            try {
+                return DisciplinaRepositoryOff.listarDisciplinas(longs[0], CronogramaActivity.this);
+            } catch (Exception e) {
+                Toast.makeText(CronogramaActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                return null;
+            }
         }
     }
 }

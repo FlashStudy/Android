@@ -8,6 +8,7 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,10 +18,10 @@ import java.util.List;
                                     childColumns = "usuario_codigo")},
         indices = { @Index(value = {"codigo"}, unique = true),
                     @Index(value = {"usuario_codigo"})})
-public class CronogramaOff {
+public class CronogramaOff implements Serializable {
 
     @NonNull
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private long codigo;
 
     @NonNull
@@ -41,6 +42,14 @@ public class CronogramaOff {
 
     @Ignore
     public CronogramaOff(@NonNull String inicio, @NonNull String fim, @NonNull long usuarioCodigo) {
+        this.inicio = inicio;
+        this.fim = fim;
+        this.usuarioCodigo = usuarioCodigo;
+    }
+
+    @Ignore
+    public CronogramaOff(@NonNull long codigo, @NonNull String inicio, @NonNull String fim, @NonNull long usuarioCodigo) {
+        this.codigo = codigo;
         this.inicio = inicio;
         this.fim = fim;
         this.usuarioCodigo = usuarioCodigo;

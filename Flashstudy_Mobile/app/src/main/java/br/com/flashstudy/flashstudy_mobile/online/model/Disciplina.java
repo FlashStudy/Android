@@ -3,12 +3,13 @@ package br.com.flashstudy.flashstudy_mobile.online.model;
 
 import com.fasterxml.jackson.annotation.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "codigo", "nome", "assuntos", "usuario"})
-public class Disciplina implements java.io.Serializable {
+public class Disciplina implements Serializable {
 
     @JsonProperty("codigo")
     private Long codigo;

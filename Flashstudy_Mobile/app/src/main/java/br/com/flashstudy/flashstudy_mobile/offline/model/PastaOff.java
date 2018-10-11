@@ -8,6 +8,7 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
                 parentColumns = "codigo",
                 childColumns = "usuario_codigo")},
         indices = {@Index(value = {"codigo"}), @Index(value = {"usuario_codigo"})})
-public class PastaOff {
+public class PastaOff implements Serializable {
 
     @NonNull
     @PrimaryKey(autoGenerate = true)

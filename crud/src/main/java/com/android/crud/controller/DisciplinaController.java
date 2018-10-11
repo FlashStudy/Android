@@ -43,6 +43,15 @@ public class DisciplinaController {
 		return new ResponseEntity<>(disciplinaRepository.save(d), HttpStatus.OK);
 	}
 	
+        // Salva/atualiza a disciplina
+	@PostMapping(value = "/salvarLista", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	public ResponseEntity<?> salvarLista(@RequestBody List<Disciplina> disciplinas) {
+            for(Disciplina d : disciplinas){
+                disciplinaRepository.save(d);
+            }
+            return new ResponseEntity<>(HttpStatus.OK);
+	}
+        
 	// Deleta através do código da disciplina
 	@DeleteMapping(value = "/deleta/{codigo}", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public ResponseEntity<?> deletar(@PathVariable("codigo") Long codigo) {

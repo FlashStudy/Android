@@ -8,6 +8,7 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
                                     childColumns = "usuario_codigo")},
         indices = { @Index(value = {"codigo"}, unique = true),
                     @Index(value = "usuario_codigo")})
-public class CicloOff {
+public class CicloOff implements Serializable {
 
 
     @NonNull

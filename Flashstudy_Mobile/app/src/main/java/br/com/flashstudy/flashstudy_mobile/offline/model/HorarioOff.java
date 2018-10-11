@@ -8,6 +8,8 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
+
 @Entity(tableName = "horario",
         foreignKeys = { @ForeignKey(entity = UsuarioOff.class,
                                     parentColumns = "codigo",
@@ -22,10 +24,10 @@ import android.support.annotation.NonNull;
                     @Index(value = {"usuario_codigo"}),
                     @Index(value = {"disciplina_codigo"}),
                     @Index(value = {"dia_codigo"})})
-public class HorarioOff {
+public class HorarioOff implements Serializable {
 
     @NonNull
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private long codigo;
 
     @NonNull

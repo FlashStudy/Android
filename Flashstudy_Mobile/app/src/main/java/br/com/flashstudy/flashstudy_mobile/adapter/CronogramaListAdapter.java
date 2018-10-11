@@ -13,14 +13,15 @@ import android.widget.TextView;
 import java.util.List;
 
 import br.com.flashstudy.flashstudy_mobile.R;
+import br.com.flashstudy.flashstudy_mobile.offline.model.DisciplinaOff;
 import br.com.flashstudy.flashstudy_mobile.online.model.Disciplina;
 
-public class CronogramaListAdapter extends ArrayAdapter<Disciplina> {
+public class CronogramaListAdapter extends ArrayAdapter<DisciplinaOff> {
 
-    private List<Disciplina> disciplinas;
+    private List<DisciplinaOff> disciplinas;
     private Context context;
 
-    public CronogramaListAdapter(@NonNull Context context, List<Disciplina> disciplinas) {
+    public CronogramaListAdapter(@NonNull Context context, List<DisciplinaOff> disciplinas) {
         super(context, R.layout.activity_cronograma, disciplinas);
         this.disciplinas = disciplinas;
         this.context = context;
@@ -32,7 +33,7 @@ public class CronogramaListAdapter extends ArrayAdapter<Disciplina> {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(R.layout.one_text_layout, parent, false);
 
-        Disciplina disciplina = disciplinas.get(position);
+        DisciplinaOff disciplina = disciplinas.get(position);
 
         TextView textViewNome = view.findViewById(R.id.textViewAtt1);
         textViewNome.setText(disciplina.getNome());

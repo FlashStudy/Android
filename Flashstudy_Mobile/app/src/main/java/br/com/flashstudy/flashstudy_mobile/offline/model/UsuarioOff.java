@@ -6,8 +6,10 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
+
 @Entity(tableName = "usuario", indices = {@Index(value = {"codigo"}, unique = true), @Index(value = {"email"}, unique = true)})
-public class UsuarioOff {
+public class UsuarioOff implements Serializable {
 
     @NonNull
     @PrimaryKey
