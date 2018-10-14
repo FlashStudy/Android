@@ -1,9 +1,8 @@
 package br.com.flashstudy.flashstudy_mobile.activities.crud;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +16,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import br.com.flashstudy.flashstudy_mobile.R;
+import br.com.flashstudy.flashstudy_mobile.Util.Util;
 import br.com.flashstudy.flashstudy_mobile.offline.model.FlashcardOff;
 import br.com.flashstudy.flashstudy_mobile.offline.repository.FlashcardRepositoryOff;
 import butterknife.BindViews;
@@ -26,8 +26,6 @@ public class FlashcardCrudActivity extends AppCompatActivity {
 
     @BindViews({R.id.txtTitulo, R.id.txtPergunta, R.id.txtResposta})
     List<EditText> campos;
-
-    private FlashcardRepositoryOff flashcardRepositoryOff = new FlashcardRepositoryOff();
 
     static final int SALVAR = Menu.FIRST;
     static final int DELETAR = Menu.FIRST + 1;
@@ -94,14 +92,23 @@ public class FlashcardCrudActivity extends AppCompatActivity {
                     flashcardOff.setTitulo(campos.get(0).getText().toString());
                     flashcardOff.setPergunta(campos.get(1).getText().toString());
                     flashcardOff.setResposta(campos.get(2).getText().toString());
-
-                    if (salvarFlashcard(flashcardOff)) {
-                        finish();
+                    try {
+                        new Salvar().execute(flashcardOff);
+                    } catch (Exception e) {
+                        Toast.makeText(getApplicationContext(), "Houve um erro ao salvar o flashcard!", Toast.LENGTH_LONG).show();
                     }
-                    Toast.makeText(getApplicationContext(), "Flashcard salvo com sucesso", Toast.LENGTH_LONG).show();
                     return true;
                 } else {
-                    return false;
+                    flashcardOff.setTitulo(campos.get(0).getText().toString());
+                    flashcardOff.setPergunta(campos.get(1).getText().toString());
+                    flashcardOff.setResposta(campos.get(2).getText().toString());
+
+                    try {
+                        new Atualizar().execute(flashcardOff);
+                    } catch (Exception e) {
+                        Toast.makeText(getApplicationContext(), "Houve um erro ao salvar o flashcard!", Toast.LENGTH_LONG).show();
+                    }
+                    return true;
                 }
             case DELETAR:
                 AlertDialog.Builder dlg = new AlertDialog.Builder(this);
@@ -112,12 +119,9 @@ public class FlashcardCrudActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         try {
-                            boolean result = flashcardRepositoryOff.deletar(flashcardOff, getApplicationContext());
-                            if (result) {
-                                Toast.makeText(getApplicationContext(), "Flashcard deletado com sucesso!", Toast.LENGTH_LONG).show();
-                                finish();
-                            }
+                            new Deletar().execute(flashcardOff);
                         } catch (Exception e) {
+                            Log.i("ERRO DELETAR FLASH", e.getMessage());
                             Toast.makeText(getApplicationContext(), "Houve um erro ao deletar o flashcard!", Toast.LENGTH_LONG).show();
                         }
                     }
@@ -151,19 +155,65 @@ public class FlashcardCrudActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private class Salvar extends AsyncTask<FlashcardOff, Void, Void> {
 
-    private boolean salvarFlashcard(FlashcardOff flashcardOff) {
-        try {
-            SharedPreferences sharedPreferences = getSharedPreferences("usuario", Context.MODE_PRIVATE);
-            long codigo = sharedPreferences.getLong("codigo", 0);
+        @Override
+        protected Void doInBackground(FlashcardOff... flashcardOffs) {
+            try {
 
-            flashcardOff.setUsuarioCodigo(codigo);
+                FlashcardOff flashcard = flashcardOffs[0];
+                long codigo = Util.getLocalUserCodigo(FlashcardCrudActivity.this);
 
-            return flashcardRepositoryOff.salvar(flashcardOff, getApplicationContext());
-        } catch (Exception e) {
-            Log.i("ERRO NA CONSULTA", e.getMessage());
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-            return false;
+                flashcard.setUsuarioCodigo(codigo);
+
+                FlashcardRepositoryOff.salvar(flashcard, FlashcardCrudActivity.this);
+            } catch (Exception e) {
+                Log.i("ERRO SALVAR FLASH", e.getMessage());
+            }
+            return null;
         }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Toast.makeText(getApplicationContext(), "Flashcard salvo com sucesso!", Toast.LENGTH_LONG).show();
+            finish();
+        }
+    }
+
+    private class Deletar extends AsyncTask<FlashcardOff, Void, Void> {
+
+        @Override
+        protected Void doInBackground(FlashcardOff... flashcardOffs) {
+            try {
+                FlashcardRepositoryOff.deletar(flashcardOffs[0], FlashcardCrudActivity.this);
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), "Houve um erro ao deletar o flashcard!", Toast.LENGTH_LONG).show();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Toast.makeText(getApplicationContext(), "Flashcard deletado com sucesso!", Toast.LENGTH_LONG).show();
+            finish();
+        }
+    }
+
+    private class Atualizar extends AsyncTask<FlashcardOff, Void, Void> {
+
+        @Override
+        protected Void doInBackground(FlashcardOff... flashcardOffs) {
+            try {
+                FlashcardRepositoryOff.atualizar(flashcardOffs[0], FlashcardCrudActivity.this);
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), "Houve um erro ao atualizar o flashcard!", Toast.LENGTH_LONG).show();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Toast.makeText(getApplicationContext(), "Flashcard atualizado com sucesso!", Toast.LENGTH_LONG).show();
+            finish();        }
     }
 }

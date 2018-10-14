@@ -119,7 +119,6 @@ public class CadastroActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 Log.i("ERRO NO CADASTRO", e.getMessage());
-                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
 
                 progressDialog.dismiss();
                 cancel(true);

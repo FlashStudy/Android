@@ -1,32 +1,41 @@
 package com.android.crud.model;
 
-import java.io.IOException;
+import java.io.Serializable;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.*;
 
+@SuppressWarnings("serial")
 @Table
 @Entity
-public class Usuario {
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({"codigo", "nome", "email", "senha"})
+public class Usuario implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long codigo;
+	@Column(name = "codigo", unique = true, nullable = false)
+    @JsonProperty("codigo")
+    private Long codigo;
 
 	@Column(name = "nome", nullable = false)
-	private String nome;
+    @JsonProperty("nome")
+    private String nome;
 
-	@Column(name = "email", nullable = false)
-	private String email;
+	@Column(name = "email", nullable = false, unique = true)
+    @JsonProperty("email")
+    private String email;
 
 	@Column(name = "senha", nullable = false)
-	private String senha;
+    @JsonProperty("senha")
+    private String senha;
 
-	public Usuario() {
+    public Usuario() {
         super();
     }
-    
+
     public Usuario(String email, String senha) {
         super();
         this.email = email;
@@ -46,51 +55,54 @@ public class Usuario {
         this.email = email;
         this.senha = senha;
     }
-    
-    public Usuario(String json) throws IOException{
-    	Usuario u = new ObjectMapper().readValue(json, Usuario.class);
-    	
-    	 this.codigo = u.codigo;
-         this.nome = u.nome;
-         this.email = u.email;
-         this.senha = u.senha;
+
+    @JsonProperty("codigo")
+    public Long getCodigo() {
+        return codigo;
     }
 
-	public Long getCodigo() {
-		return codigo;
-	}
+    @JsonProperty("codigo")
+    public void setCodigo(Long codigo) {
+        this.codigo = codigo;
+    }
 
-	public void setCodigo(Long codigo) {
-		this.codigo = codigo;
-	}
+    @JsonProperty("nome")
+    public String getNome() {
+        return nome;
+    }
 
-	public String getNome() {
-		return nome;
-	}
+    @JsonProperty("nome")
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    @JsonProperty("email")
+    public String getEmail() {
+        return email;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    @JsonProperty("email")
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    @JsonProperty("senha")
+    public String getSenha() {
+        return senha;
+    }
 
-	public String getSenha() {
-		return senha;
-	}
+    @JsonProperty("senha")
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
 
-	public void setSenha(String senha) {
-		this.senha = senha;
-	}
-
-	@Override
-	public String toString() {
-		return "Usuario [codigo=" + codigo + ", nome=" + nome + ", email=" + email + ", senha=" + senha + "]";
-	}
-
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "codigo=" + codigo +
+                ", nome='" + nome + '\'' +
+                ", email='" + email + '\'' +
+                ", senha='" + senha + '\'' +
+                '}';
+    }
 }

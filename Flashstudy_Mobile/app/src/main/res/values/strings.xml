@@ -59,4 +59,7 @@
     <string name="hint_data">dd/MM/aaaa</string>
     <string name="hint_materia">Matemática</string>
     <string name="lbl_btn_add_disciplina">Adicionar Disciplina</string>
+    <string name="lbl_assunto">Assunto:</string>
+    <string name="hint_assunto">Ex: Orgânica</string>
+    <string name="aux">aux</string>
 </resources>

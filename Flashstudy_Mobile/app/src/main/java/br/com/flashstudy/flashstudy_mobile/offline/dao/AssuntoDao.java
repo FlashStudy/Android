@@ -18,6 +18,10 @@ public interface AssuntoDao {
     @Insert
     void insert(AssuntoOff assunto);
 
+    //Insere uma lista
+    @Insert
+    void insertLista(List<AssuntoOff> assuntos);
+
     //Deleta
     @Delete
     void delete(AssuntoOff assunto);
@@ -27,7 +31,7 @@ public interface AssuntoDao {
     void update(AssuntoOff assunto);
 
     //Procura Assuntos de uma Disciplina de um Usuario
-    @Query("SELECT * FROM assunto WHERE usuario_codigo = :codigoUsuario AND disciplina_codigo = :codigoDisciplina ORDER BY codigo ASC")
-    LiveData<List<AssuntoOff>> getAllAssuntosByUsuarioAndDisciplina(int codigoUsuario, int codigoDisciplina);
+    @Query("SELECT * FROM assunto WHERE disciplina_codigo = :codigoDisciplina ORDER BY codigo ASC")
+    List<AssuntoOff> getAllAssuntosByDisciplina(long codigoDisciplina);
 
 }

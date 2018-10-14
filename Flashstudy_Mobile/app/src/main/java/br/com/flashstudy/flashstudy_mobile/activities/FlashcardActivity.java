@@ -3,6 +3,7 @@ package br.com.flashstudy.flashstudy_mobile.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import br.com.flashstudy.flashstudy_mobile.R;
+import br.com.flashstudy.flashstudy_mobile.Util.Util;
 import br.com.flashstudy.flashstudy_mobile.activities.crud.FlashcardCrudActivity;
 import br.com.flashstudy.flashstudy_mobile.adapter.FlashcardListAdapter;
 import br.com.flashstudy.flashstudy_mobile.offline.model.FlashcardOff;
@@ -58,19 +60,13 @@ public class FlashcardActivity extends AppCompatActivity {
     }
 
     public void populaTela(){
-        long codigo = 0;
-
         try {
-            SharedPreferences sharedPreferences = getSharedPreferences("usuario", Context.MODE_PRIVATE);
-            codigo = sharedPreferences.getLong("codigo", 0);
-
-        } catch (Exception e) {
-            Log.i("ERRO NA CONSULTA", e.getMessage());
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            flashcards = new ListarFlashcard().execute().get();
+        }catch (Exception e){
+            Toast.makeText(getApplicationContext(), "Erro ao listar flashcards!", Toast.LENGTH_LONG).show();
+            finish();
         }
-
-         flashcards = new FlashcardRepositoryOff().listar(codigo, getApplicationContext());
-
+        
         if (flashcards != null) {
             listViewFlashcards.setAdapter(new FlashcardListAdapter(getApplicationContext(), flashcards));
         } else {
@@ -121,5 +117,19 @@ public class FlashcardActivity extends AppCompatActivity {
         Intent intent = new Intent(FlashcardActivity.this, FlashcardCrudActivity.class);
         intent.putExtra("flashcard", flashcards.get(position));
         startActivity(intent);
+    }
+
+    private class ListarFlashcard extends AsyncTask<Void, Void, List<FlashcardOff>>{
+
+        @Override
+        protected List<FlashcardOff> doInBackground(Void... voids) {
+            try{
+                long codigo = Util.getLocalUserCodigo(FlashcardActivity.this);
+                return FlashcardRepositoryOff.listar(codigo, FlashcardActivity.this);
+            }catch (Exception e){
+                Log.i("ERRO LISTAR FLASH", e.getMessage());
+                return null;
+            }
+        }
     }
 }

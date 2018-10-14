@@ -15,7 +15,7 @@ public class FlashcardRepositoryOff {
         try {
             return AppDatabase.getAppDatabase(context).flashcardDao().getAllFlashcardsByUsuario(codigo);
         } catch (Exception e) {
-            Log.i("ERRO CONSULT SERV", e.getMessage());
+            Log.i("ERRO LISTAR FLASH", e.getMessage());
             return null;
         }
     }
@@ -25,7 +25,7 @@ public class FlashcardRepositoryOff {
             AppDatabase.getAppDatabase(context).flashcardDao().insert(flashcardOff);
             return true;
         } catch (Exception e) {
-            Log.i("ERRO AO SALVAR", e.getMessage());
+            Log.i("ERRO SALVAR FLASH", e.getMessage());
             return false;
         }
     }
@@ -35,7 +35,17 @@ public class FlashcardRepositoryOff {
             AppDatabase.getAppDatabase(context).flashcardDao().delete(flashcardOff);
             return true;
         } catch (Exception e) {
-            Log.i("ERRO AO DELETAR", e.getMessage());
+            Log.i("ERRO DELETAR FLASH", e.getMessage());
+            return false;
+        }
+    }
+
+    public static boolean atualizar(FlashcardOff flashcardOff, Context context) {
+        try {
+            AppDatabase.getAppDatabase(context).flashcardDao().update(flashcardOff);
+            return true;
+        } catch (Exception e) {
+            Log.i("ERRO ATUALIZAR FLASH ", e.getMessage());
             return false;
         }
     }

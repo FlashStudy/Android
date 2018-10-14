@@ -1,16 +1,14 @@
 package br.com.flashstudy.flashstudy_mobile.activities;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -25,19 +23,27 @@ import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.Util.Util;
 import br.com.flashstudy.flashstudy_mobile.activities.crud.CronogramaCrudActivity;
 import br.com.flashstudy.flashstudy_mobile.activities.crud.DisciplinaCrudActivity;
+import br.com.flashstudy.flashstudy_mobile.offline.model.AssuntoOff;
 import br.com.flashstudy.flashstudy_mobile.offline.model.CronogramaOff;
 import br.com.flashstudy.flashstudy_mobile.offline.model.DisciplinaOff;
+import br.com.flashstudy.flashstudy_mobile.offline.repository.AssuntoRepositoryOff;
 import br.com.flashstudy.flashstudy_mobile.offline.repository.CronogramaRepositoryOff;
 import br.com.flashstudy.flashstudy_mobile.offline.repository.DisciplinaRepositoryOff;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnItemClick;
 
 public class CronogramaActivity extends AppCompatActivity {
 
     @BindView(R.id.swipeMenuDisciplinas)
     SwipeMenuListView swipeMenuListView;
+
+    @BindView(R.id.lblInicio)
+    TextView lblInicio;
+
+
+    @BindView(R.id.lblFim)
+    TextView lblFim;
 
     private CronogramaOff cronograma = new CronogramaOff();
     List<DisciplinaOff> offs = new ArrayList<>();
@@ -76,6 +82,8 @@ public class CronogramaActivity extends AppCompatActivity {
                 cronograma.setDisciplinas(new BuscarDisciplinas().execute(cronograma.getCodigo()).get());
                 offs = cronograma.getDisciplinas();
 
+                lblInicio.setText("Início: " + cronograma.getInicio());
+                lblFim.setText("Fim: " + cronograma.getFim());
             } catch (Exception e) {
                 Toast.makeText(CronogramaActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 finish();
@@ -113,8 +121,21 @@ public class CronogramaActivity extends AppCompatActivity {
 
                         //editar
                         case 0:
+
+                            DisciplinaOff disciplinaOff = offs.get(position);
+                            List<AssuntoOff> assuntos;
+
+                            try {
+                                assuntos = new BuscarAssuntos().execute(disciplinaOff.getCodigo()).get();
+                            } catch (Exception e) {
+                                Toast.makeText(getApplicationContext(), "Erro ao buscar assuntos!", Toast.LENGTH_LONG).show();
+                                break;
+                            }
+
+                            disciplinaOff.setAssuntos(assuntos);
+
                             Intent intent = new Intent(CronogramaActivity.this, DisciplinaCrudActivity.class);
-                            intent.putExtra("disciplina", offs.get(position));
+                            intent.putExtra("disciplina", disciplinaOff);
                             startActivity(intent);
                             break;
                     }
@@ -171,6 +192,19 @@ public class CronogramaActivity extends AppCompatActivity {
         protected List<DisciplinaOff> doInBackground(Long... longs) {
             try {
                 return DisciplinaRepositoryOff.listarDisciplinas(longs[0], CronogramaActivity.this);
+            } catch (Exception e) {
+                Toast.makeText(CronogramaActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                return null;
+            }
+        }
+    }
+
+    private class BuscarAssuntos extends AsyncTask<Long, Void, List<AssuntoOff>> {
+
+        @Override
+        protected List<AssuntoOff> doInBackground(Long... longs) {
+            try {
+                return AssuntoRepositoryOff.listar(longs[0], CronogramaActivity.this);
             } catch (Exception e) {
                 Toast.makeText(CronogramaActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 return null;

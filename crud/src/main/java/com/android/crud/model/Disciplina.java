@@ -1,5 +1,6 @@
 package com.android.crud.model;
 
+import java.io.Serializable;
 import java.util.*;
 
 import javax.persistence.*;
@@ -12,8 +13,8 @@ import com.fasterxml.jackson.annotation.*;
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "codigo", "nome", "assuntos", "usuario"})
-public class Disciplina implements java.io.Serializable {
+@JsonPropertyOrder({ "codigo", "nome", "assuntos", "usuario" })
+public class Disciplina implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -104,7 +105,7 @@ public class Disciplina implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "Disciplina [codigo=" + codigo + ", nome=" + nome + ", assuntos=" + assuntos + ", usuario=" + usuario
-				+ "]";
+		return "Disciplina {codigo=" + codigo + ", nome=" + nome + ", assuntos=" + assuntos + ", usuario=" + usuario
+				+ "}";
 	}
 }

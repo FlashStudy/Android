@@ -16,7 +16,9 @@ public class ConversaoDeClasse {
     public static Usuario usuarioOffToUsuario(UsuarioOff usuarioOff){
         return new Usuario(usuarioOff.getCodigo(), usuarioOff.getNome(), usuarioOff.getEmail(), usuarioOff.getSenha());
     }
-
+    public static UsuarioOff usuarioToUsuarioOff(Usuario usuario){
+        return new UsuarioOff(usuario.getCodigo(), usuario.getNome(), usuario.getEmail(), usuario.getSenha());
+    }
     public static Disciplina disciplinaListToDisciplina(DisciplinaListModel disciplinaListModel){
         return new Disciplina(disciplinaListModel.getCodigo(), disciplinaListModel.getNome(), disciplinaListModel.getAssuntos(), disciplinaListModel.getUsuario());
     }

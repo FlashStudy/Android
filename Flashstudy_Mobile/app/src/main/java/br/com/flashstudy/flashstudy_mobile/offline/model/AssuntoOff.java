@@ -16,7 +16,9 @@ import java.io.Serializable;
                                     childColumns = "usuario_codigo"),
                         @ForeignKey(entity = DisciplinaOff.class,
                                     parentColumns = "codigo",
-                                    childColumns = "disciplina_codigo")},
+                                    childColumns = "disciplina_codigo",
+                                    onDelete = ForeignKey.CASCADE,
+                                    onUpdate = ForeignKey.CASCADE)},
         indices = { @Index(value = {"codigo"}, unique = true),
                     @Index(value = {"disciplina_codigo"}),
                     @Index(value = {"usuario_codigo"})})
@@ -86,6 +88,10 @@ public class AssuntoOff implements Serializable {
 
     @Override
     public String toString() {
+        return tema;
+    }
+
+    public String toStringCompleto(){
         return "AssuntoOff{" +
                 "codigo=" + codigo +
                 ", tema='" + tema + '\'' +

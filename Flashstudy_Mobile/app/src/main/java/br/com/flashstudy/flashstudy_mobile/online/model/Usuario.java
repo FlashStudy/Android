@@ -1,20 +1,29 @@
 package br.com.flashstudy.flashstudy_mobile.online.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.Serializable;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({"codigo", "nome", "email", "senha"})
 public class Usuario implements Serializable {
 
+    @JsonProperty("codigo")
     private Long codigo;
 
+    @JsonProperty("nome")
     private String nome;
 
+    @JsonProperty("email")
     private String email;
 
+    @JsonProperty("senha")
     private String senha;
 
     public Usuario() {
@@ -50,34 +59,42 @@ public class Usuario implements Serializable {
         this.senha = u.senha;
     }
 
+    @JsonProperty("codigo")
     public Long getCodigo() {
         return codigo;
     }
 
+    @JsonProperty("codigo")
     public void setCodigo(Long codigo) {
         this.codigo = codigo;
     }
 
+    @JsonProperty("nome")
     public String getNome() {
         return nome;
     }
 
+    @JsonProperty("nome")
     public void setNome(String nome) {
         this.nome = nome;
     }
 
+    @JsonProperty("email")
     public String getEmail() {
         return email;
     }
 
+    @JsonProperty("email")
     public void setEmail(String email) {
         this.email = email;
     }
 
+    @JsonProperty("senha")
     public String getSenha() {
         return senha;
     }
 
+    @JsonProperty("senha")
     public void setSenha(String senha) {
         this.senha = senha;
     }

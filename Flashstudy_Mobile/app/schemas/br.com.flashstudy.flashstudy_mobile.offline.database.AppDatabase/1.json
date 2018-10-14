@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "976f9f501f12da10d21b19832fa14816",
+    "identityHash": "585f7dc86fd15fa2fecbca7c4f78a7f0",
     "entities": [
       {
         "tableName": "assunto",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tema` TEXT NOT NULL, `disciplina_codigo` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`disciplina_codigo`) REFERENCES `disciplina`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tema` TEXT NOT NULL, `disciplina_codigo` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`disciplina_codigo`) REFERENCES `disciplina`(`codigo`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "codigo",
@@ -79,8 +79,8 @@
           },
           {
             "table": "disciplina",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
             "columns": [
               "disciplina_codigo"
             ],
@@ -220,7 +220,7 @@
       },
       {
         "tableName": "dia_da_semana",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nome` TEXT NOT NULL, `usuario_codigo` INTEGER NOT NULL, `ciclo_codigo` INTEGER NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`ciclo_codigo`) REFERENCES `ciclo`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nome` TEXT NOT NULL, `usuario_codigo` INTEGER NOT NULL, `ciclo_codigo` INTEGER NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`ciclo_codigo`) REFERENCES `ciclo`(`codigo`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "codigo",
@@ -293,8 +293,8 @@
           },
           {
             "table": "ciclo",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
             "columns": [
               "ciclo_codigo"
             ],
@@ -440,7 +440,7 @@
       },
       {
         "tableName": "horario",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tempo` INTEGER NOT NULL, `disciplina_codigo` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, `dia_codigo` INTEGER NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`disciplina_codigo`) REFERENCES `disciplina`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`dia_codigo`) REFERENCES `dia_da_semana`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tempo` INTEGER NOT NULL, `disciplina_codigo` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, `dia_codigo` INTEGER NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`disciplina_codigo`) REFERENCES `disciplina`(`codigo`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`dia_codigo`) REFERENCES `dia_da_semana`(`codigo`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "codigo",
@@ -527,8 +527,8 @@
           },
           {
             "table": "disciplina",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
             "columns": [
               "disciplina_codigo"
             ],
@@ -538,8 +538,8 @@
           },
           {
             "table": "dia_da_semana",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
             "columns": [
               "dia_codigo"
             ],
@@ -668,7 +668,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"976f9f501f12da10d21b19832fa14816\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"585f7dc86fd15fa2fecbca7c4f78a7f0\")"
     ]
   }
 }

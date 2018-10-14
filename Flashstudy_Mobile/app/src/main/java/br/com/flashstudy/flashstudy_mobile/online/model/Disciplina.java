@@ -94,7 +94,7 @@ public class Disciplina implements Serializable {
 
     @Override
     public String toString() {
-        return "Disciplina [codigo=" + codigo + ", nome=" + nome + ", assuntos=" + assuntos + ", usuario=" + usuario
-                + "]";
+        return "Disciplina {codigo=" + codigo + ", nome=" + nome + ", assuntos=" + assuntos + ", usuario=" + usuario
+                + "}";
     }
 }

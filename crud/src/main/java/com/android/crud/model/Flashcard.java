@@ -4,22 +4,27 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.*;
 
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "Flashcard")
-@SuppressWarnings("serial")
-// @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({ "codigo", "pergunta", "resposta", "nivel", "titulo", "publico", "usuario", "disicplina", "assunto"})
 public class Flashcard implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonProperty("codigo")
 	private Long codigo;
 
 	@Column(name = "pergunta", nullable = false)
+    @JsonProperty("pergunta")
 	private String pergunta;
 
 	@Column(name = "resposta", nullable = false)
+    @JsonProperty("resposta")
 	private String resposta;
 
 	/*
@@ -27,6 +32,7 @@ public class Flashcard implements Serializable {
 	 */
 
 	@Column(name = "titulo", nullable = false)
+    @JsonProperty("titulo")
 	private String titulo;
 
 	/*
@@ -35,7 +41,7 @@ public class Flashcard implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "codigo_usuario")
-	@JsonBackReference
+    @JsonProperty("usuario")	
 	private Usuario usuario;
 
 	/*
@@ -55,53 +61,119 @@ public class Flashcard implements Serializable {
 	 */
 
 	public Flashcard() {
-		super();
-	}
+        super();
+    }
 
-	public Long getCodigo() {
-		return codigo;
-	}
+    public Flashcard(Long codigo, String pergunta, String resposta, String titulo,
+                     Usuario usuario) {
+        super();
+        this.codigo = codigo;
+        this.pergunta = pergunta;
+        this.resposta = resposta;
+        //this.nivel = nivel;
+        this.titulo = titulo;
+        //this.publico = publico;
+        this.usuario = usuario;
+        //this.disciplina = disciplina;
+        //this.assunto = assunto;
+    }
 
-	public void setCodigo(Long codigo) {
-		this.codigo = codigo;
-	}
+    @JsonProperty("codigo")
+    public Long getCodigo() {
+        return codigo;
+    }
 
-	public String getPergunta() {
-		return pergunta;
-	}
+    @JsonProperty("codigo")
+    public void setCodigo(Long codigo) {
+        this.codigo = codigo;
+    }
 
-	public void setPergunta(String pergunta) {
-		this.pergunta = pergunta;
-	}
+    @JsonProperty("pergunta")
+    public String getPergunta() {
+        return pergunta;
+    }
 
-	public String getResposta() {
-		return resposta;
-	}
+    @JsonProperty("pergunta")
+    public void setPergunta(String pergunta) {
+        this.pergunta = pergunta;
+    }
 
-	public void setResposta(String resposta) {
-		this.resposta = resposta;
-	}
+    @JsonProperty("resposta")
+    public String getResposta() {
+        return resposta;
+    }
 
-	public String getTitulo() {
-		return titulo;
-	}
+    @JsonProperty("resposta")
+    public void setResposta(String resposta) {
+        this.resposta = resposta;
+    }
+/*
+    @JsonProperty("nivel")
+    public String getNivel() {
+        return nivel;
+    }
 
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
-	}
+    @JsonProperty("nivel")
+    public void setNivel(String nivel) {
+        this.nivel = nivel;
+    }
+*/
+    @JsonProperty("titulo")
+    public String getTitulo() {
+        return titulo;
+    }
 
-	public Usuario getUsuario() {
-		return usuario;
-	}
+    @JsonProperty("titulo")
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+/*
+    @JsonProperty("publico")
+    public boolean isPublico() {
+        return publico;
+    }
 
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
+    @JsonProperty("publico")
+    public void setPublico(boolean publico) {
+        this.publico = publico;
+    }
+*/
+    @JsonProperty("usuario")
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    @JsonProperty("usuario")
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+/*
+    @JsonProperty("disciplina")
+    public Disciplina getDisciplina() {
+        return disciplina;
+    }
+
+    @JsonProperty("disciplina")
+    public void setDisciplina(Disciplina disciplina) {
+        this.disciplina = disciplina;
+    }
+
+    @JsonProperty("assunto")
+    public Assunto getAssunto() {
+        return assunto;
+    }
+
+    @JsonProperty("assunto")
+    public void setAssunto(Assunto assunto) {
+        this.assunto = assunto;
+    }
+*/
 
 	@Override
 	public String toString() {
-		return "Flashcard [codigo=" + codigo + ", pergunta=" + pergunta + ", resposta=" + resposta + ", titulo="
-				+ titulo + ", usuario=" + usuario + "]";
+		return "Flashcard {codigo=" + codigo + ", pergunta=" + pergunta + ", resposta=" + resposta + ", titulo="
+				+ titulo + ", usuario=" + usuario + "}";
 	}
+   
 
 }

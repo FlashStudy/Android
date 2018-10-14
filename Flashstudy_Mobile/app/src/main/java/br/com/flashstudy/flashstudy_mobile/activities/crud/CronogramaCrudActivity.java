@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -28,6 +29,7 @@ import br.com.flashstudy.flashstudy_mobile.Util.Util;
 import br.com.flashstudy.flashstudy_mobile.offline.model.CronogramaOff;
 import br.com.flashstudy.flashstudy_mobile.offline.model.DisciplinaOff;
 import br.com.flashstudy.flashstudy_mobile.offline.repository.CronogramaRepositoryOff;
+import br.com.flashstudy.flashstudy_mobile.offline.repository.DisciplinaRepositoryOff;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -127,18 +129,20 @@ public class CronogramaCrudActivity extends AppCompatActivity {
 
                                 if (disciplinaOffs.get(position).getCodigo() != 0) {
 
-                                /*try {
-                                    boolean result = flashcardRepositoryOff.deletar(flashcardOff, getApplicationContext());
-                                    if (result) {
-                                        Toast.makeText(getApplicationContext(), "Flashcard deletado com sucesso!", Toast.LENGTH_LONG).show();
-                                        finish();
+                                    DisciplinaOff disciplinaOff = disciplinaOffs.get(position);
+
+                                    try {
+                                        new DeletarDisciplina().execute(disciplinaOff);
+                                        disciplinaOffs.remove(position);
+                                        populaLista();
+                                        Toast.makeText(CronogramaCrudActivity.this, "Disciplina deletada com sucesso!", Toast.LENGTH_LONG).show();
+                                    } catch (Exception e) {
+                                        Toast.makeText(CronogramaCrudActivity.this, "Ocorreu um erro ao deletar a disciplina!", Toast.LENGTH_LONG).show();
                                     }
-                                } catch (Exception e) {
-                                    Toast.makeText(getApplicationContext(), "Houve um erro ao deletar o flashcard!", Toast.LENGTH_LONG).show();
-                                }*/
                                 } else {
                                     disciplinaOffs.remove(position);
                                     populaLista();
+                                    Toast.makeText(CronogramaCrudActivity.this, "Disciplina deletada com sucesso!", Toast.LENGTH_LONG).show();
                                 }
                             }
                         });
@@ -161,10 +165,27 @@ public class CronogramaCrudActivity extends AppCompatActivity {
             cronograma.setFim(txtFim.getText().toString().trim());
 
             try {
-                new SalvarCronograma().execute(cronograma);
+                if (cronograma.getCodigo() == 0)
+                    new SalvarCronograma().execute(cronograma);
+                else
+                    new AtualizarCronograma().execute(cronograma);
+
+                Toast.makeText(CronogramaCrudActivity.this, "Cronograma salvo com sucesso!", Toast.LENGTH_LONG).show();
+                finish();
             } catch (Exception e) {
                 Toast.makeText(CronogramaCrudActivity.this, "Houve um erro ao salvar o cronograma!", Toast.LENGTH_LONG).show();
             }
+        } else {
+            Date currentTime = Calendar.getInstance().getTime();
+
+            String diaAtual = "" + currentTime.getDay() + "/" + currentTime.getMonth() + "/" + currentTime.getYear();
+
+            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+            dlg.setTitle("AVISO!");
+            dlg.setMessage("Datas inválidas!");
+
+            dlg.setNeutralButton("OK", null);
+            dlg.show();
         }
 
 
@@ -238,7 +259,7 @@ public class CronogramaCrudActivity extends AppCompatActivity {
         return false;
     }
 
-    private class SalvarCronograma extends AsyncTask<CronogramaOff, Void, Boolean> {
+    private class SalvarCronograma extends AsyncTask<CronogramaOff, Void, Void> {
         ProgressDialog progressDialog;
 
         @Override
@@ -250,21 +271,60 @@ public class CronogramaCrudActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Boolean doInBackground(CronogramaOff... cronogramaOffs) {
+        protected Void doInBackground(CronogramaOff... cronogramaOffs) {
             try {
                 CronogramaRepositoryOff.salvar(cronogramaOffs[0], CronogramaCrudActivity.this);
-                return true;
             } catch (Exception e) {
                 Toast.makeText(CronogramaCrudActivity.this, "Houve um erro ao salvar o cronograma", Toast.LENGTH_LONG).show();
                 progressDialog.dismiss();
-                return false;
             }
+            return null;
         }
 
         @Override
-        protected void onPostExecute(Boolean aBoolean) {
+        protected void onPostExecute(Void aVoid) {
             progressDialog.dismiss();
-            finish();
+        }
+    }
+
+    private class AtualizarCronograma extends AsyncTask<CronogramaOff, Void, Void> {
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(CronogramaCrudActivity.this);
+            progressDialog.setMessage("Salvando cronograma... ");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(CronogramaOff... cronogramaOffs) {
+            try {
+                CronogramaRepositoryOff.atualizar(cronogramaOffs[0], CronogramaCrudActivity.this);
+            } catch (Exception e) {
+                Toast.makeText(CronogramaCrudActivity.this, "Houve um erro ao atualizar o cronograma", Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            progressDialog.dismiss();
+        }
+    }
+
+    private class DeletarDisciplina extends AsyncTask<DisciplinaOff, Void, Void> {
+
+        @Override
+        protected Void doInBackground(DisciplinaOff... disciplinaOffs) {
+            try {
+                DisciplinaRepositoryOff.deletar(disciplinaOffs[0], CronogramaCrudActivity.this);
+            } catch (Exception e) {
+                Toast.makeText(CronogramaCrudActivity.this, "Houve um erro ao deletar a disciplina", Toast.LENGTH_LONG).show();
+            }
+            return null;
         }
     }
 }

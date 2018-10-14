@@ -15,12 +15,13 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.flashstudy.flashstudy_mobile.Util.ConversaoDeClasse;
 import br.com.flashstudy.flashstudy_mobile.offline.model.UsuarioOff;
 import br.com.flashstudy.flashstudy_mobile.online.model.Usuario;
 
 public class UsuarioRestClient {
 
-    private String BASE_URL = "http://192.168.0.96:8000/usuario/";
+    private String BASE_URL = "http://192.168.0.127:8000/usuario/";
     private RestTemplate restTemplate = new RestTemplate();
 
     public UsuarioOff cadastro(Usuario usuario) {
@@ -39,8 +40,11 @@ public class UsuarioRestClient {
 
             usuario = (Usuario) responseEntity.getBody();
 
-            return new UsuarioOff(usuario.getCodigo(), usuario.getNome(), usuario.getEmail(), usuario.getSenha());
+            Log.i("USUARIO SERV", usuario.toString());
+
+            return ConversaoDeClasse.usuarioToUsuarioOff(usuario);
         } catch (Exception e) {
+            Log.i("ERRO USUARIO SERV", e.getMessage());
             return null;
         }
     }

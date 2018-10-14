@@ -10,7 +10,7 @@
 
 
     <TextView
-        android:id="@+id/txtCronograma"
+        android:id="@+id/lblDisciplina"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -29,33 +29,67 @@
         android:layout_height="1dip"
         android:layout_gravity="center_horizontal"
         android:background="@color/gray"
-        app:layout_constraintEnd_toEndOf="@+id/txtCronograma"
-        app:layout_constraintStart_toStartOf="@+id/txtCronograma"
-        app:layout_constraintTop_toBottomOf="@+id/txtCronograma" />
+        app:layout_constraintEnd_toEndOf="@+id/lblDisciplina"
+        app:layout_constraintStart_toStartOf="@+id/lblDisciplina"
+        app:layout_constraintTop_toBottomOf="@+id/lblDisciplina" />
 
 
-    <com.baoyz.swipemenulistview.SwipeMenuListView
-        android:id="@+id/swipeMenuDisciplinas"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
-        android:layout_height="439dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/layout_bg"
-        app:layout_constraintBottom_toTopOf="@+id/fab"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Divisor1">
+
+        <TextView
+            android:id="@+id/lblInicio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAppearance="@style/AppTheme.lbl" />
+
+        <TextView
+            android:id="@+id/lblFim"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAppearance="@style/AppTheme.lbl"
+            app:fontFamily="@font/comfortaa_bold" />
+    </LinearLayout>
+
+    <com.baoyz.swipemenulistview.SwipeMenuListView
+        android:id="@+id/swipeMenuDisciplinas"
+        android:layout_width="match_parent"
+        android:layout_height="388dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/colorPrimary"
+        android:cacheColorHint="@color/black"
+        android:divider="@color/gray"
+        android:dividerHeight="1dp"
+        android:entries="@color/black"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/fab"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
     </com.baoyz.swipemenulistview.SwipeMenuListView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:layout_marginEnd="8dp"
@@ -65,4 +99,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_menu_edit" />
+
 </android.support.constraint.ConstraintLayout>

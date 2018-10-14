@@ -91,4 +91,8 @@ public class DisciplinaOff implements Serializable {
     public String toString() {
         return nome;
     }
+
+    public String toStringCompleto() {
+        return "Disciplina {codigo=" + codigo + ", nome=" + nome + ", usuarioCodigo=" + usuarioCodigo + ", assuntos=" + assuntos + "}";
+    }
 }

@@ -17,7 +17,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/txtCronograma"
+                android:id="@+id/lblDisciplina"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -36,9 +36,9 @@
                 android:layout_height="1dip"
                 android:layout_gravity="center_horizontal"
                 android:background="@color/gray"
-                app:layout_constraintEnd_toEndOf="@+id/txtCronograma"
-                app:layout_constraintStart_toStartOf="@+id/txtCronograma"
-                app:layout_constraintTop_toBottomOf="@+id/txtCronograma" />
+                app:layout_constraintEnd_toEndOf="@+id/lblDisciplina"
+                app:layout_constraintStart_toStartOf="@+id/lblDisciplina"
+                app:layout_constraintTop_toBottomOf="@+id/lblDisciplina" />
 
 
             <LinearLayout
@@ -80,7 +80,8 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/lbl_inicio"
-                            android:textAppearance="@style/AppTheme.lbl_black" />
+                            android:textAppearance="@style/AppTheme.lbl_black"
+                            app:fontFamily="@font/comfortaa_bold" />
 
                         <EditText
                             android:id="@+id/txtInicio"
@@ -155,7 +156,8 @@
                     android:id="@+id/btnAddMateria"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/lbl_btn_add_disciplina" />
+                    android:text="@string/lbl_btn_add_disciplina"
+                    app:fontFamily="@font/comfortaa_bold"/>
 
                 <com.baoyz.swipemenulistview.SwipeMenuListView
                     android:id="@+id/swipeMenuDisciplinas"
@@ -178,6 +180,7 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
                 android:background="@color/black"
+                app:fontFamily="@font/comfortaa_bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:srcCompat="@android:drawable/ic_menu_save" />

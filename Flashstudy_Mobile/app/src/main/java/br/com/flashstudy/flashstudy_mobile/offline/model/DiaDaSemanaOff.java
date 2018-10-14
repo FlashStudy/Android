@@ -18,7 +18,9 @@ import java.util.List;
                                     childColumns = "usuario_codigo"),
                         @ForeignKey(entity = CicloOff.class,
                                     parentColumns = "codigo",
-                                    childColumns = "ciclo_codigo")},
+                                    childColumns = "ciclo_codigo",
+                                    onDelete = ForeignKey.CASCADE,
+                                    onUpdate = ForeignKey.CASCADE)},
         indices = { @Index(value = {"codigo"}, unique = true),
                     @Index(value = {"usuario_codigo"}),
                     @Index(value = {"ciclo_codigo"})})
