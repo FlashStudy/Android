@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
     }
 
 
@@ -94,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
 
     private class Login extends AsyncTask<UsuarioOff, Void, Void> {
         ProgressDialog progressDialog;
+        boolean encontrado;
+        long codigo;
 
         @Override
         protected void onPreExecute() {
@@ -109,41 +112,22 @@ public class MainActivity extends AppCompatActivity {
             UsuarioRepository usuarioRepository = new UsuarioRepository();
 
             try {
-                long codigo = usuarioRepositoryOff.login(usuarioOffs[0], MainActivity.this);
+                codigo = usuarioRepositoryOff.login(usuarioOffs[0], MainActivity.this);
 
-                if (codigo != 0) {
-
-                    SharedPreferences preferences = getSharedPreferences("usuario", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putLong("codigo", codigo);
-                    editor.apply();
-
-                    Intent intent = new Intent(MainActivity.this, TelaPrincipalActivity.class);
-                    startActivity(intent);
-                    finish();
-
-                } else {
+                if (codigo == 0) {
                     UsuarioOff usuarioOff = usuarioRepository.login(new Usuario(usuarioOffs[0].getEmail(), usuarioOffs[0].getSenha()));
 
                     if (usuarioOff != null) {
                         usuarioRepositoryOff.salvar(usuarioOff, MainActivity.this);
-
-                        Util.setLocalUserCodigo(MainActivity.this, usuarioOff.getCodigo());
-
-                    } else {
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-
-                        builder.setTitle("AVISO!");
-                        builder.setMessage("Nenhum registro foi encontrado!");
-                        builder.setNeutralButton("OK", null);
-                        builder.show();
-                        cancel(true);
+                        codigo = usuarioOff.getCodigo();
+                        encontrado = true;
                     }
+                } else {
+                    encontrado = true;
                 }
             } catch (Exception e) {
                 Log.i("ERRO NO LOGIN", e.getMessage());
-                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                cancel(true);
             }
 
             return null;
@@ -153,9 +137,15 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             progressDialog.dismiss();
 
-            Intent intent = new Intent(MainActivity.this, TelaPrincipalActivity.class);
-            startActivity(intent);
-            finish();
+            if (encontrado) {
+                Util.setLocalUserCodigo(MainActivity.this, codigo);
+
+                Intent intent = new Intent(MainActivity.this, TelaPrincipalActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(MainActivity.this, "Nenhum usuário encontrado!", Toast.LENGTH_LONG).show();
+            }
         }
     }
 }

@@ -209,4 +209,19 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
             finish();
         }
     }
+
+    private class AtualizarAssuntos extends AsyncTask<List<AssuntoOff>, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(List<AssuntoOff>... assuntos) {
+            try {
+                AssuntoRepositoryOff.salvarAssuntos(assuntos[0], DisciplinaCrudActivity.this);
+                return true;
+            } catch (Exception e) {
+                Toast.makeText(DisciplinaCrudActivity.this, "Houve um erro ao salvar o cronograma", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }
+
+    }
 }

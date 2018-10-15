@@ -1,11 +1,6 @@
 package br.com.flashstudy.flashstudy_mobile.offline.dao;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
+import android.arch.persistence.room.*;
 
 import java.util.List;
 
@@ -29,6 +24,10 @@ public interface AssuntoDao {
     //Atualiza
     @Update
     void update(AssuntoOff assunto);
+
+    //Atualiza
+    @Update
+    void updateLista(List<AssuntoOff> assunto);
 
     //Procura Assuntos de uma Disciplina de um Usuario
     @Query("SELECT * FROM assunto WHERE disciplina_codigo = :codigoDisciplina ORDER BY codigo ASC")

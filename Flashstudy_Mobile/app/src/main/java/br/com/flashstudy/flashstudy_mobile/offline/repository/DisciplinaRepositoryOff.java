@@ -19,6 +19,15 @@ public class DisciplinaRepositoryOff {
         }
     }
 
+    public static boolean atualizar(DisciplinaOff disciplinaOff, Context context) {
+        try {
+            AppDatabase.getAppDatabase(context).disciplinaDao().update(disciplinaOff);
+            return true;
+        } catch (Exception e) {
+            Log.i("ERRO DELETAR DISCIPLINA", e.getMessage());
+            return false;
+        }
+    }
 
     public static boolean deletar(DisciplinaOff disciplinaOff, Context context) {
         try {
@@ -29,4 +38,5 @@ public class DisciplinaRepositoryOff {
             return false;
         }
     }
+
 }

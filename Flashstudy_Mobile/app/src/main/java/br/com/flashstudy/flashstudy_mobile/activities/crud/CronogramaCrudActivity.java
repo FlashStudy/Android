@@ -1,17 +1,22 @@
 package br.com.flashstudy.flashstudy_mobile.activities.crud;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -19,10 +24,12 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.Util.Util;
@@ -53,6 +60,7 @@ public class CronogramaCrudActivity extends AppCompatActivity {
 
     long codigoUsuario;
 
+    Calendar myCalendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +91,7 @@ public class CronogramaCrudActivity extends AppCompatActivity {
 
         } else {
             cronograma = new CronogramaOff();
+            txtInicio.setText(data(myCalendar.getTime()));
         }
     }
 
@@ -94,6 +103,20 @@ public class CronogramaCrudActivity extends AppCompatActivity {
 
             @Override
             public void create(SwipeMenu menu) {
+                // create "edit" item
+                SwipeMenuItem editItem = new SwipeMenuItem(
+                        getApplicationContext());
+                // set item background
+                editItem.setBackground(new ColorDrawable(Color.rgb(0,
+                        0, 255)));
+                // set item width
+                editItem.setWidth(170);
+                // set a icon
+                editItem.setIcon(R.drawable.ic_edit);
+                // add to menu
+                menu.addMenuItem(editItem);
+
+
                 // create "delete" item
                 SwipeMenuItem deleteItem = new SwipeMenuItem(
                         getApplicationContext());
@@ -115,10 +138,45 @@ public class CronogramaCrudActivity extends AppCompatActivity {
         swipeMenuListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(final int position, SwipeMenu menu, int index) {
+                final DisciplinaOff disciplinaOff = disciplinaOffs.get(position);
                 switch (index) {
 
-                    //deletar
                     case 0:
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(CronogramaCrudActivity.this);
+                        alertDialog.setTitle("Editar disciplina");
+                        alertDialog.setMessage(R.string.lbl_disciplina);
+                        final EditText input = new EditText(CronogramaCrudActivity.this);
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.MATCH_PARENT);
+                        input.setLayoutParams(lp);
+                        input.setText(disciplinaOff.getNome());
+                        alertDialog.setView(input);
+                        alertDialog.setIcon(R.drawable.ic_edit);
+
+                        alertDialog.setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        disciplinaOff.setNome(input.getText().toString().trim());
+
+                                        if (disciplinaOff.getCodigo() != 0) {
+                                            try {
+                                                new AtualizarDisciplina().execute(disciplinaOff);
+                                            } catch (Exception e) {
+                                                Toast.makeText(CronogramaCrudActivity.this, "Houve um erro ao atualizar a disciplina", Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                        disciplinaOffs.get(position).setNome(disciplinaOff.getNome());
+                                        populaLista();
+                                    }
+                                });
+                        alertDialog.show();
+
+                        break;
+
+                    //deletar
+                    case 1:
                         AlertDialog.Builder dlg = new AlertDialog.Builder(CronogramaCrudActivity.this);
                         dlg.setTitle("AVISO!");
                         dlg.setMessage("Tem certeza em deletar essa disciplina?");
@@ -127,23 +185,18 @@ public class CronogramaCrudActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-                                if (disciplinaOffs.get(position).getCodigo() != 0) {
-
-                                    DisciplinaOff disciplinaOff = disciplinaOffs.get(position);
+                                if (disciplinaOff.getCodigo() != 0) {
 
                                     try {
                                         new DeletarDisciplina().execute(disciplinaOff);
-                                        disciplinaOffs.remove(position);
-                                        populaLista();
-                                        Toast.makeText(CronogramaCrudActivity.this, "Disciplina deletada com sucesso!", Toast.LENGTH_LONG).show();
                                     } catch (Exception e) {
                                         Toast.makeText(CronogramaCrudActivity.this, "Ocorreu um erro ao deletar a disciplina!", Toast.LENGTH_LONG).show();
                                     }
-                                } else {
-                                    disciplinaOffs.remove(position);
-                                    populaLista();
-                                    Toast.makeText(CronogramaCrudActivity.this, "Disciplina deletada com sucesso!", Toast.LENGTH_LONG).show();
                                 }
+
+                                disciplinaOffs.remove(position);
+                                populaLista();
+                                Toast.makeText(CronogramaCrudActivity.this, "Disciplina deletada com sucesso!", Toast.LENGTH_LONG).show();
                             }
                         });
                         dlg.show();
@@ -158,36 +211,22 @@ public class CronogramaCrudActivity extends AppCompatActivity {
     @OnClick(R.id.fab)
     public void salvarCronograma() {
 
-        if (isDataValida(txtInicio.getText().toString().trim()) && isDataValida(txtFim.getText().toString().trim())) {
-            cronograma.setUsuarioCodigo(codigoUsuario);
-            cronograma.setDisciplinas(disciplinaOffs);
-            cronograma.setInicio(txtInicio.getText().toString().trim());
-            cronograma.setFim(txtFim.getText().toString().trim());
+        cronograma.setUsuarioCodigo(codigoUsuario);
+        cronograma.setDisciplinas(disciplinaOffs);
+        cronograma.setInicio(txtInicio.getText().toString().trim());
+        cronograma.setFim(txtFim.getText().toString().trim());
 
-            try {
-                if (cronograma.getCodigo() == 0)
-                    new SalvarCronograma().execute(cronograma);
-                else
-                    new AtualizarCronograma().execute(cronograma);
+        try {
+            if (cronograma.getCodigo() == 0)
+                new SalvarCronograma().execute(cronograma);
+            else
+                new AtualizarCronograma().execute(cronograma);
 
-                Toast.makeText(CronogramaCrudActivity.this, "Cronograma salvo com sucesso!", Toast.LENGTH_LONG).show();
-                finish();
-            } catch (Exception e) {
-                Toast.makeText(CronogramaCrudActivity.this, "Houve um erro ao salvar o cronograma!", Toast.LENGTH_LONG).show();
-            }
-        } else {
-            Date currentTime = Calendar.getInstance().getTime();
-
-            String diaAtual = "" + currentTime.getDay() + "/" + currentTime.getMonth() + "/" + currentTime.getYear();
-
-            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-            dlg.setTitle("AVISO!");
-            dlg.setMessage("Datas inválidas!");
-
-            dlg.setNeutralButton("OK", null);
-            dlg.show();
+            Toast.makeText(CronogramaCrudActivity.this, "Cronograma salvo com sucesso!", Toast.LENGTH_LONG).show();
+            finish();
+        } catch (Exception e) {
+            Toast.makeText(CronogramaCrudActivity.this, "Houve um erro ao salvar o cronograma!", Toast.LENGTH_LONG).show();
         }
-
 
     }
 
@@ -209,109 +248,69 @@ public class CronogramaCrudActivity extends AppCompatActivity {
         }
     }
 
+    @OnClick({R.id.txtInicio, R.id.txtFim})
+    public void setData(final EditText txt) {
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
-    public boolean isFormatoDaDataCerto(String data) {
-        Date currentTime = Calendar.getInstance().getTime();
-
-        String[] strings = data.split("/");
-        if (strings.length < 3 || strings.length > 3) {
-            return false;
-        } else {
-            if (Integer.parseInt(strings[0]) < 1 || Integer.parseInt(strings[0]) > 31) {
-                return false;
-            } else {
-                if (Integer.parseInt(strings[1]) < 1 || Integer.parseInt(strings[1]) > 12) {
-                    return false;
-                } else {
-                    if (Integer.parseInt(strings[2]) < currentTime.getYear()) {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                }
-
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                txt.setText(data(myCalendar.getTime()));
             }
-        }
+
+        };
+
+        new DatePickerDialog(CronogramaCrudActivity.this, date, myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+
     }
 
-    public boolean isDataValida(String data) {
-        if (isFormatoDaDataCerto(data)) {
-            Date currentTime = Calendar.getInstance().getTime();
-            String[] strings = data.split("/");
+    private String data(Date date) {
 
-            if (Integer.parseInt(strings[1]) < currentTime.getMonth()) {
-                return false;
-            }
+        String myFormat = "dd/MM/yyyy";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, new Locale("pt", "BR"));
 
-            if (Integer.parseInt(strings[1]) == currentTime.getMonth()) {
-                if (Integer.parseInt(strings[0]) < currentTime.getDay()) {
-                    return false;
-                } else return true;
-            }
-
-            if (Integer.parseInt(strings[1]) > currentTime.getMonth()) {
-                return true;
-            }
-
-        } else {
-            return false;
-        }
-        return false;
+        return sdf.format(date.getTime());
     }
 
     private class SalvarCronograma extends AsyncTask<CronogramaOff, Void, Void> {
-        ProgressDialog progressDialog;
-
-        @Override
-        protected void onPreExecute() {
-            progressDialog = new ProgressDialog(CronogramaCrudActivity.this);
-            progressDialog.setMessage("Salvando cronograma... ");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-
         @Override
         protected Void doInBackground(CronogramaOff... cronogramaOffs) {
             try {
                 CronogramaRepositoryOff.salvar(cronogramaOffs[0], CronogramaCrudActivity.this);
             } catch (Exception e) {
-                Toast.makeText(CronogramaCrudActivity.this, "Houve um erro ao salvar o cronograma", Toast.LENGTH_LONG).show();
-                progressDialog.dismiss();
+                Log.e("ERRO SALVAR CRONOG", e.getMessage());
             }
             return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            progressDialog.dismiss();
         }
     }
 
     private class AtualizarCronograma extends AsyncTask<CronogramaOff, Void, Void> {
-        ProgressDialog progressDialog;
-
-        @Override
-        protected void onPreExecute() {
-            progressDialog = new ProgressDialog(CronogramaCrudActivity.this);
-            progressDialog.setMessage("Salvando cronograma... ");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-
         @Override
         protected Void doInBackground(CronogramaOff... cronogramaOffs) {
             try {
                 CronogramaRepositoryOff.atualizar(cronogramaOffs[0], CronogramaCrudActivity.this);
             } catch (Exception e) {
-                Toast.makeText(CronogramaCrudActivity.this, "Houve um erro ao atualizar o cronograma", Toast.LENGTH_LONG).show();
-                progressDialog.dismiss();
+                Log.e("ERRO ATUALIZAR CRONO", e.getMessage());
             }
             return null;
         }
+    }
+
+    private class AtualizarDisciplina extends AsyncTask<DisciplinaOff, Void, Void> {
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            progressDialog.dismiss();
+        protected Void doInBackground(DisciplinaOff... disciplinaOffs) {
+            try {
+                DisciplinaRepositoryOff.atualizar(disciplinaOffs[0], CronogramaCrudActivity.this);
+            } catch (Exception e) {
+                Log.e("ERRO ATUALIZAR DISC", e.getMessage());
+            }
+            return null;
         }
     }
 
@@ -322,9 +321,11 @@ public class CronogramaCrudActivity extends AppCompatActivity {
             try {
                 DisciplinaRepositoryOff.deletar(disciplinaOffs[0], CronogramaCrudActivity.this);
             } catch (Exception e) {
-                Toast.makeText(CronogramaCrudActivity.this, "Houve um erro ao deletar a disciplina", Toast.LENGTH_LONG).show();
+                Log.e("ERRO DELETAR DISC", e.getMessage());
             }
             return null;
         }
     }
+
+
 }
