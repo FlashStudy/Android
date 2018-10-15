@@ -25,5 +25,5 @@ public interface CicloDao {
 
     //Procura o Ciclo de um Usuario
     @Query("SELECT * FROM ciclo WHERE usuario_codigo = :codigo")
-    CicloOff getCicloByUsuario(int codigo);
+    CicloOff getCicloByUsuario(long codigo);
 }

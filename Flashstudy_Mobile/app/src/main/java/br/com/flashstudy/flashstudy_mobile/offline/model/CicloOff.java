@@ -14,10 +14,10 @@ import java.util.List;
 
 @Entity(tableName = "ciclo",
         foreignKeys = {@ForeignKey( entity = UsuarioOff.class,
-                                    parentColumns = "codigo",
-                                    childColumns = "usuario_codigo")},
+                parentColumns = "codigo",
+                childColumns = "usuario_codigo")},
         indices = { @Index(value = {"codigo"}, unique = true),
-                    @Index(value = "usuario_codigo")})
+                @Index(value = "usuario_codigo")})
 public class CicloOff implements Serializable {
 
 
@@ -37,6 +37,13 @@ public class CicloOff implements Serializable {
     private long usuarioCodigo;
 
     public CicloOff() {
+    }
+
+    @Ignore
+    public CicloOff(@NonNull long codigo, @NonNull long numMaterias, @NonNull long usuarioCodigo) {
+        this.codigo = codigo;
+        this.numMaterias = numMaterias;
+        this.usuarioCodigo = usuarioCodigo;
     }
 
     @Ignore

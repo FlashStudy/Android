@@ -2,12 +2,12 @@
 <resources>
     <color name="white">#ffffff</color>
     <color name="gray">#e8e8e8</color>
-    <color name="winter">#0D4F63</color>
+    <color name="winter">#0d4f63</color>
     <color name="colorSecondary">#79CDCD</color>
-    <color name="gostei">#66CDAA</color>
+    <color name="gostei">#66cdaa</color>
     <color name="deep_blue">#2C3E50</color>
     <color name="colorPrimary">#012F46</color>
-    <color name="black">#000</color>
-    <color name="verde">#228B22</color>
-    <color name="vermelho">#A52A2A</color>
+    <color name="black">#000000</color>
+    <color name="verde">#228b22</color>
+    <color name="vermelho">#a52a2a</color>
 </resources>

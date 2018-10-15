@@ -12,22 +12,22 @@ import java.io.Serializable;
 
 @Entity(tableName = "horario",
         foreignKeys = { @ForeignKey(entity = UsuarioOff.class,
-                                    parentColumns = "codigo",
-                                    childColumns = "usuario_codigo"),
-                        @ForeignKey(entity = DisciplinaOff.class,
-                                    parentColumns = "codigo",
-                                    childColumns = "disciplina_codigo",
-                                    onDelete = ForeignKey.CASCADE,
-                                    onUpdate = ForeignKey.CASCADE),
-                        @ForeignKey(entity = DiaDaSemanaOff.class,
-                                    parentColumns = "codigo",
-                                    childColumns = "dia_codigo",
-                                    onDelete = ForeignKey.CASCADE,
-                                    onUpdate = ForeignKey.CASCADE)},
+                parentColumns = "codigo",
+                childColumns = "usuario_codigo"),
+                @ForeignKey(entity = DisciplinaOff.class,
+                        parentColumns = "codigo",
+                        childColumns = "disciplina_codigo",
+                        onDelete = ForeignKey.CASCADE,
+                        onUpdate = ForeignKey.CASCADE),
+                @ForeignKey(entity = DiaDaSemanaOff.class,
+                        parentColumns = "codigo",
+                        childColumns = "dia_codigo",
+                        onDelete = ForeignKey.CASCADE,
+                        onUpdate = ForeignKey.CASCADE)},
         indices = { @Index(value = {"codigo"}, unique = true),
-                    @Index(value = {"usuario_codigo"}),
-                    @Index(value = {"disciplina_codigo"}),
-                    @Index(value = {"dia_codigo"})})
+                @Index(value = {"usuario_codigo"}),
+                @Index(value = {"disciplina_codigo"}),
+                @Index(value = {"dia_codigo"})})
 public class HorarioOff implements Serializable {
 
     @NonNull
@@ -53,7 +53,7 @@ public class HorarioOff implements Serializable {
     }
 
     @Ignore
-    public HorarioOff(@NonNull long tempo, @NonNull long disciplinaCodigo, @NonNull long usuarioCodigo, @NonNull long diaCodigo) {
+    public HorarioOff(@NonNull long tempo, @NonNull long disciplinaCodigo, @NonNull long usuarioCodigo) {
         this.tempo = tempo;
         this.disciplinaCodigo = disciplinaCodigo;
         this.usuarioCodigo = usuarioCodigo;

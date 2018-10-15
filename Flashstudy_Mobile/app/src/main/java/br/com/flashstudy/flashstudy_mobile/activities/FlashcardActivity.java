@@ -66,7 +66,7 @@ public class FlashcardActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Erro ao listar flashcards!", Toast.LENGTH_LONG).show();
             finish();
         }
-        
+
         if (flashcards != null) {
             listViewFlashcards.setAdapter(new FlashcardListAdapter(getApplicationContext(), flashcards));
         } else {

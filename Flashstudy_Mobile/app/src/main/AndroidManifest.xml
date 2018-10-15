@@ -38,7 +38,8 @@
             android:name=".activities.AjudaActivity"
             android:label="@string/title_activity_ajuda" />
         <activity android:name=".activities.crud.CronogramaCrudActivity" />
-        <activity android:name=".activities.crud.DisciplinaCrudActivity"></activity>
+        <activity android:name=".activities.crud.DisciplinaCrudActivity" />
+        <activity android:name=".activities.crud.CicloDeEstudosCrudActivity"></activity>
     </application>
 
 </manifest>

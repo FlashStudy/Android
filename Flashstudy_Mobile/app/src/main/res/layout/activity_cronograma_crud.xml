@@ -93,6 +93,8 @@
                             android:inputType="date"
                             android:textAppearance="@style/AppTheme.lbl_black"
                             android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            app:fontFamily="@font/comfortaa_bold"
                             tools:targetApi="o" />
                     </TableRow>
 
@@ -120,6 +122,8 @@
                             android:inputType="date"
                             android:textAppearance="@style/AppTheme.lbl_black"
                             android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            app:fontFamily="@font/comfortaa_bold"
                             tools:targetApi="o" />
                     </TableRow>
 
@@ -147,6 +151,8 @@
                             android:inputType="textPersonName"
                             android:textAppearance="@style/AppTheme.lbl_black"
                             android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            app:fontFamily="@font/comfortaa_bold"
                             tools:targetApi="o" />
                     </TableRow>
 
@@ -164,7 +170,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="24dp"
-                    android:background="@drawable/dark_layout_bg">
+                    android:background="@drawable/dark_layout_bg"
+                    app:fontFamily="@font/comfortaa_bold">
 
                 </com.baoyz.swipemenulistview.SwipeMenuListView>
             </LinearLayout>
@@ -180,6 +187,7 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
                 android:background="@color/black"
+                app:backgroundTint="@color/verde"
                 app:fontFamily="@font/comfortaa_bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

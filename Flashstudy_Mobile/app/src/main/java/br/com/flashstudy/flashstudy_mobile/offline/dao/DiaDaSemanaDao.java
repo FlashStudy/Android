@@ -18,6 +18,10 @@ public interface DiaDaSemanaDao {
     @Insert
     void insert(DiaDaSemanaOff diaDaSemana);
 
+    //Insere uma lista
+    @Insert
+    void insertLista(List<DiaDaSemanaOff> diaDaSemana);
+
     //Deleta
     @Delete
     void delete(DiaDaSemanaOff diaDaSemana);
@@ -27,6 +31,6 @@ public interface DiaDaSemanaDao {
     void update(DiaDaSemanaOff diaDaSemana);
 
     //Procura todos os Dias de um ciclo de um usuário
-    @Query("SELECT * FROM dia_da_semana WHERE usuario_codigo = :codigoUsuario AND ciclo_codigo = :codigoCiclo ORDER BY nome ASC")
-    LiveData<List<DiaDaSemanaOff>> getAllDiasFromUsuarioCodigo(int codigoUsuario, int codigoCiclo);
+    @Query("SELECT * FROM dia_da_semana WHERE usuario_codigo = :codigoUsuario ORDER BY codigo ASC")
+    List<DiaDaSemanaOff> getAllDiasFromUsuarioCodigo(long codigoUsuario);
 }

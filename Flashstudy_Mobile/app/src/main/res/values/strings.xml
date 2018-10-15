@@ -62,4 +62,13 @@
     <string name="lbl_assunto">Assunto:</string>
     <string name="hint_assunto">Ex: Orgânica</string>
     <string name="aux">aux</string>
+    <string name="lbl_num_materias">Matérias por dia:</string>
+    <string name="lbl_Domingo">Domingo</string>
+    <string name="lbl_Segunda">Segunda-feira</string>
+    <string name="lbl_terca">Terça-feira</string>
+    <string name="lbl_quarta">Quarta-feira</string>
+    <string name="lbl_quinta">Quinta-feira</string>
+    <string name="lbl_sexta">Sexta-feira</string>
+    <string name="lbl_domingo">Domingo</string>
+    <string name="lbl_btn_salvar_ciclo">Salvar ciclo</string>
 </resources>

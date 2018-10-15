@@ -21,7 +21,7 @@ import br.com.flashstudy.flashstudy_mobile.online.model.Usuario;
 
 public class UsuarioRestClient {
 
-    private String BASE_URL = "http://192.168.0.127:8000/usuario/";
+    private String BASE_URL = "http://192.168.0.18:8000/usuario/";
     private RestTemplate restTemplate = new RestTemplate();
 
     public UsuarioOff cadastro(Usuario usuario) {

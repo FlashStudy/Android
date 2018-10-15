@@ -14,16 +14,16 @@ import java.util.List;
 
 @Entity(tableName = "dia_da_semana",
         foreignKeys = { @ForeignKey(entity = UsuarioOff.class,
-                                    parentColumns = "codigo",
-                                    childColumns = "usuario_codigo"),
-                        @ForeignKey(entity = CicloOff.class,
-                                    parentColumns = "codigo",
-                                    childColumns = "ciclo_codigo",
-                                    onDelete = ForeignKey.CASCADE,
-                                    onUpdate = ForeignKey.CASCADE)},
+                parentColumns = "codigo",
+                childColumns = "usuario_codigo"),
+                @ForeignKey(entity = CicloOff.class,
+                        parentColumns = "codigo",
+                        childColumns = "ciclo_codigo",
+                        onDelete = ForeignKey.CASCADE,
+                        onUpdate = ForeignKey.CASCADE)},
         indices = { @Index(value = {"codigo"}, unique = true),
-                    @Index(value = {"usuario_codigo"}),
-                    @Index(value = {"ciclo_codigo"})})
+                @Index(value = {"usuario_codigo"}),
+                @Index(value = {"ciclo_codigo"})})
 public class DiaDaSemanaOff implements Serializable {
 
     @NonNull

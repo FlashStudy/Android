@@ -6,8 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -18,7 +17,7 @@ public class Ciclo implements Serializable {
     private Long codigo;
 
     @JsonProperty("dias")
-    private Set<DiaDaSemana> dias = new HashSet<>();
+    private List<DiaDaSemana> dias = new ArrayList<>();
 
     @JsonProperty("numMaterias")
     private Integer numMaterias;
@@ -48,12 +47,12 @@ public class Ciclo implements Serializable {
     }
 
     @JsonProperty("dias")
-    public Set<DiaDaSemana> getDias() {
+    public List<DiaDaSemana> getDias() {
         return dias;
     }
 
     @JsonProperty("dias")
-    public void setDias(Set<DiaDaSemana> dias) {
+    public void setDias(List<DiaDaSemana> dias) {
         this.dias = dias;
     }
 
