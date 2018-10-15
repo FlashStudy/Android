@@ -17,7 +17,7 @@ import java.util.List;
 import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.Util.Util;
 import br.com.flashstudy.flashstudy_mobile.offline.model.CicloOff;
-import br.com.flashstudy.flashstudy_mobile.offline.model.DiaDaSemanaOff;
+import br.com.flashstudy.flashstudy_mobile.offline.model.HorarioOff;
 import br.com.flashstudy.flashstudy_mobile.offline.repository.CicloRepositoryOff;
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -57,10 +57,12 @@ public class CicloDeEstudosCrudActivity extends AppCompatActivity {
         if (cicloOff != null) {
             spinnerNumMaterias.setSelection((int) cicloOff.getNumMaterias() - 1);
 
-            for (DiaDaSemanaOff d : cicloOff.getDias()) {
-                for (int i = 0; i < cbDias.size(); i++) {
-                    if (cbDias.get(i).getText().toString().equals(d.getNome())) {
-                        cbDias.get(i).setChecked(true);
+            for (HorarioOff h : cicloOff.getHorarios()) {
+                for (CheckBox cb : cbDias){
+                    if(cb.getText().toString().equals(h.getDia())){
+                        if(!cb.isChecked()){
+                            cb.setChecked(true);
+                        }
                     }
                 }
             }
@@ -71,22 +73,18 @@ public class CicloDeEstudosCrudActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnSalvarCiclo)
     public void salvarCiclo(View view) {
-        List<DiaDaSemanaOff> dias = new ArrayList<>();
 
+        List<String> dias = new ArrayList<>();
         for (CheckBox cb : cbDias) {
             if (cb.isChecked()) {
-                DiaDaSemanaOff d = new DiaDaSemanaOff();
-                d.setUsuarioCodigo(usuarioCodigo);
-                d.setNome(cb.getText().toString());
-                dias.add(d);
+                dias.add(cb.getText().toString());
             }
         }
 
-        cicloOff.setDias(dias);
         cicloOff.setNumMaterias(spinnerNumMaterias.getSelectedItemPosition() + 1);
 
         try {
-            new Salvar().execute(cicloOff);
+            new Salvar(dias).execute(cicloOff);
             Toast.makeText(this, "Ciclo salvo com sucesso!", Toast.LENGTH_LONG).show();
             finish();
         } catch (Exception e) {
@@ -96,6 +94,11 @@ public class CicloDeEstudosCrudActivity extends AppCompatActivity {
 
     private class Salvar extends AsyncTask<CicloOff, Void, Void> {
         private ProgressDialog dialog;
+        private List<String> dias;
+
+        public Salvar(List<String> dias) {
+            this.dias = dias;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -108,7 +111,7 @@ public class CicloDeEstudosCrudActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(CicloOff... cicloOffs) {
             try {
-                CicloRepositoryOff.salvar(cicloOffs[0], CicloDeEstudosCrudActivity.this);
+                CicloRepositoryOff.salvar(cicloOffs[0], dias, CicloDeEstudosCrudActivity.this);
             } catch (Exception e) {
                 Log.i("ERRO SALVAR CICLO", e.getMessage());
                 dialog.dismiss();

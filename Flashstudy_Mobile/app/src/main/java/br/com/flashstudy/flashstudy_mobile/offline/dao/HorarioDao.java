@@ -18,9 +18,17 @@ public interface HorarioDao {
     @Insert
     void insert(HorarioOff horario);
 
+    //Insere lista
+    @Insert
+    void insertLista(List<HorarioOff> horarios);
+
     //Deleta
     @Delete
     void delete(HorarioOff horario);
+
+    //Deleta lista
+    @Delete
+    void deleteLista(List<HorarioOff> horario);
 
     //Atualiza
     @Update

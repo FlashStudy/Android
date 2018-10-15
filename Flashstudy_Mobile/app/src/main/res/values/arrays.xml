@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="arr_dias">[domingo, segunda]</string-array>
+    <string-array name="dias">
+        <item>@string/domingo</item>
+        <item>@string/segunda_feira</item>
+        <item>@string/terca_feira</item>
+        <item>@string/quarta_feira</item>
+        <item>@string/quinta_feira</item>
+        <item>@string/sexta_feira</item>
+        <item>@string/sabado</item>
+    </string-array>
+
+    <array name="numMateria">
+        <item>"1"</item>
+        <item>"2"</item>
+        <item>"3"</item>
+        <item>"4"</item>
+        <item>"5"</item>
+    </array>
 </resources>

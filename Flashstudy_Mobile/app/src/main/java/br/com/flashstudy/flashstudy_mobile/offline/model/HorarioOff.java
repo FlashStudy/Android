@@ -11,23 +11,17 @@ import android.support.annotation.NonNull;
 import java.io.Serializable;
 
 @Entity(tableName = "horario",
-        foreignKeys = { @ForeignKey(entity = UsuarioOff.class,
-                parentColumns = "codigo",
-                childColumns = "usuario_codigo"),
-                @ForeignKey(entity = DisciplinaOff.class,
-                        parentColumns = "codigo",
-                        childColumns = "disciplina_codigo",
-                        onDelete = ForeignKey.CASCADE,
-                        onUpdate = ForeignKey.CASCADE),
-                @ForeignKey(entity = DiaDaSemanaOff.class,
-                        parentColumns = "codigo",
-                        childColumns = "dia_codigo",
-                        onDelete = ForeignKey.CASCADE,
-                        onUpdate = ForeignKey.CASCADE)},
+        foreignKeys = {@ForeignKey( entity = UsuarioOff.class,
+                                    parentColumns = "codigo",
+                                    childColumns = "usuario_codigo"),
+                        @ForeignKey(entity = DisciplinaOff.class,
+                                    parentColumns = "codigo",
+                                    childColumns = "disciplina_codigo",
+                                    onDelete = ForeignKey.CASCADE,
+                                    onUpdate = ForeignKey.CASCADE)},
         indices = { @Index(value = {"codigo"}, unique = true),
-                @Index(value = {"usuario_codigo"}),
-                @Index(value = {"disciplina_codigo"}),
-                @Index(value = {"dia_codigo"})})
+                    @Index(value = {"usuario_codigo"}),
+                    @Index(value = {"disciplina_codigo"})})
 public class HorarioOff implements Serializable {
 
     @NonNull
@@ -46,18 +40,17 @@ public class HorarioOff implements Serializable {
     private long usuarioCodigo;
 
     @NonNull
-    @ColumnInfo(name = "dia_codigo")
-    private long diaCodigo;
+    private String dia;
 
     public HorarioOff() {
     }
 
     @Ignore
-    public HorarioOff(@NonNull long tempo, @NonNull long disciplinaCodigo, @NonNull long usuarioCodigo) {
+    public HorarioOff(@NonNull long tempo, @NonNull long disciplinaCodigo, @NonNull long usuarioCodigo, @NonNull String dia) {
         this.tempo = tempo;
         this.disciplinaCodigo = disciplinaCodigo;
         this.usuarioCodigo = usuarioCodigo;
-        this.diaCodigo = diaCodigo;
+        this.dia = dia;
     }
 
     @NonNull
@@ -97,12 +90,12 @@ public class HorarioOff implements Serializable {
     }
 
     @NonNull
-    public long getDiaCodigo() {
-        return diaCodigo;
+    public String getDia() {
+        return dia;
     }
 
-    public void setDiaCodigo(@NonNull long diaCodigo) {
-        this.diaCodigo = diaCodigo;
+    public void setDia(@NonNull String dia) {
+        this.dia = dia;
     }
 
     @Override
@@ -112,7 +105,7 @@ public class HorarioOff implements Serializable {
                 ", tempo=" + tempo +
                 ", disciplinaCodigo=" + disciplinaCodigo +
                 ", usuarioCodigo=" + usuarioCodigo +
-                ", diaCodigo=" + diaCodigo +
+                ", dia='" + dia + '\'' +
                 '}';
     }
 }

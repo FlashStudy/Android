@@ -65,7 +65,7 @@ public class CicloDeEstudosActivity extends AppCompatActivity {
                 long codigo = Util.getLocalUserCodigo(CicloDeEstudosActivity.this);
                 return CicloRepositoryOff.buscarPorUsario(codigo, CicloDeEstudosActivity.this);
             } catch (Exception e) {
-                Log.i("ERRO BUSCAR CICLO", e.getMessage());
+                Log.e("ERRO BUSCAR CICLO", e.getMessage());
                 return null;
             }
         }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "585f7dc86fd15fa2fecbca7c4f78a7f0",
+    "identityHash": "100cd7d4cfb9db6e770c9c19848fb07a",
     "entities": [
       {
         "tableName": "assunto",
@@ -219,92 +219,6 @@
         ]
       },
       {
-        "tableName": "dia_da_semana",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nome` TEXT NOT NULL, `usuario_codigo` INTEGER NOT NULL, `ciclo_codigo` INTEGER NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`ciclo_codigo`) REFERENCES `ciclo`(`codigo`) ON UPDATE CASCADE ON DELETE CASCADE )",
-        "fields": [
-          {
-            "fieldPath": "codigo",
-            "columnName": "codigo",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "nome",
-            "columnName": "nome",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "usuarioCodigo",
-            "columnName": "usuario_codigo",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "cicloCodigo",
-            "columnName": "ciclo_codigo",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "codigo"
-          ],
-          "autoGenerate": true
-        },
-        "indices": [
-          {
-            "name": "index_dia_da_semana_codigo",
-            "unique": true,
-            "columnNames": [
-              "codigo"
-            ],
-            "createSql": "CREATE UNIQUE INDEX `index_dia_da_semana_codigo` ON `${TABLE_NAME}` (`codigo`)"
-          },
-          {
-            "name": "index_dia_da_semana_usuario_codigo",
-            "unique": false,
-            "columnNames": [
-              "usuario_codigo"
-            ],
-            "createSql": "CREATE  INDEX `index_dia_da_semana_usuario_codigo` ON `${TABLE_NAME}` (`usuario_codigo`)"
-          },
-          {
-            "name": "index_dia_da_semana_ciclo_codigo",
-            "unique": false,
-            "columnNames": [
-              "ciclo_codigo"
-            ],
-            "createSql": "CREATE  INDEX `index_dia_da_semana_ciclo_codigo` ON `${TABLE_NAME}` (`ciclo_codigo`)"
-          }
-        ],
-        "foreignKeys": [
-          {
-            "table": "usuario",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "usuario_codigo"
-            ],
-            "referencedColumns": [
-              "codigo"
-            ]
-          },
-          {
-            "table": "ciclo",
-            "onDelete": "CASCADE",
-            "onUpdate": "CASCADE",
-            "columns": [
-              "ciclo_codigo"
-            ],
-            "referencedColumns": [
-              "codigo"
-            ]
-          }
-        ]
-      },
-      {
         "tableName": "disciplina",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nome` TEXT NOT NULL, `usuario_codigo` INTEGER NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
@@ -440,7 +354,7 @@
       },
       {
         "tableName": "horario",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tempo` INTEGER NOT NULL, `disciplina_codigo` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, `dia_codigo` INTEGER NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`disciplina_codigo`) REFERENCES `disciplina`(`codigo`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`dia_codigo`) REFERENCES `dia_da_semana`(`codigo`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tempo` INTEGER NOT NULL, `disciplina_codigo` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, `dia` TEXT NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`disciplina_codigo`) REFERENCES `disciplina`(`codigo`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "codigo",
@@ -467,9 +381,9 @@
             "notNull": true
           },
           {
-            "fieldPath": "diaCodigo",
-            "columnName": "dia_codigo",
-            "affinity": "INTEGER",
+            "fieldPath": "dia",
+            "columnName": "dia",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -503,14 +417,6 @@
               "disciplina_codigo"
             ],
             "createSql": "CREATE  INDEX `index_horario_disciplina_codigo` ON `${TABLE_NAME}` (`disciplina_codigo`)"
-          },
-          {
-            "name": "index_horario_dia_codigo",
-            "unique": false,
-            "columnNames": [
-              "dia_codigo"
-            ],
-            "createSql": "CREATE  INDEX `index_horario_dia_codigo` ON `${TABLE_NAME}` (`dia_codigo`)"
           }
         ],
         "foreignKeys": [
@@ -531,17 +437,6 @@
             "onUpdate": "CASCADE",
             "columns": [
               "disciplina_codigo"
-            ],
-            "referencedColumns": [
-              "codigo"
-            ]
-          },
-          {
-            "table": "dia_da_semana",
-            "onDelete": "CASCADE",
-            "onUpdate": "CASCADE",
-            "columns": [
-              "dia_codigo"
             ],
             "referencedColumns": [
               "codigo"
@@ -668,7 +563,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"585f7dc86fd15fa2fecbca7c4f78a7f0\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"100cd7d4cfb9db6e770c9c19848fb07a\")"
     ]
   }
 }

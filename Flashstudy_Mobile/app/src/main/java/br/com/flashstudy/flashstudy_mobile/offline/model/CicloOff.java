@@ -14,10 +14,10 @@ import java.util.List;
 
 @Entity(tableName = "ciclo",
         foreignKeys = {@ForeignKey( entity = UsuarioOff.class,
-                parentColumns = "codigo",
-                childColumns = "usuario_codigo")},
-        indices = { @Index(value = {"codigo"}, unique = true),
-                @Index(value = "usuario_codigo")})
+                                    parentColumns = "codigo",
+                                    childColumns = "usuario_codigo")},
+        indices = {@Index(value = {"codigo"}, unique = true),
+                   @Index(value = "usuario_codigo")})
 public class CicloOff implements Serializable {
 
 
@@ -26,7 +26,7 @@ public class CicloOff implements Serializable {
     private long codigo;
 
     @Ignore
-    private List<DiaDaSemanaOff> dias = new ArrayList<>();
+    private List<HorarioOff> horarios = new ArrayList<>();
 
     @NonNull
     @ColumnInfo(name = "numero_de_materias")
@@ -46,13 +46,6 @@ public class CicloOff implements Serializable {
         this.usuarioCodigo = usuarioCodigo;
     }
 
-    @Ignore
-    public CicloOff(List<DiaDaSemanaOff> dias, @NonNull long numMaterias, @NonNull long usuarioCodigo) {
-        this.dias = dias;
-        this.numMaterias = numMaterias;
-        this.usuarioCodigo = usuarioCodigo;
-    }
-
     @NonNull
     public long getCodigo() {
         return codigo;
@@ -62,12 +55,12 @@ public class CicloOff implements Serializable {
         this.codigo = codigo;
     }
 
-    public List<DiaDaSemanaOff> getDias() {
-        return dias;
+    public List<HorarioOff> getHorarios() {
+        return horarios;
     }
 
-    public void setDias(List<DiaDaSemanaOff> dias) {
-        this.dias = dias;
+    public void setHorarios(List<HorarioOff> horarios) {
+        this.horarios = horarios;
     }
 
     @NonNull
@@ -88,15 +81,15 @@ public class CicloOff implements Serializable {
         this.usuarioCodigo = usuarioCodigo;
     }
 
-    public void addDiaDaSemana(DiaDaSemanaOff diaDaSemana) {
-        dias.add(diaDaSemana);
+    public void addHorario(HorarioOff horarioOff){
+        horarios.add(horarioOff);
     }
 
     @Override
     public String toString() {
         return "CicloOff{" +
                 "codigo=" + codigo +
-                ", dias=" + dias +
+                ", horarios=" + horarios +
                 ", numMaterias=" + numMaterias +
                 ", usuarioCodigo=" + usuarioCodigo +
                 '}';

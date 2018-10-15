@@ -62,8 +62,11 @@
                         android:id="@+id/spinNumMaterias"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:entries="@array/arr_dias"
-                        android:visibility="visible" />
+                        android:background="?attr/actionModeSplitBackground"
+                        android:entries="@array/numMateria"
+                        android:textAppearance="@style/AppTheme.lbl"
+                        android:textColor="@color/black"
+                        app:fontFamily="@font/comfortaa_bold" />
                 </LinearLayout>
 
                 <CheckBox
