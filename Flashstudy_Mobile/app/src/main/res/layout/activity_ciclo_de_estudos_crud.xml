@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activities.crud.CicloDeEstudosCrudActivity">
 
     <ScrollView
@@ -39,35 +39,41 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:background="@drawable/layout_bg"
                 android:layout_margin="16dp"
-                android:padding="8dp">
+                android:background="@drawable/layout_bg"
+                android:orientation="vertical"
+                android:padding="16dp">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/lblNumMaterias"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:text="@string/lbl_num_materias"
+                    android:textAppearance="@style/AppTheme.lbl"
+                    android:textColor="@color/black"
+                    app:fontFamily="@font/comfortaa_bold" />
 
-                    <TextView
-                        android:id="@+id/textView6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/lbl_num_materias"
-                        android:textAppearance="@style/AppTheme.lbl"
-                        android:textColor="@color/black"
-                        app:fontFamily="@font/comfortaa_bold" />
+                <Spinner
+                    android:id="@+id/spinNumMaterias"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/winter"
+                    android:popupBackground="@color/winter"
+                    android:entries="@array/numMateriasStr"
+                    android:prompt="@string/lbl_num_materias"
+                    android:textAppearance="@style/AppTheme.h1_black"
+                    android:textColor="@color/black"
+                    app:fontFamily="@font/comfortaa_bold" />
 
-                    <Spinner
-                        android:id="@+id/spinNumMaterias"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/actionModeSplitBackground"
-                        android:entries="@array/numMateria"
-                        android:textAppearance="@style/AppTheme.lbl"
-                        android:textColor="@color/black"
-                        app:fontFamily="@font/comfortaa_bold" />
-                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/lblDias"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_dias_estudos"
+                    android:textAppearance="@style/AppTheme.lbl"
+                    android:textColor="@color/black"
+                    app:fontFamily="@font/comfortaa_bold" />
 
                 <CheckBox
                     android:id="@+id/cbDomingo"
@@ -76,7 +82,7 @@
                     android:text="@string/lbl_Domingo"
                     android:textAppearance="@style/AppTheme.lbl"
                     android:textColor="@color/black"
-                    app:fontFamily="@font/comfortaa_bold"/>
+                    app:fontFamily="@font/comfortaa_bold" />
 
                 <CheckBox
                     android:id="@+id/cbSegunda"
@@ -85,7 +91,7 @@
                     android:text="@string/lbl_Segunda"
                     android:textAppearance="@style/AppTheme.lbl"
                     android:textColor="@color/black"
-                    app:fontFamily="@font/comfortaa_bold"/>
+                    app:fontFamily="@font/comfortaa_bold" />
 
                 <CheckBox
                     android:id="@+id/cbTerca"
@@ -103,7 +109,7 @@
                     android:text="@string/lbl_quarta"
                     android:textAppearance="@style/AppTheme.lbl"
                     android:textColor="@color/black"
-                    app:fontFamily="@font/comfortaa_bold"/>
+                    app:fontFamily="@font/comfortaa_bold" />
 
                 <CheckBox
                     android:id="@+id/cbQuinta"
@@ -112,7 +118,7 @@
                     android:text="@string/lbl_quinta"
                     android:textAppearance="@style/AppTheme.lbl"
                     android:textColor="@color/black"
-                    app:fontFamily="@font/comfortaa_bold"/>
+                    app:fontFamily="@font/comfortaa_bold" />
 
                 <CheckBox
                     android:id="@+id/cbSexta"
@@ -121,7 +127,7 @@
                     android:text="@string/lbl_sexta"
                     android:textAppearance="@style/AppTheme.lbl"
                     android:textColor="@color/black"
-                    app:fontFamily="@font/comfortaa_bold"/>
+                    app:fontFamily="@font/comfortaa_bold" />
 
                 <CheckBox
                     android:id="@+id/cbSabado"

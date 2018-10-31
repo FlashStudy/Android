@@ -22,7 +22,7 @@ public class CicloOff implements Serializable {
 
 
     @NonNull
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private long codigo;
 
     @Ignore

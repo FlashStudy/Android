@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "100cd7d4cfb9db6e770c9c19848fb07a",
+    "identityHash": "f68aa67b7e8680324bc074607518cdba",
     "entities": [
       {
         "tableName": "assunto",
@@ -92,7 +92,7 @@
       },
       {
         "tableName": "ciclo",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER NOT NULL, `numero_de_materias` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, PRIMARY KEY(`codigo`), FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `numero_de_materias` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "codigo",
@@ -117,7 +117,7 @@
           "columnNames": [
             "codigo"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [
           {
@@ -563,7 +563,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"100cd7d4cfb9db6e770c9c19848fb07a\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"f68aa67b7e8680324bc074607518cdba\")"
     ]
   }
 }

@@ -71,4 +71,13 @@
     <string name="lbl_sexta">Sexta-feira</string>
     <string name="lbl_domingo">Domingo</string>
     <string name="lbl_btn_salvar_ciclo">Salvar ciclo</string>
+    <string name="lbl_dias_estudos">Dias para estudo:</string>
+
+    <string-array name="numMateriasStr">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
 </resources>

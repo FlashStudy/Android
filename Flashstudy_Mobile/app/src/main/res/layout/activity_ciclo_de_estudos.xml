@@ -46,11 +46,13 @@
             android:orientation="horizontal">
 
             <TableLayout
+                android:id="@+id/tbl_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:padding="10dp">
 
-                <TableRow
+                <!--<TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
@@ -117,7 +119,7 @@
                         android:layout_weight="1"
                         android:text="@string/sabado"
                         android:textAppearance="@style/AppTheme.h1_black" />
-                </TableRow>
+                </TableRow>-->
 
             </TableLayout>
         </LinearLayout>

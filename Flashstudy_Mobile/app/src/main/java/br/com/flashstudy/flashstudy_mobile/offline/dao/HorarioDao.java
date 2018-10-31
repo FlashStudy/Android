@@ -35,6 +35,6 @@ public interface HorarioDao {
     void update(HorarioOff horario);
 
     //Procura Horarios de um Usuario
-    @Query("SELECT * FROM horario WHERE usuario_codigo = :codigo ORDER BY codigo ASC")
-    LiveData<List<HorarioOff>> getAllHorariosByUsuario(int codigo);
+    @Query("SELECT * FROM horario WHERE usuario_codigo = :codigo ORDER BY tempo ASC, dia")
+    List<HorarioOff> getAllHorariosByUsuario(long codigo);
 }

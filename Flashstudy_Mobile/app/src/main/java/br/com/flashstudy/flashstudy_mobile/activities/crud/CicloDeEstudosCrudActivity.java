@@ -54,7 +54,7 @@ public class CicloDeEstudosCrudActivity extends AppCompatActivity {
             finish();
         }
 
-        if (cicloOff != null) {
+        if (cicloOff.getCodigo() != 0) {
             spinnerNumMaterias.setSelection((int) cicloOff.getNumMaterias() - 1);
 
             for (HorarioOff h : cicloOff.getHorarios()) {
@@ -69,6 +69,7 @@ public class CicloDeEstudosCrudActivity extends AppCompatActivity {
         } else {
             cicloOff = new CicloOff();
         }
+
     }
 
     @OnClick(R.id.btnSalvarCiclo)
@@ -113,7 +114,8 @@ public class CicloDeEstudosCrudActivity extends AppCompatActivity {
             try {
                 CicloRepositoryOff.salvar(cicloOffs[0], dias, CicloDeEstudosCrudActivity.this);
             } catch (Exception e) {
-                Log.i("ERRO SALVAR CICLO", e.getMessage());
+                Log.e("ERRO SALVAR CICLO", e.getMessage());
+                e.printStackTrace();
                 dialog.dismiss();
             }
             return null;

@@ -29,7 +29,7 @@ public class CicloRepositoryOff {
         try {
             Random rand = new Random();
 
-            CicloOff c = new CicloOff(cicloOff.getCodigo(), cicloOff.getNumMaterias(), cicloOff.getUsuarioCodigo());
+            CicloOff c = new CicloOff(cicloOff.getCodigo(), cicloOff.getNumMaterias(), Util.getLocalUserCodigo(context));
 
             List<DisciplinaOff> disciplinas = DisciplinaRepositoryOff.listarDisciplinas(Util.getLocalUserCodigo(context), context);
 
@@ -43,17 +43,20 @@ public class CicloRepositoryOff {
 
             for (int i = 0; i < dias.size(); i++) {
                 for (int j = 0; j < cicloOff.getNumMaterias(); j++) {
-                    HorarioOff horarioOff = new HorarioOff(j, disciplinas.get(rand.nextInt(arrLength)).getCodigo(), cicloOff.getUsuarioCodigo(), dias.get(i));
+                    HorarioOff horarioOff = new HorarioOff(j+1, disciplinas.get(rand.nextInt(arrLength)).getCodigo(), Util.getLocalUserCodigo(context), dias.get(i));
                     horarios.add(horarioOff);
                 }
             }
 
+            Log.i("HORARIOS", horarios.toString());
+
             AppDatabase.getAppDatabase(context).horarioDao().insertLista(horarios);
-            AppDatabase.getAppDatabase(context).cicloDao().insert(cicloOff);
+            AppDatabase.getAppDatabase(context).cicloDao().insert(c);
 
             return true;
         } catch (Exception e) {
-            Log.i("ERRO SALVAR CICLO", e.getMessage());
+            Log.e("ERRO SALVAR CICLO", e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
