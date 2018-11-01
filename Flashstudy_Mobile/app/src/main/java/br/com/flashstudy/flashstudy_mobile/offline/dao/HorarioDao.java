@@ -35,6 +35,6 @@ public interface HorarioDao {
     void update(HorarioOff horario);
 
     //Procura Horarios de um Usuario
-    @Query("SELECT * FROM horario WHERE usuario_codigo = :codigo ORDER BY tempo ASC, dia")
+    @Query("SELECT * FROM horario WHERE usuario_codigo = :codigo ORDER BY tempo ASC")
     List<HorarioOff> getAllHorariosByUsuario(long codigo);
 }

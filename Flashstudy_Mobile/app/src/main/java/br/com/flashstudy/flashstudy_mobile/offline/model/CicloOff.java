@@ -30,7 +30,7 @@ public class CicloOff implements Serializable {
 
     @NonNull
     @ColumnInfo(name = "numero_de_materias")
-    private long numMaterias;
+    private int numMaterias;
 
     @NonNull
     @ColumnInfo(name = "usuario_codigo")
@@ -40,7 +40,7 @@ public class CicloOff implements Serializable {
     }
 
     @Ignore
-    public CicloOff(@NonNull long codigo, @NonNull long numMaterias, @NonNull long usuarioCodigo) {
+    public CicloOff(@NonNull long codigo, @NonNull int numMaterias, @NonNull long usuarioCodigo) {
         this.codigo = codigo;
         this.numMaterias = numMaterias;
         this.usuarioCodigo = usuarioCodigo;
@@ -64,11 +64,11 @@ public class CicloOff implements Serializable {
     }
 
     @NonNull
-    public long getNumMaterias() {
+    public int getNumMaterias() {
         return numMaterias;
     }
 
-    public void setNumMaterias(@NonNull long numMaterias) {
+    public void setNumMaterias(@NonNull int numMaterias) {
         this.numMaterias = numMaterias;
     }
 
