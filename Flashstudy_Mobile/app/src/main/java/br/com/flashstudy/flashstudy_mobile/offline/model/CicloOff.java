@@ -40,8 +40,7 @@ public class CicloOff implements Serializable {
     }
 
     @Ignore
-    public CicloOff(@NonNull long codigo, @NonNull int numMaterias, @NonNull long usuarioCodigo) {
-        this.codigo = codigo;
+    public CicloOff(@NonNull int numMaterias, @NonNull long usuarioCodigo) {
         this.numMaterias = numMaterias;
         this.usuarioCodigo = usuarioCodigo;
     }

@@ -26,10 +26,21 @@ public class CicloRepositoryOff {
     }
 
     public static boolean salvar(CicloOff cicloOff, List<String> dias, Context context) {
+
+        if(cicloOff.getCodigo() != 0){
+            try{
+                AppDatabase.getAppDatabase(context).cicloDao().delete(cicloOff);
+            }catch (Exception e){
+                Log.e("ERRO DELETAR CICLO ATT", e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
+        }
+
         try {
             Random rand = new Random();
 
-            CicloOff c = new CicloOff(cicloOff.getCodigo(), cicloOff.getNumMaterias(), Util.getLocalUserCodigo(context));
+            CicloOff c = new CicloOff(cicloOff.getNumMaterias(), Util.getLocalUserCodigo(context));
 
             List<DisciplinaOff> disciplinas = DisciplinaRepositoryOff.listarDisciplinas(Util.getLocalUserCodigo(context), context);
 
@@ -61,12 +72,4 @@ public class CicloRepositoryOff {
         }
     }
 
-    public static CicloOff atualizar(long codigo, Context context) {
-        try {
-            return AppDatabase.getAppDatabase(context).cicloDao().getCicloByUsuario(codigo);
-        } catch (Exception e) {
-            Log.i("ERRO BUSCAR CICLO", e.getMessage());
-            return null;
-        }
-    }
 }

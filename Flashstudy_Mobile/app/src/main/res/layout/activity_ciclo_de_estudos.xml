@@ -8,120 +8,65 @@
     android:orientation="vertical"
     tools:context=".activities.CicloDeEstudosActivity">
 
-    <TextView
-        android:id="@+id/lblCicloDeEstudos"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
-        android:text="@string/txt_ciclo_de_estudos"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        app:fontFamily="@font/comfortaa_bold" />
-
-    <View
-        android:id="@+id/Divisor1"
-        android:layout_width="250dp"
-        android:layout_height="1dip"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/gray" />
-
-    <Button
-        android:id="@+id/btnEditarCiclo"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:background="@color/winter"
-        android:text="@string/lbl_btn_editar" />
-
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="10dp"
-        android:background="@drawable/layout_bg">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <TableLayout
-                android:id="@+id/tbl_layout"
+            <TextView
+                android:id="@+id/lblCicloDeEstudos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:text="@string/txt_ciclo_de_estudos"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                app:fontFamily="@font/comfortaa_bold" />
+
+            <View
+                android:id="@+id/Divisor1"
+                android:layout_width="250dp"
+                android:layout_height="1dip"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/gray" />
+
+            <Button
+                android:id="@+id/btnEditarCiclo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:background="@color/winter"
+                android:text="@string/lbl_btn_editar" />
+
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="10dp">
+                android:layout_margin="10dp"
+                android:background="@drawable/layout_bg">
 
-                <!--<TableRow
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/textView19"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="15dp"
+                    <TableLayout
+                        android:id="@+id/tbl_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:text="@string/domingo"
-                        android:textAppearance="@style/AppTheme.h1_black" />
+                        android:padding="10dp">
 
-                    <TextView
-                        android:id="@+id/textView20"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="15dp"
-                        android:layout_weight="1"
-                        android:text="@string/segunda_feira"
-                        android:textAppearance="@style/AppTheme.h1_black" />
-
-                    <TextView
-                        android:id="@+id/textView21"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="15dp"
-                        android:layout_weight="1"
-                        android:text="@string/terca_feira"
-                        android:textAppearance="@style/AppTheme.h1_black" />
-
-                    <TextView
-                        android:id="@+id/textView22"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="15dp"
-                        android:layout_weight="1"
-                        android:text="@string/quarta_feira"
-                        android:textAppearance="@style/AppTheme.h1_black" />
-
-                    <TextView
-                        android:id="@+id/textView23"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="15dp"
-                        android:layout_weight="1"
-                        android:text="@string/quinta_feira"
-                        android:textAppearance="@style/AppTheme.h1_black" />
-
-                    <TextView
-                        android:id="@+id/textView24"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="15dp"
-                        android:layout_weight="1"
-                        android:text="@string/sexta_feira"
-                        android:textAppearance="@style/AppTheme.h1_black" />
-
-                    <TextView
-                        android:id="@+id/textView25"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="15dp"
-                        android:layout_weight="1"
-                        android:text="@string/sabado"
-                        android:textAppearance="@style/AppTheme.h1_black" />
-                </TableRow>-->
-
-            </TableLayout>
+                    </TableLayout>
+                </LinearLayout>
+            </HorizontalScrollView>
         </LinearLayout>
-    </HorizontalScrollView>
+
+    </ScrollView>
+
+
 </LinearLayout>

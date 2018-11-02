@@ -55,7 +55,7 @@ public class CicloDeEstudosCrudActivity extends AppCompatActivity {
         }
 
         if (cicloOff.getCodigo() != 0) {
-            spinnerNumMaterias.setSelection((int) cicloOff.getNumMaterias() - 1);
+            spinnerNumMaterias.setSelection(cicloOff.getNumMaterias() - 1);
 
             for (HorarioOff h : cicloOff.getHorarios()) {
                 for (CheckBox cb : cbDias){
@@ -91,6 +91,8 @@ public class CicloDeEstudosCrudActivity extends AppCompatActivity {
         } catch (Exception e) {
             Toast.makeText(this, "Ocorreu um erro ao salvar o ciclo!", Toast.LENGTH_LONG).show();
         }
+
+
     }
 
     private class Salvar extends AsyncTask<CicloOff, Void, Void> {
@@ -104,7 +106,8 @@ public class CicloDeEstudosCrudActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             dialog = new ProgressDialog(CicloDeEstudosCrudActivity.this);
-            dialog.setMessage("Salvando e gerando ciclo.../");
+            dialog.setTitle("Salvando e gerando ciclo!");
+            dialog.setMessage("Isso pode levar algum tempo...");
             dialog.setCancelable(false);
             dialog.show();
         }
@@ -124,34 +127,6 @@ public class CicloDeEstudosCrudActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             dialog.dismiss();
-        }
-    }
-
-    private class Atualizar extends AsyncTask<CicloOff, Void, Void> {
-        private ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            dialog = new ProgressDialog(CicloDeEstudosCrudActivity.this);
-            dialog.setMessage("Gerando ciclo.../");
-            dialog.setCancelable(false);
-            dialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(CicloOff... cicloOffs) {
-            try {
-
-            } catch (Exception e) {
-                Log.i("ERRO SALVAR CICLO", e.getMessage());
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            dialog.dismiss();
-            finish();
         }
     }
 }

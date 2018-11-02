@@ -3,9 +3,10 @@ package br.com.flashstudy.flashstudy_mobile.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -53,6 +54,9 @@ public class CicloDeEstudosActivity extends AppCompatActivity {
 
     @SuppressLint("NewApi")
     private void populaTela() {
+
+        tableLayout.removeAllViews();
+
         try {
             cicloOff = new BuscarCiclo().execute().get();
         } catch (Exception e) {
@@ -80,40 +84,95 @@ public class CicloDeEstudosActivity extends AppCompatActivity {
 
             List<String> dias = ordenarDias(horarioOffs);
 
+            Log.e("HORARIOS SIZE", "" + horarioOffs.size());
+            Log.e("HORARIOS", horarioOffs.toString());
+
             // Adicionando dias
             TableRow titulo = new TableRow(this);
             titulo.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
 
             for (String dia : dias) {
                 TextView txtDia = new TextView(this);
+
+                //Centralizado
+                txtDia.setGravity(Gravity.CENTER);
+
+                //Cor do texto
+                txtDia.setTextColor(getResources().getColor(android.R.color.black));
+
+                //Paddding
+                txtDia.setPadding(16, 16, 16, 16);
+
+                //Tamanho do texto
+                txtDia.setTextSize(22);
+
+                //Texto
                 txtDia.setText(dia);
-                txtDia.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                txtDia.setTextAppearance(R.style.AppTheme_tbl_titulo);
+
+                //Parâmetros de layout
+                txtDia.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
+
+                //Adiciona ao titulo
                 titulo.addView(txtDia);
             }
 
             tableLayout.addView(titulo, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
 
-            for (HorarioOff h : horarioOffs) {
+            int contador = 0;
+
+            for (int i = 0; i < cicloOff.getNumMaterias(); i++) {
+
+                //Linha da tabela
                 TableRow corpo = new TableRow(this);
                 corpo.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
 
-                for (int i = 0; i < cicloOff.getNumMaterias(); i++) {
+                for (int j = 0; j < dias.size(); j++) {
 
+                    //Disciplina para colocar na tabela
                     DisciplinaOff d = new DisciplinaOff();
-                    for (DisciplinaOff disc : disciplinas) {
-                        if (disc.getCodigo() == h.getDisciplinaCodigo())
+
+                    for (DisciplinaOff disc : disciplinas){
+                        if (disc.getCodigo() == horarioOffs.get(contador).getDisciplinaCodigo()){
                             d = disc;
+                        }
                     }
 
+                    Log.e("CONTADOR DE DISCIPLINA:", "Disciplina " + contador + ": " + d.getNome());
+
+                    //Celula para mostrar o horario
                     TextView txtHorario = new TextView(this);
+
+                    //Centraliza
+                    txtHorario.setGravity(Gravity.CENTER);
+
+                    //Cor do texto
+                    txtHorario.setTextColor(getResources().getColor(android.R.color.black));
+
+                    //Padding
+                    txtHorario.setPadding(16, 16, 16, 16);
+
+                    //Tamanho do texto
+                    txtHorario.setTextSize(20);
+
+                    //Bordas
+                    txtHorario.setBackgroundResource(R.drawable.tbl_celula);
+
+                    //Texto
                     txtHorario.setText(d.getNome());
-                    txtHorario.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                    txtHorario.setTextAppearance(R.style.AppTheme_tbl_corpo);
+
+                    //Layout params
+                    txtHorario.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
+
+                    //Adiciona na tabela
                     corpo.addView(txtHorario);
+
+                    contador++;
                 }
+
                 tableLayout.addView(corpo, new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+
             }
+
         }
     }
 
@@ -161,6 +220,7 @@ public class CicloDeEstudosActivity extends AppCompatActivity {
                 return c;
             } catch (Exception e) {
                 Log.e("ERRO BUSCAR CICLO", e.getMessage());
+                e.printStackTrace();
                 return null;
             }
         }

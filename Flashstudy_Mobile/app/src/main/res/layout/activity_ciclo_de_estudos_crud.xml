@@ -133,7 +133,7 @@
                     android:id="@+id/cbSabado"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/lbl_domingo"
+                    android:text="@string/sabado"
                     android:textAppearance="@style/AppTheme.lbl"
                     android:textColor="@color/black"
                     app:fontFamily="@font/comfortaa_bold" />
