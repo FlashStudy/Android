@@ -1,16 +1,16 @@
 package br.com.flashstudy.flashstudy_mobile.activities.crud;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,8 +27,6 @@ import br.com.flashstudy.flashstudy_mobile.Util.Util;
 import br.com.flashstudy.flashstudy_mobile.offline.model.AssuntoOff;
 import br.com.flashstudy.flashstudy_mobile.offline.model.DisciplinaOff;
 import br.com.flashstudy.flashstudy_mobile.offline.repository.AssuntoRepositoryOff;
-import br.com.flashstudy.flashstudy_mobile.offline.repository.DisciplinaRepositoryOff;
-import br.com.flashstudy.flashstudy_mobile.online.model.Disciplina;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -69,12 +67,17 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
         }
 
 
+        try {
+            assuntos = new BuscarAssuntos().execute(disciplinaOff.getCodigo()).get();
+        } catch (Exception e) {
+            Toast.makeText(this, "Erro ao buscar disciplinas", Toast.LENGTH_LONG).show();
+            finish();
+        }
+
+
         if (disciplinaOff != null) {
             textViewDisciplina.setText(disciplinaOff.getNome());
-            assuntos.addAll(disciplinaOff.getAssuntos());
-
             populaLista();
-
         } else {
             disciplinaOff = new DisciplinaOff();
         }
@@ -90,6 +93,20 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
 
             @Override
             public void create(SwipeMenu menu) {
+                // create "edit" item
+                SwipeMenuItem editItem = new SwipeMenuItem(
+                        getApplicationContext());
+                // set item background
+                editItem.setBackground(new ColorDrawable(Color.rgb(0,
+                        0, 255)));
+                // set item width
+                editItem.setWidth(170);
+                // set a icon
+                editItem.setIcon(R.drawable.ic_edit);
+                // add to menu
+                menu.addMenuItem(editItem);
+
+
                 // create "delete" item
                 SwipeMenuItem deleteItem = new SwipeMenuItem(
                         getApplicationContext());
@@ -112,9 +129,45 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(final int position, SwipeMenu menu, int index) {
                 switch (index) {
+                    case 0:
+                        final AssuntoOff a = assuntos.get(position);
+
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(DisciplinaCrudActivity.this);
+                        alertDialog.setTitle("Editar assunto");
+                        alertDialog.setMessage(R.string.lbl_assunto);
+                        final EditText input = new EditText(DisciplinaCrudActivity.this);
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.MATCH_PARENT);
+                        input.setLayoutParams(lp);
+                        input.setText(a.getTema());
+                        alertDialog.setView(input);
+                        alertDialog.setIcon(R.drawable.ic_edit);
+
+                        alertDialog.setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        a.setTema(input.getText().toString().trim());
+
+                                        if (a.getCodigo() != 0) {
+                                            try {
+                                                new AtualizarAssunto().execute(a);
+                                            } catch (Exception e) {
+                                                Toast.makeText(DisciplinaCrudActivity.this, "Houve um erro ao atualizar o assunto!", Toast.LENGTH_LONG).show();
+                                                finish();
+                                            }
+                                        }
+                                        assuntos.get(position).setTema(a.getTema());
+                                        populaLista();
+                                    }
+                                });
+                        alertDialog.show();
+
+                        break;
 
                     //deletar
-                    case 0:
+                    case 1:
                         AlertDialog.Builder dlg = new AlertDialog.Builder(DisciplinaCrudActivity.this);
                         dlg.setTitle("AVISO!");
                         dlg.setMessage("Tem certeza em deletar esse assunto?");
@@ -125,15 +178,16 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
 
                                 if (assuntos.get(position).getCodigo() != 0) {
 
-                                /*try {
-                                    boolean result = flashcardRepositoryOff.deletar(flashcardOff, getApplicationContext());
-                                    if (result) {
-                                        Toast.makeText(getApplicationContext(), "Flashcard deletado com sucesso!", Toast.LENGTH_LONG).show();
-                                        finish();
+                                    try {
+                                        boolean result = new DeletarAssunto().execute(assuntos.get(position)).get();
+                                        assuntos.remove(position);
+                                        if (result) {
+                                            Toast.makeText(getApplicationContext(), "Disciplina deletado com sucesso!", Toast.LENGTH_LONG).show();
+                                        }
+                                    } catch (Exception e) {
+                                        Toast.makeText(getApplicationContext(), "Houve um erro ao deletar a disciplina!", Toast.LENGTH_LONG).show();
                                     }
-                                } catch (Exception e) {
-                                    Toast.makeText(getApplicationContext(), "Houve um erro ao deletar o flashcard!", Toast.LENGTH_LONG).show();
-                                }*/
+                                    populaLista();
                                 } else {
                                     assuntos.remove(position);
                                     populaLista();
@@ -179,49 +233,66 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
         }
     }
 
-
     private class SalvarAssuntos extends AsyncTask<List<AssuntoOff>, Void, Boolean> {
-        ProgressDialog progressDialog;
 
         @Override
-        protected void onPreExecute() {
-            progressDialog = new ProgressDialog(DisciplinaCrudActivity.this);
-            progressDialog.setMessage("Salvando disciplina... ");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-
-        @Override
-        protected Boolean doInBackground(List<AssuntoOff>... assuntos) {
+        protected Boolean doInBackground(List<AssuntoOff>... lists) {
             try {
-                AssuntoRepositoryOff.salvarAssuntos(assuntos[0], DisciplinaCrudActivity.this);
+                List<AssuntoOff> assuntos = lists[0];
+                AssuntoRepositoryOff.salvarAssuntos(assuntos, DisciplinaCrudActivity.this);
                 return true;
             } catch (Exception e) {
                 Toast.makeText(DisciplinaCrudActivity.this, "Houve um erro ao salvar o cronograma", Toast.LENGTH_LONG).show();
-                progressDialog.dismiss();
                 return false;
             }
         }
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
-            progressDialog.dismiss();
+            Toast.makeText(DisciplinaCrudActivity.this, "Assuntos salvos com sucesso!", Toast.LENGTH_LONG).show();
             finish();
         }
     }
 
-    private class AtualizarAssuntos extends AsyncTask<List<AssuntoOff>, Void, Boolean> {
+    private class AtualizarAssunto extends AsyncTask<AssuntoOff, Void, Boolean> {
 
         @Override
-        protected Boolean doInBackground(List<AssuntoOff>... assuntos) {
+        protected Boolean doInBackground(AssuntoOff... assuntos) {
             try {
-                AssuntoRepositoryOff.salvarAssuntos(assuntos[0], DisciplinaCrudActivity.this);
+                AssuntoRepositoryOff.atualizarAssunto(assuntos[0], DisciplinaCrudActivity.this);
                 return true;
             } catch (Exception e) {
-                Toast.makeText(DisciplinaCrudActivity.this, "Houve um erro ao salvar o cronograma", Toast.LENGTH_LONG).show();
+                Toast.makeText(DisciplinaCrudActivity.this, "Houve um erro ao atualizar o assunto", Toast.LENGTH_LONG).show();
                 return false;
             }
         }
 
+    }
+
+    private class DeletarAssunto extends AsyncTask<AssuntoOff, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(AssuntoOff... assuntos) {
+            try {
+                AssuntoRepositoryOff.deletar(assuntos[0], DisciplinaCrudActivity.this);
+                return true;
+            } catch (Exception e) {
+                Toast.makeText(DisciplinaCrudActivity.this, "Houve um erro ao deletar a disciplina", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }
+
+    }
+
+    private class BuscarAssuntos extends AsyncTask<Long, Void, List<AssuntoOff>> {
+
+        @Override
+        protected List<AssuntoOff> doInBackground(Long... longs) {
+            try {
+                return AssuntoRepositoryOff.listar(longs[0], DisciplinaCrudActivity.this);
+            } catch (Exception e) {
+                return null;
+            }
+        }
     }
 }

@@ -64,27 +64,23 @@
             app:fontFamily="@font/comfortaa_bold" />
     </LinearLayout>
 
-    <com.baoyz.swipemenulistview.SwipeMenuListView
-        android:id="@+id/swipeMenuDisciplinas"
+    <ListView
+        android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="388dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@color/colorPrimary"
-        android:cacheColorHint="@color/black"
-        android:divider="@color/gray"
-        android:dividerHeight="1dp"
-        android:entries="@color/black"
-        android:scrollbars="vertical"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="4dp"
+        android:textAppearance="@style/AppTheme.lbl"
         app:layout_constraintBottom_toTopOf="@+id/fab"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
-    </com.baoyz.swipemenulistview.SwipeMenuListView>
+    </ListView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

@@ -85,11 +85,6 @@ public class PastaOff implements Serializable {
 
     @Override
     public String toString() {
-        return "PastaOff{" +
-                "codigo=" + codigo +
-                ", nome='" + nome + '\'' +
-                ", usuarioCodigo=" + usuarioCodigo +
-                ", flashcards=" + flashcards +
-                '}';
+        return nome;
     }
 }

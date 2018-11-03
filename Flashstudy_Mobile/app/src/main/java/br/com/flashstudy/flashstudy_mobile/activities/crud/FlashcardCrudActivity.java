@@ -10,22 +10,42 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.Util.Util;
+import br.com.flashstudy.flashstudy_mobile.offline.model.AssuntoOff;
+import br.com.flashstudy.flashstudy_mobile.offline.model.DisciplinaOff;
 import br.com.flashstudy.flashstudy_mobile.offline.model.FlashcardOff;
+import br.com.flashstudy.flashstudy_mobile.offline.model.PastaOff;
+import br.com.flashstudy.flashstudy_mobile.offline.repository.AssuntoRepositoryOff;
+import br.com.flashstudy.flashstudy_mobile.offline.repository.DisciplinaRepositoryOff;
 import br.com.flashstudy.flashstudy_mobile.offline.repository.FlashcardRepositoryOff;
+import br.com.flashstudy.flashstudy_mobile.offline.repository.PastaRepositoryOff;
+import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
+import butterknife.OnItemSelected;
 
 public class FlashcardCrudActivity extends AppCompatActivity {
 
     @BindViews({R.id.txtTitulo, R.id.txtPergunta, R.id.txtResposta})
     List<EditText> campos;
+
+    @BindView(R.id.spinAssuntos)
+    Spinner spinAssuntos;
+
+    @BindView(R.id.spinDisciplinas)
+    Spinner spinDisciplinas;
+
+    @BindView(R.id.spinPastas)
+    Spinner spinPastas;
 
     static final int SALVAR = Menu.FIRST;
     static final int DELETAR = Menu.FIRST + 1;
@@ -34,6 +54,11 @@ public class FlashcardCrudActivity extends AppCompatActivity {
     static final int RESPOSTA = Menu.FIRST + 4;
 
     FlashcardOff flashcardOff;
+
+    List<DisciplinaOff> disciplinas = new ArrayList<>();
+    List<AssuntoOff> assuntos = new ArrayList<>();
+    List<PastaOff> pastas = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,16 +74,53 @@ public class FlashcardCrudActivity extends AppCompatActivity {
         try {
             intent = getIntent();
             flashcardOff = (FlashcardOff) intent.getSerializableExtra("flashcard");
-            campos.get(0).setText(flashcardOff.getTitulo());
-            campos.get(1).setText(flashcardOff.getPergunta());
-            campos.get(2).setText("Clique no botão 'Ver resposta' !");
 
-            campos.get(0).setEnabled(false);
-            campos.get(1).setEnabled(false);
-            campos.get(2).setEnabled(false);
+            disciplinas = new BuscarDisciplinas().execute().get();
+            pastas = new BuscarPastas().execute().get();
+
+
+            Log.e("DISCIPLINAS:", disciplinas.toString());
+
+            ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, disciplinas);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinDisciplinas.setAdapter(adapter);
+
+            adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, pastas);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinPastas.setAdapter(adapter);
+
+            if (flashcardOff.getCodigo() != 0) {
+                campos.get(0).setText(flashcardOff.getTitulo());
+                campos.get(1).setText(flashcardOff.getPergunta());
+                campos.get(2).setText("Clique no botão 'Ver resposta' !");
+
+                campos.get(0).setEnabled(false);
+                campos.get(1).setEnabled(false);
+                campos.get(2).setEnabled(false);
+
+                Log.e("FLASHCARD", flashcardOff.toStringCompleto());
+
+                int discPosition = 0;
+                for (int i = 0; i < disciplinas.size(); i++) {
+                    Log.e("DISCIPLINA", "pos: " + i + ": " + disciplinas.get(i).toString());
+                    if (disciplinas.get(i).getCodigo() == flashcardOff.getDisciplinaCodigo()) {
+
+                        discPosition = i;
+                    }
+                }
+
+                Log.e("DISCPOSITION", "posicao = " + discPosition);
+
+                spinDisciplinas.setSelection(discPosition);
+            }
+
+
         } catch (Exception e) {
-
+            Log.e("ERRO", e.getMessage());
+            e.printStackTrace();
         }
+
+
     }
 
 
@@ -92,12 +154,31 @@ public class FlashcardCrudActivity extends AppCompatActivity {
                     flashcardOff.setTitulo(campos.get(0).getText().toString());
                     flashcardOff.setPergunta(campos.get(1).getText().toString());
                     flashcardOff.setResposta(campos.get(2).getText().toString());
+
+                    int discPosition = spinDisciplinas.getSelectedItemPosition();
+                    int assuntoPosition = spinAssuntos.getSelectedItemPosition();
+                    int pastaPosition = spinPastas.getSelectedItemPosition();
+
                     try {
-                        new Salvar().execute(flashcardOff);
-                    } catch (Exception e) {
-                        Toast.makeText(getApplicationContext(), "Houve um erro ao salvar o flashcard!", Toast.LENGTH_LONG).show();
+                        if (disciplinas.get(discPosition).getCodigo() != 0 && assuntos.get(assuntoPosition).getCodigo() != 0 && pastas.get(pastaPosition).getCodigo() != 0) {
+
+                            flashcardOff.setDisciplinaCodigo(disciplinas.get(discPosition).getCodigo());
+                            flashcardOff.setAssuntoCodigo(assuntos.get(assuntoPosition).getCodigo());
+                            flashcardOff.setPastaCodigo(pastas.get(pastaPosition).getCodigo());
+
+                            Log.e("FLASHCARD", flashcardOff.toStringCompleto());
+
+                            try {
+                                new Salvar().execute(flashcardOff);
+                            } catch (Exception e) {
+                                Toast.makeText(getApplicationContext(), "Houve um erro ao salvar o flashcard!", Toast.LENGTH_LONG).show();
+                            }
+                            return true;
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        Toast.makeText(getApplicationContext(), "Selecione uma Disciplina e um Assunto válidos!", Toast.LENGTH_LONG).show();
                     }
-                    return true;
+
                 } else {
                     flashcardOff.setTitulo(campos.get(0).getText().toString());
                     flashcardOff.setPergunta(campos.get(1).getText().toString());
@@ -153,6 +234,35 @@ public class FlashcardCrudActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnItemSelected(R.id.spinDisciplinas)
+    public void populaSpinAssuntos(int position) {
+        try {
+            assuntos = new BuscarAssuntos().execute(disciplinas.get(position).getCodigo()).get();
+
+            ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, assuntos);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinAssuntos.setAdapter(adapter);
+
+            if (flashcardOff.getCodigo() != 0) {
+                Log.e("ASSUNTOS:", assuntos.toString());
+
+                int assuntoPosition = 0;
+                for (int i = 0; i < assuntos.size(); i++) {
+                    Log.e("ASSUNTO", "pos: " + i + ": " + assuntos.get(i).toString());
+                    if (assuntos.get(i).getCodigo() == flashcardOff.getAssuntoCodigo()) {
+
+                        assuntoPosition = i;
+                    }
+                }
+                Log.e("ASSUNTOPOSITION", "posicao = " + assuntoPosition);
+
+                spinAssuntos.setSelection(assuntoPosition);
+            }
+        } catch (Exception e) {
+
+        }
     }
 
     private class Salvar extends AsyncTask<FlashcardOff, Void, Void> {
@@ -214,6 +324,50 @@ public class FlashcardCrudActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             Toast.makeText(getApplicationContext(), "Flashcard atualizado com sucesso!", Toast.LENGTH_LONG).show();
-            finish();        }
+            finish();
+        }
+    }
+
+
+    private class BuscarDisciplinas extends AsyncTask<Void, Void, List<DisciplinaOff>> {
+
+        @Override
+        protected List<DisciplinaOff> doInBackground(Void... voids) {
+            try {
+                return DisciplinaRepositoryOff.listarDisciplinas(Util.getLocalUserCodigo(FlashcardCrudActivity.this), FlashcardCrudActivity.this);
+            } catch (Exception e) {
+                Log.e("ERRO BUSCAR DISCIPLINAS", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    private class BuscarAssuntos extends AsyncTask<Long, Void, List<AssuntoOff>> {
+
+        @Override
+        protected List<AssuntoOff> doInBackground(Long... longs) {
+            try {
+                return AssuntoRepositoryOff.listar(longs[0], FlashcardCrudActivity.this);
+            } catch (Exception e) {
+                Log.e("ERRO BUSCAR ASSUNTOS", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    private class BuscarPastas extends AsyncTask<Void, Void, List<PastaOff>> {
+
+        @Override
+        protected List<PastaOff> doInBackground(Void... longs) {
+            try {
+                return PastaRepositoryOff.listar(Util.getLocalUserCodigo(FlashcardCrudActivity.this), FlashcardCrudActivity.this);
+            } catch (Exception e) {
+                Log.e("ERRO BUSCAR ASSUNTOS", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
+        }
     }
 }

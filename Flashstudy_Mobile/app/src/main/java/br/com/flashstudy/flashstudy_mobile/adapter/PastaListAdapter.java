@@ -12,25 +12,24 @@ import android.widget.TextView;
 import java.util.List;
 
 import br.com.flashstudy.flashstudy_mobile.R;
-import br.com.flashstudy.flashstudy_mobile.offline.model.FlashcardOff;
 import br.com.flashstudy.flashstudy_mobile.offline.model.PastaOff;
 
-public class FlashcardListAdapter extends BaseAdapter {
+public class PastaListAdapter extends BaseAdapter {
 
     private Activity activity;
     private Context mContext;
-    private List<FlashcardOff> flashcards;
+    private List<PastaOff> pastas;
 
-    public FlashcardListAdapter(Activity a, Context context, List<FlashcardOff> flashcardOffs) {
+    public PastaListAdapter(Activity a, Context context, List<PastaOff> pastaOffs) {
         activity = a;
         mContext = context;
-        flashcards = flashcardOffs;
+        pastas = pastaOffs;
 
     }
 
     public int getCount() {
         // TODO Auto-generated method stub
-        return flashcards.size();
+        return pastas.size();
     }
 
     public Object getItem(int arg0) {
@@ -55,8 +54,8 @@ public class FlashcardListAdapter extends BaseAdapter {
         TextView nome = (TextView) vi.findViewById(R.id.txtTitle); // title
         ImageView icone = (ImageView) vi.findViewById(R.id.imgIcon); // thumb image
 
-        nome.setText(flashcards.get(position).getTitulo());
-        icone.setImageResource(R.drawable.ic_flashcard);
+        nome.setText(pastas.get(position).getNome());
+        icone.setImageResource(R.drawable.ic_pasta);
         return vi;
     }
 }

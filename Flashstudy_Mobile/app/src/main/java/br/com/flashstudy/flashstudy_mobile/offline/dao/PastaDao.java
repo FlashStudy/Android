@@ -1,6 +1,5 @@
 package br.com.flashstudy.flashstudy_mobile.offline.dao;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -27,6 +26,6 @@ public interface PastaDao {
 
     //Procura Pastas de um Usuario
     @Query("SELECT * FROM pasta WHERE usuario_codigo = :codigo ORDER BY codigo ASC")
-    LiveData<List<PastaOff>> getAllPastasByUsuario(int codigo);
+    List<PastaOff> getAllPastasByUsuario(long codigo);
 
 }

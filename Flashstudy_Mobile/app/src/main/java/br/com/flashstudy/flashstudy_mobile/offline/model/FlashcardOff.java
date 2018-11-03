@@ -11,31 +11,23 @@ import android.support.annotation.NonNull;
 import java.io.Serializable;
 
 
-/*,
-                        @ForeignKey(entity = DisciplinaOff.class,
-                                    parentColumns = "codigo",
-                                    childColumns = "disciplina_codigo"),
-                        @ForeignKey(entity = AssuntoOff.class,
-                                    parentColumns = "codigo",
-                                    childColumns = "assunto_codigo"),
-                        @ForeignKey(entity = PastaOff.class,
-                                    parentColumns = "codigo",
-                                    childColumns = "pasta_codigo")}
-
-
-                                    ,
-                @Index(value = {"usuario_codigo"}),
-                @Index(value = {"disciplina_codigo"}),
-                @Index(value = {"assunto_codigo"}),
-                @Index(value = {"pasta_codigo"})*/
-
-
 @Entity(tableName = "flashcard",
         foreignKeys = {@ForeignKey(entity = UsuarioOff.class,
                 parentColumns = "codigo",
-                childColumns = "usuario_codigo")},
+                childColumns = "usuario_codigo"),
+                @ForeignKey(entity = DisciplinaOff.class,
+                        parentColumns = "codigo",
+                        childColumns = "disciplina_codigo"),
+                @ForeignKey(entity = AssuntoOff.class,
+                        parentColumns = "codigo",
+                        childColumns = "assunto_codigo"),
+                @ForeignKey(entity = PastaOff.class,
+                        parentColumns = "codigo",
+                        childColumns = "pasta_codigo")},
         indices = {@Index(value = {"codigo"}, unique = true),
-                    @Index(value = {"usuario_codigo"})})
+                @Index(value = {"usuario_codigo"}),
+                @Index(value = {"disciplina_codigo"}),
+                @Index(value = {"assunto_codigo"})})
 public class FlashcardOff implements Serializable {
 
     @NonNull
@@ -61,7 +53,7 @@ public class FlashcardOff implements Serializable {
     @ColumnInfo(name = "usuario_codigo")
     private long usuarioCodigo;
 
-    /*@NonNull
+    @NonNull
     @ColumnInfo(name = "disciplina_codigo")
     private long disciplinaCodigo;
 
@@ -70,7 +62,7 @@ public class FlashcardOff implements Serializable {
     private long assuntoCodigo;
 
     @ColumnInfo(name = "pasta_codigo")
-    private long pastaCodigo;*/
+    private long pastaCodigo;
 
     public FlashcardOff() {
     }
@@ -146,7 +138,7 @@ public class FlashcardOff implements Serializable {
         this.usuarioCodigo = usuarioCodigo;
     }
 
-    /*@NonNull
+    @NonNull
     public long getDisciplinaCodigo() {
         return disciplinaCodigo;
     }
@@ -172,6 +164,10 @@ public class FlashcardOff implements Serializable {
         this.pastaCodigo = pastaCodigo;
     }
 
+    /*
+
+
+
     @Override
     public String toString() {
         return "FlashcardOff{" +
@@ -187,4 +183,22 @@ public class FlashcardOff implements Serializable {
                 ", pastaCodigo=" + pastaCodigo +
                 '}';
     }*/
+
+    @Override
+    public String toString() {
+        return titulo;
+    }
+
+    public String toStringCompleto() {
+        return "FlashcardOff{" +
+                "codigo=" + codigo +
+                ", pergunta='" + pergunta + '\'' +
+                ", resposta='" + resposta + '\'' +
+                ", titulo='" + titulo + '\'' +
+                ", usuarioCodigo=" + usuarioCodigo +
+                ", disciplinaCodigo=" + disciplinaCodigo +
+                ", assuntoCodigo=" + assuntoCodigo +
+                ", pastaCodigo=" + pastaCodigo +
+                '}';
+    }
 }

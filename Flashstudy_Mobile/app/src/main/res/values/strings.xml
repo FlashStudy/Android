@@ -72,6 +72,8 @@
     <string name="lbl_domingo">Domingo</string>
     <string name="lbl_btn_salvar_ciclo">Salvar ciclo</string>
     <string name="lbl_dias_estudos">Dias para estudo:</string>
+    <string name="lbl_materia">Matéria:</string>
+    <string name="lbl_pasta">Pasta:</string>
 
     <string-array name="numMateriasStr">
         <item>1</item>

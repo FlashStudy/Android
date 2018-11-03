@@ -1,16 +1,19 @@
 package br.com.flashstudy.flashstudy_mobile.activities;
 
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -20,8 +23,11 @@ import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.Util.Util;
 import br.com.flashstudy.flashstudy_mobile.activities.crud.FlashcardCrudActivity;
 import br.com.flashstudy.flashstudy_mobile.adapter.FlashcardListAdapter;
+import br.com.flashstudy.flashstudy_mobile.adapter.PastaListAdapter;
 import br.com.flashstudy.flashstudy_mobile.offline.model.FlashcardOff;
+import br.com.flashstudy.flashstudy_mobile.offline.model.PastaOff;
 import br.com.flashstudy.flashstudy_mobile.offline.repository.FlashcardRepositoryOff;
+import br.com.flashstudy.flashstudy_mobile.offline.repository.PastaRepositoryOff;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -29,8 +35,11 @@ import butterknife.OnItemClick;
 
 public class FlashcardActivity extends AppCompatActivity {
 
-    @BindView(R.id.dynamic_list)
+    @BindView(R.id.listFlashcards)
     public ListView listViewFlashcards;
+
+    @BindView(R.id.listPastas)
+    public ListView listViewPastas;
 
     static final int FLASHCARDS = Menu.FIRST;
     static final int PASTAS = Menu.FIRST + 1;
@@ -42,6 +51,9 @@ public class FlashcardActivity extends AppCompatActivity {
     static final int DELETAR_PASTA = Menu.FIRST + 5;
 
     List<FlashcardOff> flashcards;
+    List<PastaOff> pastas;
+
+    boolean pasta_selecionada = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,16 +71,38 @@ public class FlashcardActivity extends AppCompatActivity {
         populaTela();
     }
 
-    public void populaTela(){
+    public void populaTela() {
+        pasta_selecionada = false;
         try {
             flashcards = new ListarFlashcard().execute().get();
-        }catch (Exception e){
-            Toast.makeText(getApplicationContext(), "Erro ao listar flashcards!", Toast.LENGTH_LONG).show();
+            pastas = new ListarPastas().execute().get();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Erro ao listar flashcards/pastas!", Toast.LENGTH_LONG).show();
             finish();
         }
 
         if (flashcards != null) {
-            listViewFlashcards.setAdapter(new FlashcardListAdapter(getApplicationContext(), flashcards));
+            FlashcardListAdapter adapter = new FlashcardListAdapter(this, this, flashcards);
+            listViewFlashcards.setAdapter(adapter);
+            listViewPastas.setVisibility(View.VISIBLE);
+        } else {
+            Toast.makeText(getApplicationContext(), "Nenhum flashcard cadastrado!", Toast.LENGTH_LONG).show();
+        }
+
+        if (pastas != null) {
+            PastaListAdapter adapter = new PastaListAdapter(this, this, pastas);
+            listViewPastas.setAdapter(adapter);
+
+        }
+    }
+
+    public void populaTelaPasta() {
+        pasta_selecionada = true;
+        if (flashcards != null) {
+            FlashcardListAdapter adapter = new FlashcardListAdapter(this, this, flashcards);
+            listViewFlashcards.setAdapter(adapter);
+
+            listViewPastas.setVisibility(View.GONE);
         } else {
             Toast.makeText(getApplicationContext(), "Nenhum flashcard cadastrado!", Toast.LENGTH_LONG).show();
         }
@@ -100,6 +134,38 @@ public class FlashcardActivity extends AppCompatActivity {
                 Intent intent = new Intent(FlashcardActivity.this, FlashcardCrudActivity.class);
                 startActivity(intent);
                 return true;
+            case NOVA_PASTA:
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(FlashcardActivity.this);
+                alertDialog.setTitle("Nova pasta");
+                alertDialog.setMessage("Nome da pasta:");
+                final EditText input = new EditText(FlashcardActivity.this);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                input.setLayoutParams(lp);
+                alertDialog.setView(input);
+                alertDialog.setIcon(R.drawable.ic_edit);
+
+                alertDialog.setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                PastaOff pastaOff = new PastaOff();
+                                pastaOff.setNome(input.getText().toString().trim());
+
+                                try {
+                                    new SalvarPasta().execute(pastaOff);
+                                    Toast.makeText(FlashcardActivity.this, "Pasta salva com sucesso!", Toast.LENGTH_SHORT).show();
+                                    populaTela();
+                                } catch (Exception e) {
+                                    Toast.makeText(FlashcardActivity.this, "Erro ao salvar a pasta!", Toast.LENGTH_SHORT).show();
+                                    Log.e("ERRO SALVAR PASTA", e.getMessage());
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                alertDialog.show();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -112,23 +178,94 @@ public class FlashcardActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    @OnItemClick(R.id.dynamic_list)
-    public void seleciona(int position){
+    @OnItemClick(R.id.listFlashcards)
+    public void selecionaFlashcard(int position) {
         Intent intent = new Intent(FlashcardActivity.this, FlashcardCrudActivity.class);
         intent.putExtra("flashcard", flashcards.get(position));
         startActivity(intent);
     }
 
-    private class ListarFlashcard extends AsyncTask<Void, Void, List<FlashcardOff>>{
+    @OnItemClick(R.id.listPastas)
+    public void selecionaPasta(int position) {
+        PastaOff pastaOff = pastas.get(position);
+        try {
+            flashcards = new ListarFlashcardsPorPasta().execute(pastaOff.getCodigo()).get();
+            populaTelaPasta();
+        } catch (Exception e) {
+            Toast.makeText(this, "Houve um erro ao acessar os flashcards!", Toast.LENGTH_LONG).show();
+            Log.e("ERRO LISTAR PASTA", e.getMessage());
+            e.printStackTrace();
+            finish();
+        }
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (pasta_selecionada) {
+            populaTela();
+        } else {
+            finish();
+        }
+    }
+
+    private class ListarFlashcard extends AsyncTask<Void, Void, List<FlashcardOff>> {
 
         @Override
         protected List<FlashcardOff> doInBackground(Void... voids) {
-            try{
+            try {
                 long codigo = Util.getLocalUserCodigo(FlashcardActivity.this);
                 return FlashcardRepositoryOff.listar(codigo, FlashcardActivity.this);
-            }catch (Exception e){
-                Log.i("ERRO LISTAR FLASH", e.getMessage());
+            } catch (Exception e) {
+                Log.e("ERRO LISTAR FLASH", e.getMessage());
+                e.printStackTrace();
                 return null;
+            }
+        }
+    }
+
+    private class ListarFlashcardsPorPasta extends AsyncTask<Long, Void, List<FlashcardOff>> {
+
+        @Override
+        protected List<FlashcardOff> doInBackground(Long... longs) {
+            try {
+                return FlashcardRepositoryOff.listarPorPasta(longs[0], FlashcardActivity.this);
+            } catch (Exception e) {
+                Log.e("ERRO LISTAR FLASH", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    private class ListarPastas extends AsyncTask<Void, Void, List<PastaOff>> {
+
+        @Override
+        protected List<PastaOff> doInBackground(Void... voids) {
+            try {
+                long codigo = Util.getLocalUserCodigo(FlashcardActivity.this);
+                return PastaRepositoryOff.listar(codigo, FlashcardActivity.this);
+            } catch (Exception e) {
+                Log.e("ERRO LISTAR PASTAS", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    private class SalvarPasta extends AsyncTask<PastaOff, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(PastaOff... pastaOffs) {
+            try {
+                PastaOff pasta = pastaOffs[0];
+                pasta.setUsuarioCodigo(Util.getLocalUserCodigo(FlashcardActivity.this));
+                PastaRepositoryOff.salvar(pasta, FlashcardActivity.this);
+                return true;
+            } catch (Exception e) {
+                Log.e("ERRO ASYNC PASTA", e.getMessage());
+                e.printStackTrace();
+                return false;
             }
         }
     }

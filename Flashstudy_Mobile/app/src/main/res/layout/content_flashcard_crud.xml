@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
@@ -12,7 +11,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="15dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -20,37 +20,68 @@
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/lblDisciplinas"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/comfortaa_regular"
-                android:text="@string/txt_flashcards"
-                android:textColor="@android:color/background_light"
-                android:textSize="36sp"
-                app:fontFamily="@font/comfortaa_bold"
-                tools:targetApi="jelly_bean" />
+                android:text="@string/lbl_materia"
+                android:textAppearance="@style/AppTheme.lbl"
+                android:textColor="@color/white"
+                app:fontFamily="@font/comfortaa_bold" />
 
-            <View
-                android:id="@+id/Divisor1"
-                android:layout_width="250dp"
-                android:layout_height="1dip"
-                android:layout_gravity="center_horizontal"
-                android:background="@color/gray" />
+            <Spinner
+                android:id="@+id/spinDisciplinas"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:background="@color/winter"
+                app:fontFamily="@font/comfortaa_bold" />
+
+            <TextView
+                android:id="@+id/lblAssuntos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/lbl_assunto"
+                android:textAppearance="@style/AppTheme.lbl"
+                android:textColor="@color/white"
+                app:fontFamily="@font/comfortaa_bold" />
+
+            <Spinner
+                android:id="@+id/spinAssuntos"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:background="@color/winter"
+                app:fontFamily="@font/comfortaa_bold" />
+
+            <TextView
+                android:id="@+id/lblPasta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/lbl_pasta"
+                android:textAppearance="@style/AppTheme.lbl"
+                android:textColor="@color/white"
+                app:fontFamily="@font/comfortaa_bold" />
+
+            <Spinner
+                android:id="@+id/spinPastas"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:background="@color/winter"
+                app:fontFamily="@font/comfortaa_bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="15dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/layout_bg"
                 android:backgroundTint="#4286f4"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="15dp">
 
                 <TextView
                     android:id="@+id/textViewTitulo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
                     android:fontFamily="@font/comfortaa_bold"
                     android:text="@string/lbl_flashcard_titulo"
                     android:textAppearance="@style/AppTheme.lbl_black" />
@@ -70,7 +101,7 @@
                     android:id="@+id/textViewPergunta"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
+                    android:layout_marginTop="15dp"
                     android:fontFamily="@font/comfortaa_bold"
                     android:text="@string/lbl_flashcard_pergunta"
                     android:textAppearance="@style/AppTheme.lbl_black" />
@@ -91,16 +122,16 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/layout_bg"
                 android:backgroundTint="#00a55d"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="15dp">
 
                 <TextView
                     android:id="@+id/textViewResposta"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
                     android:fontFamily="@font/comfortaa_bold"
                     android:text="@string/lbl_flashcard_resposta"
                     android:textAppearance="@style/AppTheme.lbl_black" />

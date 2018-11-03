@@ -20,6 +20,15 @@ public class FlashcardRepositoryOff {
         }
     }
 
+    public static List<FlashcardOff> listarPorPasta(long codigo, Context context) {
+        try {
+            return AppDatabase.getAppDatabase(context).flashcardDao().getAllFlashcardOffsByPasta(codigo);
+        } catch (Exception e) {
+            Log.i("ERRO LISTAR FLASH", e.getMessage());
+            return null;
+        }
+    }
+
     public static boolean salvar(FlashcardOff flashcardOff, Context context) {
         try {
             AppDatabase.getAppDatabase(context).flashcardDao().insert(flashcardOff);
