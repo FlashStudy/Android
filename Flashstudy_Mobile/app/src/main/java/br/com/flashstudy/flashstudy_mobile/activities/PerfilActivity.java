@@ -1,11 +1,8 @@
 package br.com.flashstudy.flashstudy_mobile.activities;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +12,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import br.com.flashstudy.flashstudy_mobile.R;
+import br.com.flashstudy.flashstudy_mobile.Util.Util;
 import br.com.flashstudy.flashstudy_mobile.offline.model.UsuarioOff;
 import br.com.flashstudy.flashstudy_mobile.offline.repository.UsuarioRepositoryOff;
 import butterknife.BindView;
@@ -25,24 +23,25 @@ import butterknife.OnClick;
 public class PerfilActivity extends AppCompatActivity {
 
     @BindViews({R.id.txtNome, R.id.txtSenha, R.id.txtConfirmeSenha})
-    List<EditText> campos;
+    public List<EditText> campos;
 
     @BindViews({R.id.btnConfirmar, R.id.btnCancelar})
-    List<Button> btns;
+    public List<Button> btns;
 
     @BindView(R.id.txtEmail)
-    EditText txtEmail;
+    public EditText txtEmail;
 
-    UsuarioOff usuarioOff;
+    private UsuarioOff usuarioOff;
 
-    UsuarioRepositoryOff usuarioRepositoryOff = new UsuarioRepositoryOff();
+    private UsuarioRepositoryOff usuarioRepositoryOff;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil);
+        usuarioRepositoryOff = new UsuarioRepositoryOff(this);
         try {
-            usuarioOff = new LocalUser().execute().get();
+            usuarioOff = usuarioRepositoryOff.getLocaluserById(Util.getLocalUserCodigo(this));
         } catch (Exception e) {
             Log.i("ERRO NA CONSULTA", e.getMessage());
             Toast.makeText(PerfilActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -91,22 +90,5 @@ public class PerfilActivity extends AppCompatActivity {
         campos.get(0).setText(usuarioOff.getNome());
         campos.get(1).setText("");
         campos.get(1).setText("");
-    }
-
-    private class LocalUser extends AsyncTask<Void, Void, UsuarioOff> {
-
-        @Override
-        protected UsuarioOff doInBackground(Void... voids) {
-            try {
-                SharedPreferences sharedPreferences = getSharedPreferences("usuario", Context.MODE_PRIVATE);
-                long codigo = sharedPreferences.getLong("codigo", 0);
-
-                return usuarioRepositoryOff.getLocaluserById(codigo, PerfilActivity.this);
-            } catch (Exception e) {
-                Toast.makeText(PerfilActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-            return null;
-        }
-
     }
 }

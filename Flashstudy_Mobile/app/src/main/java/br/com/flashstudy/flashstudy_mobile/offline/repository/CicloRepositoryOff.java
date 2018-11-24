@@ -1,6 +1,7 @@
 package br.com.flashstudy.flashstudy_mobile.offline.repository;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -12,26 +13,53 @@ import br.com.flashstudy.flashstudy_mobile.offline.database.AppDatabase;
 import br.com.flashstudy.flashstudy_mobile.offline.model.CicloOff;
 import br.com.flashstudy.flashstudy_mobile.offline.model.DisciplinaOff;
 import br.com.flashstudy.flashstudy_mobile.offline.model.HorarioOff;
-import br.com.flashstudy.flashstudy_mobile.online.model.Horario;
 
 public class CicloRepositoryOff {
 
-    public static CicloOff buscarPorUsario(long codigo, Context context) {
+    private Context context;
+    private DisciplinaRepositoryOff disciplinaRepositoryOff;
+    private HorarioRepositoryOff horarioRepositoryOff;
+
+
+    public CicloRepositoryOff(Context context) {
+        this.context = context;
+        disciplinaRepositoryOff = new DisciplinaRepositoryOff(context);
+        horarioRepositoryOff = new HorarioRepositoryOff(context);
+    }
+
+    public CicloOff buscarPorUsario(long codigo) {
         try {
-            return AppDatabase.getAppDatabase(context).cicloDao().getCicloByUsuario(codigo);
+            return new BuscarPorUsuario().execute(codigo).get();
         } catch (Exception e) {
-            Log.i("ERRO BUSCAR CICLO", e.getMessage());
+            Log.e("ERRO BUSCAR CICLO", e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
 
-    public static boolean salvar(CicloOff cicloOff, List<String> dias, Context context) {
+    private class BuscarPorUsuario extends AsyncTask<Long, Void, CicloOff> {
 
-        if(cicloOff.getCodigo() != 0){
-            try{
-                AppDatabase.getAppDatabase(context).cicloDao().delete(cicloOff);
-            }catch (Exception e){
-                Log.e("ERRO DELETAR CICLO ATT", e.getMessage());
+        @Override
+        protected CicloOff doInBackground(Long... longs) {
+            try {
+                return AppDatabase.getAppDatabase(context).cicloDao().getCicloByUsuario(longs[0]);
+            } catch (Exception e) {
+                Log.e("ERRO BUSCAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    public boolean salvar(CicloOff cicloOff, List<String> dias) {
+
+        long codigo_usuario = Util.getLocalUserCodigo(context);
+
+        if (cicloOff.getCodigo() != 0) {
+            try {
+                new Deletar().execute(cicloOff).get();
+            } catch (Exception e) {
+                Log.e("ERRO DELETAR CICLO", e.getMessage());
                 e.printStackTrace();
                 return false;
             }
@@ -42,33 +70,71 @@ public class CicloRepositoryOff {
 
             CicloOff c = new CicloOff(cicloOff.getNumMaterias(), Util.getLocalUserCodigo(context));
 
-            List<DisciplinaOff> disciplinas = DisciplinaRepositoryOff.listarDisciplinas(Util.getLocalUserCodigo(context), context);
+            List<DisciplinaOff> disciplinas = disciplinaRepositoryOff.listar(codigo_usuario);
 
             int arrLength = disciplinas.size();
 
             List<HorarioOff> horarios = new ArrayList<>();
 
             if (cicloOff.getHorarios() != null) {
-                AppDatabase.getAppDatabase(context).horarioDao().deleteLista(cicloOff.getHorarios());
+                horarioRepositoryOff.deletarLista(cicloOff.getHorarios());
             }
 
             for (int i = 0; i < dias.size(); i++) {
                 for (int j = 0; j < cicloOff.getNumMaterias(); j++) {
-                    HorarioOff horarioOff = new HorarioOff(j+1, disciplinas.get(rand.nextInt(arrLength)).getCodigo(), Util.getLocalUserCodigo(context), dias.get(i));
+                    HorarioOff horarioOff = new HorarioOff(j + 1, disciplinas.get(rand.nextInt(arrLength)).getCodigo(), Util.getLocalUserCodigo(context), dias.get(i));
                     horarios.add(horarioOff);
                 }
             }
 
             Log.i("HORARIOS", horarios.toString());
 
-            AppDatabase.getAppDatabase(context).horarioDao().insertLista(horarios);
-            AppDatabase.getAppDatabase(context).cicloDao().insert(c);
 
-            return true;
+            if (horarioRepositoryOff.salvarLista(horarios)) {
+                boolean res = new Salvar().execute(c).get();
+                if (res) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+
         } catch (Exception e) {
             Log.e("ERRO SALVAR CICLO", e.getMessage());
             e.printStackTrace();
             return false;
+        }
+    }
+
+    private class Deletar extends AsyncTask<CicloOff, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(CicloOff... cicloOffs) {
+            try {
+                AppDatabase.getAppDatabase(context).cicloDao().deletar(cicloOffs[0]);
+                return true;
+            } catch (Exception e) {
+                Log.e("ERRO DELETAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
+
+    private class Salvar extends AsyncTask<CicloOff, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(CicloOff... cicloOffs) {
+            try {
+                AppDatabase.getAppDatabase(context).cicloDao().salvar(cicloOffs[0]);
+                return true;
+            } catch (Exception e) {
+                Log.e("ERRO SALVAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
         }
     }
 

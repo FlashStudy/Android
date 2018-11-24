@@ -2,7 +2,6 @@ package br.com.flashstudy.flashstudy_mobile.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -50,10 +49,14 @@ public class FlashcardActivity extends AppCompatActivity {
     static final int NOVA_PASTA = Menu.FIRST + 4;
     static final int DELETAR_PASTA = Menu.FIRST + 5;
 
-    List<FlashcardOff> flashcards;
-    List<PastaOff> pastas;
+    private FlashcardRepositoryOff flashcardRepositoryOff;
+    private PastaRepositoryOff pastaRepositoryOff;
 
-    boolean pasta_selecionada = false;
+    private List<FlashcardOff> flashcards;
+    private List<PastaOff> pastas;
+
+    private boolean pasta_selecionada;
+    private long codigo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,14 +71,18 @@ public class FlashcardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        flashcardRepositoryOff = new FlashcardRepositoryOff(this);
+        pastaRepositoryOff = new PastaRepositoryOff(this);
+        pasta_selecionada = false;
+        codigo = Util.getLocalUserCodigo(this);
         populaTela();
     }
 
     public void populaTela() {
         pasta_selecionada = false;
         try {
-            flashcards = new ListarFlashcard().execute().get();
-            pastas = new ListarPastas().execute().get();
+            flashcards = flashcardRepositoryOff.listar(codigo);
+            pastas = pastaRepositoryOff.listar(codigo);
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "Erro ao listar flashcards/pastas!", Toast.LENGTH_LONG).show();
             finish();
@@ -152,9 +159,9 @@ public class FlashcardActivity extends AppCompatActivity {
 
                                 PastaOff pastaOff = new PastaOff();
                                 pastaOff.setNome(input.getText().toString().trim());
-
+                                pastaOff.setUsuarioCodigo(codigo);
                                 try {
-                                    new SalvarPasta().execute(pastaOff);
+                                    pastaRepositoryOff.salvar(pastaOff);
                                     Toast.makeText(FlashcardActivity.this, "Pasta salva com sucesso!", Toast.LENGTH_SHORT).show();
                                     populaTela();
                                 } catch (Exception e) {
@@ -189,7 +196,7 @@ public class FlashcardActivity extends AppCompatActivity {
     public void selecionaPasta(int position) {
         PastaOff pastaOff = pastas.get(position);
         try {
-            flashcards = new ListarFlashcardsPorPasta().execute(pastaOff.getCodigo()).get();
+            flashcards = flashcardRepositoryOff.listarPorPasta(pastaOff.getCodigo());
             populaTelaPasta();
         } catch (Exception e) {
             Toast.makeText(this, "Houve um erro ao acessar os flashcards!", Toast.LENGTH_LONG).show();
@@ -206,67 +213,6 @@ public class FlashcardActivity extends AppCompatActivity {
             populaTela();
         } else {
             finish();
-        }
-    }
-
-    private class ListarFlashcard extends AsyncTask<Void, Void, List<FlashcardOff>> {
-
-        @Override
-        protected List<FlashcardOff> doInBackground(Void... voids) {
-            try {
-                long codigo = Util.getLocalUserCodigo(FlashcardActivity.this);
-                return FlashcardRepositoryOff.listar(codigo, FlashcardActivity.this);
-            } catch (Exception e) {
-                Log.e("ERRO LISTAR FLASH", e.getMessage());
-                e.printStackTrace();
-                return null;
-            }
-        }
-    }
-
-    private class ListarFlashcardsPorPasta extends AsyncTask<Long, Void, List<FlashcardOff>> {
-
-        @Override
-        protected List<FlashcardOff> doInBackground(Long... longs) {
-            try {
-                return FlashcardRepositoryOff.listarPorPasta(longs[0], FlashcardActivity.this);
-            } catch (Exception e) {
-                Log.e("ERRO LISTAR FLASH", e.getMessage());
-                e.printStackTrace();
-                return null;
-            }
-        }
-    }
-
-    private class ListarPastas extends AsyncTask<Void, Void, List<PastaOff>> {
-
-        @Override
-        protected List<PastaOff> doInBackground(Void... voids) {
-            try {
-                long codigo = Util.getLocalUserCodigo(FlashcardActivity.this);
-                return PastaRepositoryOff.listar(codigo, FlashcardActivity.this);
-            } catch (Exception e) {
-                Log.e("ERRO LISTAR PASTAS", e.getMessage());
-                e.printStackTrace();
-                return null;
-            }
-        }
-    }
-
-    private class SalvarPasta extends AsyncTask<PastaOff, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(PastaOff... pastaOffs) {
-            try {
-                PastaOff pasta = pastaOffs[0];
-                pasta.setUsuarioCodigo(Util.getLocalUserCodigo(FlashcardActivity.this));
-                PastaRepositoryOff.salvar(pasta, FlashcardActivity.this);
-                return true;
-            } catch (Exception e) {
-                Log.e("ERRO ASYNC PASTA", e.getMessage());
-                e.printStackTrace();
-                return false;
-            }
         }
     }
 }

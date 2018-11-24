@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -34,23 +33,27 @@ import butterknife.OnClick;
 public class DisciplinaCrudActivity extends AppCompatActivity {
 
     @BindView(R.id.txtAssunto)
-    EditText txtAssunto;
+    public EditText txtAssunto;
 
     @BindView(R.id.lblDisciplina)
-    TextView textViewDisciplina;
+    public TextView textViewDisciplina;
 
     @BindView(R.id.swipeMenuAssuntos)
-    SwipeMenuListView swipeMenuListView;
+    public SwipeMenuListView swipeMenuListView;
+
+    private AssuntoRepositoryOff assuntoRepositoryOff;
 
     private DisciplinaOff disciplinaOff;
     private List<AssuntoOff> assuntos = new ArrayList<>();
 
-    long codigoUsuario;
+    private long codigoUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_disciplina_crud);
+
+        assuntoRepositoryOff = new AssuntoRepositoryOff(this);
 
         ButterKnife.bind(this);
 
@@ -68,7 +71,7 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
 
 
         try {
-            assuntos = new BuscarAssuntos().execute(disciplinaOff.getCodigo()).get();
+            assuntos = assuntoRepositoryOff.listarPorDisciplinaCodigo(disciplinaOff.getCodigo());
         } catch (Exception e) {
             Toast.makeText(this, "Erro ao buscar disciplinas", Toast.LENGTH_LONG).show();
             finish();
@@ -152,7 +155,7 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
 
                                         if (a.getCodigo() != 0) {
                                             try {
-                                                new AtualizarAssunto().execute(a);
+                                                assuntoRepositoryOff.atualizar(a);
                                             } catch (Exception e) {
                                                 Toast.makeText(DisciplinaCrudActivity.this, "Houve um erro ao atualizar o assunto!", Toast.LENGTH_LONG).show();
                                                 finish();
@@ -179,9 +182,8 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
                                 if (assuntos.get(position).getCodigo() != 0) {
 
                                     try {
-                                        boolean result = new DeletarAssunto().execute(assuntos.get(position)).get();
-                                        assuntos.remove(position);
-                                        if (result) {
+                                        if (assuntoRepositoryOff.deletar(assuntos.get(position))) {
+                                            assuntos.remove(position);
                                             Toast.makeText(getApplicationContext(), "Disciplina deletado com sucesso!", Toast.LENGTH_LONG).show();
                                         }
                                     } catch (Exception e) {
@@ -206,7 +208,7 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
     @OnClick(R.id.fab)
     public void salvarAssuntos() {
         try {
-            new SalvarAssuntos().execute(assuntos);
+            assuntoRepositoryOff.salvarLista(assuntos);
         } catch (Exception e) {
             Toast.makeText(DisciplinaCrudActivity.this, "Houve um erro ao salvar o cronograma! Tente novamente!", Toast.LENGTH_LONG).show();
         }
@@ -233,66 +235,4 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
         }
     }
 
-    private class SalvarAssuntos extends AsyncTask<List<AssuntoOff>, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(List<AssuntoOff>... lists) {
-            try {
-                List<AssuntoOff> assuntos = lists[0];
-                AssuntoRepositoryOff.salvarAssuntos(assuntos, DisciplinaCrudActivity.this);
-                return true;
-            } catch (Exception e) {
-                Toast.makeText(DisciplinaCrudActivity.this, "Houve um erro ao salvar o cronograma", Toast.LENGTH_LONG).show();
-                return false;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            Toast.makeText(DisciplinaCrudActivity.this, "Assuntos salvos com sucesso!", Toast.LENGTH_LONG).show();
-            finish();
-        }
-    }
-
-    private class AtualizarAssunto extends AsyncTask<AssuntoOff, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(AssuntoOff... assuntos) {
-            try {
-                AssuntoRepositoryOff.atualizarAssunto(assuntos[0], DisciplinaCrudActivity.this);
-                return true;
-            } catch (Exception e) {
-                Toast.makeText(DisciplinaCrudActivity.this, "Houve um erro ao atualizar o assunto", Toast.LENGTH_LONG).show();
-                return false;
-            }
-        }
-
-    }
-
-    private class DeletarAssunto extends AsyncTask<AssuntoOff, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(AssuntoOff... assuntos) {
-            try {
-                AssuntoRepositoryOff.deletar(assuntos[0], DisciplinaCrudActivity.this);
-                return true;
-            } catch (Exception e) {
-                Toast.makeText(DisciplinaCrudActivity.this, "Houve um erro ao deletar a disciplina", Toast.LENGTH_LONG).show();
-                return false;
-            }
-        }
-
-    }
-
-    private class BuscarAssuntos extends AsyncTask<Long, Void, List<AssuntoOff>> {
-
-        @Override
-        protected List<AssuntoOff> doInBackground(Long... longs) {
-            try {
-                return AssuntoRepositoryOff.listar(longs[0], DisciplinaCrudActivity.this);
-            } catch (Exception e) {
-                return null;
-            }
-        }
-    }
 }

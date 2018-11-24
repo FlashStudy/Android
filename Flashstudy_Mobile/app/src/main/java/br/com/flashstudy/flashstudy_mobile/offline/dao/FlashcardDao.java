@@ -15,15 +15,15 @@ public interface FlashcardDao {
 
     //Insere
     @Insert
-    void insert(FlashcardOff flashcard);
+    void salvar(FlashcardOff flashcardOff);
 
     //Deleta
     @Delete
-    void delete(FlashcardOff flashcard);
+    void deletar(FlashcardOff flashcardOff);
 
     //Atualiza
     @Update
-    void update(FlashcardOff flashcard);
+    void atualizar(FlashcardOff flashcardOff);
 
     //Procura Flashcards de um Usuario que não estão em uma pasta
     @Query("SELECT * FROM flashcard WHERE usuario_codigo = :codigo AND pasta_codigo IN (0) ORDER BY titulo ASC")

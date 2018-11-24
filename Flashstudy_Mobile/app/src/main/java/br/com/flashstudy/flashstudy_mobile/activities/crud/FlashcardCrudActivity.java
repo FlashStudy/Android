@@ -2,7 +2,6 @@ package br.com.flashstudy.flashstudy_mobile.activities.crud;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -36,16 +35,16 @@ import butterknife.OnItemSelected;
 public class FlashcardCrudActivity extends AppCompatActivity {
 
     @BindViews({R.id.txtTitulo, R.id.txtPergunta, R.id.txtResposta})
-    List<EditText> campos;
+    public List<EditText> campos;
 
     @BindView(R.id.spinAssuntos)
-    Spinner spinAssuntos;
+    public Spinner spinAssuntos;
 
     @BindView(R.id.spinDisciplinas)
-    Spinner spinDisciplinas;
+    public Spinner spinDisciplinas;
 
     @BindView(R.id.spinPastas)
-    Spinner spinPastas;
+    public Spinner spinPastas;
 
     static final int SALVAR = Menu.FIRST;
     static final int DELETAR = Menu.FIRST + 1;
@@ -53,12 +52,18 @@ public class FlashcardCrudActivity extends AppCompatActivity {
     static final int EDITAR = Menu.FIRST + 3;
     static final int RESPOSTA = Menu.FIRST + 4;
 
-    FlashcardOff flashcardOff;
+    private FlashcardRepositoryOff flashcardRepositoryOff;
+    private DisciplinaRepositoryOff disciplinaRepositoryOff;
+    private AssuntoRepositoryOff assuntoRepositoryOff;
+    private PastaRepositoryOff pastaRepositoryOff;
 
-    List<DisciplinaOff> disciplinas = new ArrayList<>();
-    List<AssuntoOff> assuntos = new ArrayList<>();
-    List<PastaOff> pastas = new ArrayList<>();
+    private FlashcardOff flashcardOff;
 
+    private List<DisciplinaOff> disciplinas = new ArrayList<>();
+    private List<AssuntoOff> assuntos = new ArrayList<>();
+    private List<PastaOff> pastas = new ArrayList<>();
+
+    private long codigo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +71,13 @@ public class FlashcardCrudActivity extends AppCompatActivity {
         setContentView(R.layout.activity_flashcard_crud);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        codigo = Util.getLocalUserCodigo(this);
+
+        flashcardRepositoryOff = new FlashcardRepositoryOff(this);
+        disciplinaRepositoryOff = new DisciplinaRepositoryOff(this);
+        assuntoRepositoryOff = new AssuntoRepositoryOff(this);
+        pastaRepositoryOff = new PastaRepositoryOff(this);
 
         ButterKnife.bind(this);
 
@@ -75,8 +87,8 @@ public class FlashcardCrudActivity extends AppCompatActivity {
             intent = getIntent();
             flashcardOff = (FlashcardOff) intent.getSerializableExtra("flashcard");
 
-            disciplinas = new BuscarDisciplinas().execute().get();
-            pastas = new BuscarPastas().execute().get();
+            disciplinas = disciplinaRepositoryOff.listar(codigo);
+            pastas = pastaRepositoryOff.listar(codigo);
 
 
             Log.e("DISCIPLINAS:", disciplinas.toString());
@@ -165,11 +177,12 @@ public class FlashcardCrudActivity extends AppCompatActivity {
                             flashcardOff.setDisciplinaCodigo(disciplinas.get(discPosition).getCodigo());
                             flashcardOff.setAssuntoCodigo(assuntos.get(assuntoPosition).getCodigo());
                             flashcardOff.setPastaCodigo(pastas.get(pastaPosition).getCodigo());
-
+                            flashcardOff.setUsuarioCodigo(codigo);
                             Log.e("FLASHCARD", flashcardOff.toStringCompleto());
 
                             try {
-                                new Salvar().execute(flashcardOff);
+                                flashcardRepositoryOff.salvar(flashcardOff);
+                                Toast.makeText(getApplicationContext(), "Flashcard salvo!", Toast.LENGTH_SHORT).show();
                             } catch (Exception e) {
                                 Toast.makeText(getApplicationContext(), "Houve um erro ao salvar o flashcard!", Toast.LENGTH_LONG).show();
                             }
@@ -185,7 +198,7 @@ public class FlashcardCrudActivity extends AppCompatActivity {
                     flashcardOff.setResposta(campos.get(2).getText().toString());
 
                     try {
-                        new Atualizar().execute(flashcardOff);
+                        flashcardRepositoryOff.atualizar(flashcardOff);
                     } catch (Exception e) {
                         Toast.makeText(getApplicationContext(), "Houve um erro ao salvar o flashcard!", Toast.LENGTH_LONG).show();
                     }
@@ -200,7 +213,7 @@ public class FlashcardCrudActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         try {
-                            new Deletar().execute(flashcardOff);
+                            flashcardRepositoryOff.deletar(flashcardOff);
                         } catch (Exception e) {
                             Log.i("ERRO DELETAR FLASH", e.getMessage());
                             Toast.makeText(getApplicationContext(), "Houve um erro ao deletar o flashcard!", Toast.LENGTH_LONG).show();
@@ -239,7 +252,7 @@ public class FlashcardCrudActivity extends AppCompatActivity {
     @OnItemSelected(R.id.spinDisciplinas)
     public void populaSpinAssuntos(int position) {
         try {
-            assuntos = new BuscarAssuntos().execute(disciplinas.get(position).getCodigo()).get();
+            assuntos = assuntoRepositoryOff.listarPorDisciplinaCodigo(disciplinas.get(position).getCodigo());
 
             ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, assuntos);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -262,112 +275,6 @@ public class FlashcardCrudActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
 
-        }
-    }
-
-    private class Salvar extends AsyncTask<FlashcardOff, Void, Void> {
-
-        @Override
-        protected Void doInBackground(FlashcardOff... flashcardOffs) {
-            try {
-
-                FlashcardOff flashcard = flashcardOffs[0];
-                long codigo = Util.getLocalUserCodigo(FlashcardCrudActivity.this);
-
-                flashcard.setUsuarioCodigo(codigo);
-
-                FlashcardRepositoryOff.salvar(flashcard, FlashcardCrudActivity.this);
-            } catch (Exception e) {
-                Log.i("ERRO SALVAR FLASH", e.getMessage());
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            Toast.makeText(getApplicationContext(), "Flashcard salvo com sucesso!", Toast.LENGTH_LONG).show();
-            finish();
-        }
-    }
-
-    private class Deletar extends AsyncTask<FlashcardOff, Void, Void> {
-
-        @Override
-        protected Void doInBackground(FlashcardOff... flashcardOffs) {
-            try {
-                FlashcardRepositoryOff.deletar(flashcardOffs[0], FlashcardCrudActivity.this);
-            } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), "Houve um erro ao deletar o flashcard!", Toast.LENGTH_LONG).show();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            Toast.makeText(getApplicationContext(), "Flashcard deletado com sucesso!", Toast.LENGTH_LONG).show();
-            finish();
-        }
-    }
-
-    private class Atualizar extends AsyncTask<FlashcardOff, Void, Void> {
-
-        @Override
-        protected Void doInBackground(FlashcardOff... flashcardOffs) {
-            try {
-                FlashcardRepositoryOff.atualizar(flashcardOffs[0], FlashcardCrudActivity.this);
-            } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), "Houve um erro ao atualizar o flashcard!", Toast.LENGTH_LONG).show();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            Toast.makeText(getApplicationContext(), "Flashcard atualizado com sucesso!", Toast.LENGTH_LONG).show();
-            finish();
-        }
-    }
-
-
-    private class BuscarDisciplinas extends AsyncTask<Void, Void, List<DisciplinaOff>> {
-
-        @Override
-        protected List<DisciplinaOff> doInBackground(Void... voids) {
-            try {
-                return DisciplinaRepositoryOff.listarDisciplinas(Util.getLocalUserCodigo(FlashcardCrudActivity.this), FlashcardCrudActivity.this);
-            } catch (Exception e) {
-                Log.e("ERRO BUSCAR DISCIPLINAS", e.getMessage());
-                e.printStackTrace();
-                return null;
-            }
-        }
-    }
-
-    private class BuscarAssuntos extends AsyncTask<Long, Void, List<AssuntoOff>> {
-
-        @Override
-        protected List<AssuntoOff> doInBackground(Long... longs) {
-            try {
-                return AssuntoRepositoryOff.listar(longs[0], FlashcardCrudActivity.this);
-            } catch (Exception e) {
-                Log.e("ERRO BUSCAR ASSUNTOS", e.getMessage());
-                e.printStackTrace();
-                return null;
-            }
-        }
-    }
-
-    private class BuscarPastas extends AsyncTask<Void, Void, List<PastaOff>> {
-
-        @Override
-        protected List<PastaOff> doInBackground(Void... longs) {
-            try {
-                return PastaRepositoryOff.listar(Util.getLocalUserCodigo(FlashcardCrudActivity.this), FlashcardCrudActivity.this);
-            } catch (Exception e) {
-                Log.e("ERRO BUSCAR ASSUNTOS", e.getMessage());
-                e.printStackTrace();
-                return null;
-            }
         }
     }
 }

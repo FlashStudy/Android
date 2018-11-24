@@ -1,9 +1,7 @@
 package br.com.flashstudy.flashstudy_mobile.activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -108,17 +106,17 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(UsuarioOff... usuarioOffs) {
-            UsuarioRepositoryOff usuarioRepositoryOff = new UsuarioRepositoryOff();
+            UsuarioRepositoryOff usuarioRepositoryOff = new UsuarioRepositoryOff(MainActivity.this);
             UsuarioRepository usuarioRepository = new UsuarioRepository();
 
             try {
-                codigo = usuarioRepositoryOff.login(usuarioOffs[0], MainActivity.this);
+                codigo = usuarioRepositoryOff.login(usuarioOffs[0]);
 
                 if (codigo == 0) {
                     UsuarioOff usuarioOff = usuarioRepository.login(new Usuario(usuarioOffs[0].getEmail(), usuarioOffs[0].getSenha()));
 
                     if (usuarioOff != null) {
-                        usuarioRepositoryOff.salvar(usuarioOff, MainActivity.this);
+                        usuarioRepositoryOff.salvar(usuarioOff);
                         codigo = usuarioOff.getCodigo();
                         encontrado = true;
                     }

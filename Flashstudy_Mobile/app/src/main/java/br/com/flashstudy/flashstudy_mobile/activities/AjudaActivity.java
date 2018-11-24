@@ -1,10 +1,8 @@
 package br.com.flashstudy.flashstudy_mobile.activities;
 
-import android.content.DialogInterface;
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.widget.Toast;
 
 import br.com.flashstudy.flashstudy_mobile.R;
 import butterknife.ButterKnife;

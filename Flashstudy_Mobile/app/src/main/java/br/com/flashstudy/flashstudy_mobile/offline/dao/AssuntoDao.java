@@ -11,23 +11,23 @@ public interface AssuntoDao {
 
     //Insere
     @Insert
-    void insert(AssuntoOff assunto);
+    void salvar(AssuntoOff assuntoOff);
 
     //Insere uma lista
     @Insert
-    void insertLista(List<AssuntoOff> assuntos);
+    void salvarLista(List<AssuntoOff> assuntoOffs);
 
     //Deleta
     @Delete
-    void delete(AssuntoOff assunto);
+    void deletar(AssuntoOff assuntoOff);
 
     //Atualiza
     @Update
-    void update(AssuntoOff assunto);
+    void atualizar(AssuntoOff assuntoOff);
 
     //Atualiza
     @Update
-    void updateLista(List<AssuntoOff> assunto);
+    void atualizarLista(List<AssuntoOff> assuntoOffs);
 
     //Procura Assuntos de uma Disciplina de um Usuario
     @Query("SELECT * FROM assunto WHERE disciplina_codigo = :codigoDisciplina ORDER BY codigo ASC")

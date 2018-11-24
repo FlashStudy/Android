@@ -13,15 +13,15 @@ public interface CicloDao {
 
     //Insere
     @Insert
-    void insert(CicloOff ciclo);
+    void salvar(CicloOff cicloOff);
 
     //Deleta
     @Delete
-    void delete(CicloOff ciclo);
+    void deletar(CicloOff cicloOff);
 
     //Atualiza
     @Update
-    void update(CicloOff ciclo);
+    void atualizar(CicloOff cicloOff);
 
     //Procura o Ciclo de um Usuario
     @Query("SELECT * FROM ciclo WHERE usuario_codigo = :codigo")

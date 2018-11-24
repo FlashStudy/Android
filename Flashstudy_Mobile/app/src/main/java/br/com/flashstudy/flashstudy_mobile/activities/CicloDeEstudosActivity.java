@@ -2,7 +2,6 @@ package br.com.flashstudy.flashstudy_mobile.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -31,12 +30,15 @@ import butterknife.OnClick;
 
 public class CicloDeEstudosActivity extends AppCompatActivity {
 
-    CicloOff cicloOff;
-
     @BindView(R.id.tbl_layout)
-    TableLayout tableLayout;
+    public TableLayout tableLayout;
 
-    private List<Integer> posDias;
+    private long codigo;
+
+    private CicloOff cicloOff;
+    private CicloRepositoryOff cicloRepositoryOff;
+    private HorarioRepositoryOff horarioRepositoryOff;
+    private DisciplinaRepositoryOff disciplinaRepositoryOff;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,10 @@ public class CicloDeEstudosActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        cicloRepositoryOff = new CicloRepositoryOff(this);
+        horarioRepositoryOff = new HorarioRepositoryOff(this);
+        disciplinaRepositoryOff = new DisciplinaRepositoryOff(this);
+        codigo = Util.getLocalUserCodigo(this);
         populaTela();
     }
 
@@ -58,7 +64,9 @@ public class CicloDeEstudosActivity extends AppCompatActivity {
         tableLayout.removeAllViews();
 
         try {
-            cicloOff = new BuscarCiclo().execute().get();
+            List<HorarioOff> horarios = horarioRepositoryOff.listar(codigo);
+            cicloOff = cicloRepositoryOff.buscarPorUsario(codigo);
+            cicloOff.setHorarios(horarios);
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "Houve um erro ao buscar o ciclo!", Toast.LENGTH_LONG).show();
             finish();
@@ -72,7 +80,7 @@ public class CicloDeEstudosActivity extends AppCompatActivity {
             List<DisciplinaOff> disciplinas = new ArrayList<>();
 
             try {
-                disciplinas = new BuscarDisciplinas().execute().get();
+                disciplinas = disciplinaRepositoryOff.listar(codigo);
             } catch (Exception e) {
                 Toast.makeText(getApplicationContext(), "Houve um erro ao buscar o ciclo!", Toast.LENGTH_LONG).show();
                 Log.e("ERRO DISCIPLINAS", e.getMessage());
@@ -131,8 +139,8 @@ public class CicloDeEstudosActivity extends AppCompatActivity {
                     //Disciplina para colocar na tabela
                     DisciplinaOff d = new DisciplinaOff();
 
-                    for (DisciplinaOff disc : disciplinas){
-                        if (disc.getCodigo() == horarioOffs.get(contador).getDisciplinaCodigo()){
+                    for (DisciplinaOff disc : disciplinas) {
+                        if (disc.getCodigo() == horarioOffs.get(contador).getDisciplinaCodigo()) {
                             d = disc;
                         }
                     }
@@ -209,33 +217,4 @@ public class CicloDeEstudosActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private class BuscarCiclo extends AsyncTask<Void, Void, CicloOff> {
-        @Override
-        protected CicloOff doInBackground(Void... voids) {
-            try {
-                long codigo = Util.getLocalUserCodigo(CicloDeEstudosActivity.this);
-                List<HorarioOff> horarios = HorarioRepositoryOff.listarPorUsuario(codigo, CicloDeEstudosActivity.this);
-                CicloOff c = CicloRepositoryOff.buscarPorUsario(codigo, CicloDeEstudosActivity.this);
-                c.setHorarios(horarios);
-                return c;
-            } catch (Exception e) {
-                Log.e("ERRO BUSCAR CICLO", e.getMessage());
-                e.printStackTrace();
-                return null;
-            }
-        }
-    }
-
-    private class BuscarDisciplinas extends AsyncTask<Void, Void, List<DisciplinaOff>> {
-        @Override
-        protected List<DisciplinaOff> doInBackground(Void... voids) {
-            try {
-                return DisciplinaRepositoryOff.listarDisciplinas(Util.getLocalUserCodigo(CicloDeEstudosActivity.this), CicloDeEstudosActivity.this);
-            } catch (Exception e) {
-                Log.e("ERRO ASYNC DISC", e.getMessage());
-                e.printStackTrace();
-                return null;
-            }
-        }
-    }
 }

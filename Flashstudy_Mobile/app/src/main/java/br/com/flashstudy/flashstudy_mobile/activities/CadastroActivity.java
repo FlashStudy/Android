@@ -1,9 +1,7 @@
 package br.com.flashstudy.flashstudy_mobile.activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -35,12 +33,14 @@ public class CadastroActivity extends AppCompatActivity {
     public Button btn;
 
     private UsuarioRepository usuarioRepository = new UsuarioRepository();
-    private UsuarioRepositoryOff usuarioRepositoryOff = new UsuarioRepositoryOff();
+    private UsuarioRepositoryOff usuarioRepositoryOff;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro);
+
+        usuarioRepositoryOff = new UsuarioRepositoryOff(this);
 
         ButterKnife.bind(this);
     }
@@ -113,7 +113,7 @@ public class CadastroActivity extends AppCompatActivity {
         protected Void doInBackground(Usuario... usuarios) {
             try {
                 UsuarioOff usuarioOff = usuarioRepository.salvar(usuarios[0]);
-                usuarioRepositoryOff.salvar(usuarioOff, CadastroActivity.this);
+                usuarioRepositoryOff.salvar(usuarioOff);
 
                 Util.setLocalUserCodigo(CadastroActivity.this, usuarioOff.getCodigo());
 

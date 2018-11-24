@@ -13,15 +13,15 @@ public interface CronogramaDao {
 
     //Insere
     @Insert
-    void insert(CronogramaOff cronograma);
+    void salvar(CronogramaOff cronogramaOff);
 
     //Deleta
     @Delete
-    void delete(CronogramaOff cronograma);
+    void deletar(CronogramaOff cronogramaOff);
 
     //Atualiza
     @Update
-    void update(CronogramaOff cronograma);
+    void atualizar(CronogramaOff cronogramaOff);
 
     //Procura o Cronograma de um Usuario
     @Query("SELECT * FROM cronograma WHERE usuario_codigo = :codigo")

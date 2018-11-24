@@ -1,6 +1,7 @@
 package br.com.flashstudy.flashstudy_mobile.offline.repository;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -11,59 +12,143 @@ import br.com.flashstudy.flashstudy_mobile.offline.model.AssuntoOff;
 
 public class AssuntoRepositoryOff {
 
-    public static boolean salvarAssuntos(List<AssuntoOff> assuntos, Context context) {
+    private Context context;
+
+    public AssuntoRepositoryOff(Context context) {
+        this.context = context;
+    }
+
+    public boolean salvarLista(List<AssuntoOff> assuntoOffs) {
         List<AssuntoOff> salvar = new ArrayList<>();
 
-        for (AssuntoOff a : assuntos) {
+        for (AssuntoOff a : assuntoOffs) {
             if (a.getCodigo() == 0)
                 salvar.add(a);
         }
-
         try {
-            AppDatabase.getAppDatabase(context).assuntoDao().insertLista(salvar);
-            return true;
+            return new SalvarLista().execute(salvar).get();
         } catch (Exception e) {
-            Log.i("ERRO SALVAR ASSUNTOS", e.getMessage());
+            Log.e("ERRO SALVAR ASSUNTOS", e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
 
-    public static boolean atualizarAssuntos(List<AssuntoOff> assuntos, Context context) {
+    public boolean atualizarLista(List<AssuntoOff> assuntoOffs) {
         try {
-            AppDatabase.getAppDatabase(context).assuntoDao().updateLista(assuntos);
-            return true;
+            return new AtualizarLista().execute(assuntoOffs).get();
         } catch (Exception e) {
-            Log.i("ERRO ATUALIZAR ASSUNTOS", e.getMessage());
+            Log.e("ERRO ATUALIZAR ASSUNTOS", e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
 
-    public static List<AssuntoOff> listar(long codigo, Context context) {
+    public List<AssuntoOff> listarPorDisciplinaCodigo(long codigo) {
         try {
-            return AppDatabase.getAppDatabase(context).assuntoDao().getAllAssuntosByDisciplina(codigo);
+            return new ListarPorDisciplina().execute(codigo).get();
         } catch (Exception e) {
-            Log.i("ERRO BUSCAR ASSUNTOS", e.getMessage());
+            Log.e("ERRO LISTAR ASSUNTOS", e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
 
-    public static boolean atualizarAssunto(AssuntoOff assunto, Context context) {
+    public boolean atualizar(AssuntoOff assuntoOff) {
         try {
-            AppDatabase.getAppDatabase(context).assuntoDao().update(assunto);
-            return true;
+            return new Atualizar().execute(assuntoOff).get();
         } catch (Exception e) {
-            Log.i("ERRO ATUALIZAR ASSUNTO", e.getMessage());
+            Log.e("ERRO ATUALIZAR ASSUNTO", e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
 
-    public static boolean deletar(AssuntoOff assunto, Context context) {
+    public boolean deletar(AssuntoOff assuntoOff) {
         try {
-            AppDatabase.getAppDatabase(context).assuntoDao().delete(assunto);
-            return true;
+            return new Deletar().execute(assuntoOff).get();
         } catch (Exception e) {
-            Log.i("ERRO DELETAR ASSUNTOS", e.getMessage());
+            Log.e("ERRO DELETAR ASSUNTOS", e.getMessage());
+            e.printStackTrace();
             return false;
+        }
+    }
+
+    private class SalvarLista extends AsyncTask<List<AssuntoOff>, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(List<AssuntoOff>... lists) {
+            List<AssuntoOff> assuntoOffs = lists[0];
+            try {
+                AppDatabase.getAppDatabase(context).assuntoDao().salvarLista(assuntoOffs);
+                return true;
+            } catch (Exception e) {
+                Log.e("ERRO SALVAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
+
+        }
+    }
+
+    private class AtualizarLista extends AsyncTask<List<AssuntoOff>, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(List<AssuntoOff>... lists) {
+            List<AssuntoOff> assuntoOffs = lists[0];
+            try {
+                AppDatabase.getAppDatabase(context).assuntoDao().atualizarLista(assuntoOffs);
+                return true;
+            } catch (Exception e) {
+                Log.e("ERRO ATUALIZAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
+
+        }
+    }
+
+    private class ListarPorDisciplina extends AsyncTask<Long, Void, List<AssuntoOff>> {
+
+        @Override
+        protected List<AssuntoOff> doInBackground(Long... longs) {
+            try {
+                return AppDatabase.getAppDatabase(context).assuntoDao().getAllAssuntosByDisciplina(longs[0]);
+            } catch (Exception e) {
+                Log.e("ERRO LISTAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    private class Atualizar extends AsyncTask<AssuntoOff, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(AssuntoOff... assuntoOffs) {
+            try {
+                AppDatabase.getAppDatabase(context).assuntoDao().atualizar(assuntoOffs[0]);
+                return true;
+            } catch (Exception e) {
+                Log.e("ERRO ATUALIZAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
+
+    private class Deletar extends AsyncTask<AssuntoOff, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(AssuntoOff... assuntoOffs) {
+            try {
+                AppDatabase.getAppDatabase(context).assuntoDao().deletar(assuntoOffs[0]);
+                return true;
+            } catch (Exception e) {
+                Log.e("ERRO DELETAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
         }
     }
 }

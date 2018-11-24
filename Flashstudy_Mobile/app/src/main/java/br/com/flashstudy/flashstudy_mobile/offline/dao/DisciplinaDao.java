@@ -1,6 +1,5 @@
 package br.com.flashstudy.flashstudy_mobile.offline.dao;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -16,19 +15,19 @@ public interface DisciplinaDao {
 
     //Insere
     @Insert
-    void insert(DisciplinaOff disciplina);
+    void salvar(DisciplinaOff disciplinaOff);
 
     //Insere uma lista
     @Insert
-    void insert(List<DisciplinaOff> lis);
+    void salvarLista(List<DisciplinaOff> disciplinaOffs);
 
     //Deleta
     @Delete
-    void delete(DisciplinaOff disciplina);
+    void deletar(DisciplinaOff disciplinaOff);
 
     //Atualiza
     @Update
-    void update(DisciplinaOff disciplina);
+    void atualizar(DisciplinaOff disciplinaOff);
 
     //Procura todas as disciplinas
     @Query("SELECT * FROM disciplina ORDER BY codigo ASC")

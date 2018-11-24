@@ -16,23 +16,23 @@ public interface HorarioDao {
 
     //Insere
     @Insert
-    void insert(HorarioOff horario);
+    void salvar(HorarioOff horarioOff);
 
     //Insere lista
     @Insert
-    void insertLista(List<HorarioOff> horarios);
+    void salvarLista(List<HorarioOff> horarioOffs);
 
     //Deleta
     @Delete
-    void delete(HorarioOff horario);
+    void deletar(HorarioOff horarioOff);
 
     //Deleta lista
     @Delete
-    void deleteLista(List<HorarioOff> horario);
+    void deletarLista(List<HorarioOff> horarioOffs);
 
     //Atualiza
     @Update
-    void update(HorarioOff horario);
+    void atualizar(HorarioOff horarioOff);
 
     //Procura Horarios de um Usuario
     @Query("SELECT * FROM horario WHERE usuario_codigo = :codigo ORDER BY tempo ASC")

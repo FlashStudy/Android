@@ -9,30 +9,40 @@ import br.com.flashstudy.flashstudy_mobile.offline.model.UsuarioOff;
 
 public class UsuarioRepositoryOff {
 
-    public UsuarioOff getLocaluserById(long codigo, Context context) {
+    private Context context;
+
+    public UsuarioRepositoryOff(Context context) {
+        this.context = context;
+    }
+
+    public UsuarioOff getLocaluserById(long codigo) {
         try {
-            return AppDatabase.getAppDatabase(context).usuarioDao().getUsuarioById(codigo);
+            return new GetById().execute(codigo).get();
         } catch (Exception e) {
+            Log.e("ERRO BUSCAR ID", e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
 
-    public boolean salvar(UsuarioOff usuario, Context context) {
+    public boolean salvar(UsuarioOff usuarioOff) {
         try {
-            AppDatabase.getAppDatabase(context).usuarioDao().insert(usuario);
-            return true;
+            return new Salvar().execute(usuarioOff).get();
         } catch (Exception e) {
+            Log.e("ERRO SALVAR USUARIO", e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
 
-    public long login(UsuarioOff usuarioOff, Context context) {
+    public long login(UsuarioOff usuarioOff) {
         try {
             UsuarioOff usuarioOff1;
             try {
-                usuarioOff1 = AppDatabase.getAppDatabase(context).usuarioDao().getUsuarioByEmail(usuarioOff.getEmail());
+                usuarioOff1 = new GetByEmail().execute(usuarioOff.getEmail()).get();
             } catch (Exception e) {
-                Log.i("ERRO NA CONSULTA", e.getMessage());
+                Log.e("ERRO NA CONSULTA", e.getMessage());
+                e.printStackTrace();
                 return (long) 0;
             }
 
@@ -44,9 +54,53 @@ public class UsuarioRepositoryOff {
                 }
             }
         } catch (Exception e) {
-            Log.i("ERRO NO LOGIN:", e.getMessage());
+            Log.e("ERRO NO LOGIN:", e.getMessage());
+            e.printStackTrace();
             return 0;
         }
         return 0;
+    }
+
+    private class GetById extends AsyncTask<Long, Void, UsuarioOff> {
+
+        @Override
+        protected UsuarioOff doInBackground(Long... longs) {
+            try {
+                return AppDatabase.getAppDatabase(context).usuarioDao().getUsuarioById(longs[0]);
+            } catch (Exception e) {
+                Log.e("ERRO ASYNC BUSCAR ID", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    private class Salvar extends AsyncTask<UsuarioOff, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(UsuarioOff... usuarioOffs) {
+            try {
+                AppDatabase.getAppDatabase(context).usuarioDao().salvar(usuarioOffs[0]);
+                return true;
+            } catch (Exception e) {
+                Log.e("ERRO SALVAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
+
+    private class GetByEmail extends AsyncTask<String, Void, UsuarioOff> {
+
+        @Override
+        protected UsuarioOff doInBackground(String... strings) {
+            try {
+                return AppDatabase.getAppDatabase(context).usuarioDao().getUsuarioByEmail(strings[0]);
+            } catch (Exception e) {
+                Log.e("ERRO GET EMAIL ASYNC", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
+        }
     }
 }

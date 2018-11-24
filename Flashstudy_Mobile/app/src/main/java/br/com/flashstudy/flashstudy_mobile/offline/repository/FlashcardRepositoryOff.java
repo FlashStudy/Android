@@ -11,51 +11,132 @@ import br.com.flashstudy.flashstudy_mobile.offline.model.FlashcardOff;
 
 public class FlashcardRepositoryOff {
 
-    public static List<FlashcardOff> listar(long codigo, Context context) {
+    private Context context;
+
+    public FlashcardRepositoryOff(Context context) {
+        this.context = context;
+    }
+
+    public List<FlashcardOff> listar(long codigo) {
         try {
-            return AppDatabase.getAppDatabase(context).flashcardDao().getAllFlashcardsByUsuario(codigo);
+            return new Listar().execute(codigo).get();
         } catch (Exception e) {
-            Log.i("ERRO LISTAR FLASH", e.getMessage());
+            Log.e("ERRO LISTAR FLASH", e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
 
-    public static List<FlashcardOff> listarPorPasta(long codigo, Context context) {
+    public List<FlashcardOff> listarPorPasta(long codigo) {
         try {
-            return AppDatabase.getAppDatabase(context).flashcardDao().getAllFlashcardOffsByPasta(codigo);
+            return new ListarPorPasta().execute(codigo).get();
         } catch (Exception e) {
-            Log.i("ERRO LISTAR FLASH", e.getMessage());
+            Log.e("ERRO LISTAR FLASH", e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
 
-    public static boolean salvar(FlashcardOff flashcardOff, Context context) {
+    public boolean salvar(FlashcardOff flashcardOff) {
         try {
-            AppDatabase.getAppDatabase(context).flashcardDao().insert(flashcardOff);
-            return true;
+            return new Salvar().execute(flashcardOff).get();
         } catch (Exception e) {
-            Log.i("ERRO SALVAR FLASH", e.getMessage());
+            Log.e("ERRO SALVAR FLASH", e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
 
-    public static boolean deletar(FlashcardOff flashcardOff, Context context) {
+    public boolean deletar(FlashcardOff flashcardOff) {
         try {
-            AppDatabase.getAppDatabase(context).flashcardDao().delete(flashcardOff);
-            return true;
+            return new Deletar().execute(flashcardOff).get();
         } catch (Exception e) {
-            Log.i("ERRO DELETAR FLASH", e.getMessage());
+            Log.e("ERRO DELETAR FLASH", e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
 
-    public static boolean atualizar(FlashcardOff flashcardOff, Context context) {
+    public boolean atualizar(FlashcardOff flashcardOff) {
         try {
-            AppDatabase.getAppDatabase(context).flashcardDao().update(flashcardOff);
-            return true;
+            return new Atualizar().execute(flashcardOff).get();
         } catch (Exception e) {
-            Log.i("ERRO ATUALIZAR FLASH ", e.getMessage());
+            Log.e("ERRO ATUALIZAR FLASH ", e.getMessage());
+            e.printStackTrace();
             return false;
+        }
+    }
+
+    private class Listar extends AsyncTask<Long, Void, List<FlashcardOff>> {
+
+        @Override
+        protected List<FlashcardOff> doInBackground(Long... longs) {
+            try {
+                return AppDatabase.getAppDatabase(context).flashcardDao().getAllFlashcardsByUsuario(longs[0]);
+            } catch (Exception e) {
+                Log.e("ERRO LISTAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    private class ListarPorPasta extends AsyncTask<Long, Void, List<FlashcardOff>> {
+
+        @Override
+        protected List<FlashcardOff> doInBackground(Long... longs) {
+            try {
+                return AppDatabase.getAppDatabase(context).flashcardDao().getAllFlashcardOffsByPasta(longs[0]);
+            } catch (Exception e) {
+                Log.e("ERRO LISTAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    private class Salvar extends AsyncTask<FlashcardOff, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(FlashcardOff... flashcardOffs) {
+            try {
+                AppDatabase.getAppDatabase(context).flashcardDao().salvar(flashcardOffs[0]);
+                return true;
+            } catch (Exception e) {
+                Log.e("ERRO SALVAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
+
+    private class Atualizar extends AsyncTask<FlashcardOff, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(FlashcardOff... flashcardOffs) {
+            try {
+                AppDatabase.getAppDatabase(context).flashcardDao().atualizar(flashcardOffs[0]);
+                return true;
+            } catch (Exception e) {
+                Log.e("ERRO ATUALIZAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
+
+    private class Deletar extends AsyncTask<FlashcardOff, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(FlashcardOff... flashcardOffs) {
+            try {
+                AppDatabase.getAppDatabase(context).flashcardDao().deletar(flashcardOffs[0]);
+                return true;
+            } catch (Exception e) {
+                Log.e("ERRO DELETAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
         }
     }
 

@@ -14,15 +14,15 @@ import br.com.flashstudy.flashstudy_mobile.offline.model.PastaOff;
 public interface PastaDao {
     //Insere
     @Insert
-    void insert(PastaOff pasta);
+    void salvar(PastaOff pastaOff);
 
     //Deleta
     @Delete
-    void delete(PastaOff pasta);
+    void deletar(PastaOff pastaOff);
 
     //Atualiza
     @Update
-    void update(PastaOff pasta);
+    void atualizar(PastaOff pastaOff);
 
     //Procura Pastas de um Usuario
     @Query("SELECT * FROM pasta WHERE usuario_codigo = :codigo ORDER BY codigo ASC")

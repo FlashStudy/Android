@@ -15,20 +15,14 @@ import br.com.flashstudy.flashstudy_mobile.offline.model.UsuarioOff;
 public interface UsuarioDao {
 
     @Insert
-    void insert(UsuarioOff usuario);
-
-    @Delete
-    void delete(UsuarioOff usuario);
+    void salvar(UsuarioOff usuarioOff);
 
     @Update
-    void update(UsuarioOff usuario);
+    void atualizar(UsuarioOff usuarioOff);
 
     //Procura Usuario por Email
     @Query("SELECT * FROM usuario WHERE email = :email")
     UsuarioOff getUsuarioByEmail(String email);
-
-    @Query("SELECT * FROM usuario")
-    List<UsuarioOff> getUsuarios();
 
     @Query("SELECT * FROM usuario WHERE codigo = :codigo")
     UsuarioOff getUsuarioById(long codigo);

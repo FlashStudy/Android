@@ -1,11 +1,8 @@
 package br.com.flashstudy.flashstudy_mobile.activities.crud;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Spinner;
@@ -26,20 +23,24 @@ import butterknife.OnClick;
 
 public class CicloDeEstudosCrudActivity extends AppCompatActivity {
 
-    CicloOff cicloOff;
-
     @BindViews({R.id.cbDomingo, R.id.cbSegunda, R.id.cbTerca, R.id.cbQuarta, R.id.cbQuinta, R.id.cbSexta, R.id.cbSabado})
-    List<CheckBox> cbDias;
+    public List<CheckBox> cbDias;
 
     @BindView(R.id.spinNumMaterias)
-    Spinner spinnerNumMaterias;
+    public Spinner spinnerNumMaterias;
 
-    long usuarioCodigo;
+    private long usuarioCodigo;
+
+    private CicloOff cicloOff;
+
+    private CicloRepositoryOff cicloRepositoryOff;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ciclo_de_estudos_crud);
+
+        cicloRepositoryOff = new CicloRepositoryOff(this);
 
         usuarioCodigo = Util.getLocalUserCodigo(this);
 
@@ -58,9 +59,9 @@ public class CicloDeEstudosCrudActivity extends AppCompatActivity {
             spinnerNumMaterias.setSelection(cicloOff.getNumMaterias() - 1);
 
             for (HorarioOff h : cicloOff.getHorarios()) {
-                for (CheckBox cb : cbDias){
-                    if(cb.getText().toString().equals(h.getDia())){
-                        if(!cb.isChecked()){
+                for (CheckBox cb : cbDias) {
+                    if (cb.getText().toString().equals(h.getDia())) {
+                        if (!cb.isChecked()) {
                             cb.setChecked(true);
                         }
                     }
@@ -85,7 +86,7 @@ public class CicloDeEstudosCrudActivity extends AppCompatActivity {
         cicloOff.setNumMaterias(spinnerNumMaterias.getSelectedItemPosition() + 1);
 
         try {
-            new Salvar(dias).execute(cicloOff);
+            cicloRepositoryOff.salvar(cicloOff, dias);
             Toast.makeText(this, "Ciclo salvo com sucesso!", Toast.LENGTH_LONG).show();
             finish();
         } catch (Exception e) {
@@ -95,38 +96,4 @@ public class CicloDeEstudosCrudActivity extends AppCompatActivity {
 
     }
 
-    private class Salvar extends AsyncTask<CicloOff, Void, Void> {
-        private ProgressDialog dialog;
-        private List<String> dias;
-
-        public Salvar(List<String> dias) {
-            this.dias = dias;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            dialog = new ProgressDialog(CicloDeEstudosCrudActivity.this);
-            dialog.setTitle("Salvando e gerando ciclo!");
-            dialog.setMessage("Isso pode levar algum tempo...");
-            dialog.setCancelable(false);
-            dialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(CicloOff... cicloOffs) {
-            try {
-                CicloRepositoryOff.salvar(cicloOffs[0], dias, CicloDeEstudosCrudActivity.this);
-            } catch (Exception e) {
-                Log.e("ERRO SALVAR CICLO", e.getMessage());
-                e.printStackTrace();
-                dialog.dismiss();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            dialog.dismiss();
-        }
-    }
 }
