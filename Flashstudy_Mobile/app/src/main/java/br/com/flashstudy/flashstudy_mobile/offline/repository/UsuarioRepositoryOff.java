@@ -47,8 +47,8 @@ public class UsuarioRepositoryOff {
             }
 
             if (usuarioOff1 != null) {
-                if (usuarioOff.getSenha().equals(usuarioOff.getSenha())) {
-                    return usuarioOff.getCodigo();
+                if (usuarioOff1.getSenha().equals(usuarioOff.getSenha())) {
+                    return usuarioOff1.getCodigo();
                 } else {
                     return (long) 0;
                 }

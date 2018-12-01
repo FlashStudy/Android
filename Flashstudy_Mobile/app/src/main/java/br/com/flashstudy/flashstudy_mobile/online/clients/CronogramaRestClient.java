@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -16,7 +15,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 
 import br.com.flashstudy.flashstudy_mobile.online.model.Cronograma;
-import br.com.flashstudy.flashstudy_mobile.online.model.Disciplina;
 
 public class CronogramaRestClient {
 

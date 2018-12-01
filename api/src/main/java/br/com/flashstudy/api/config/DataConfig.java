@@ -17,7 +17,7 @@ public class DataConfig {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
 		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-		dataSource.setUrl("jdbc:mysql://localhost:3306/flashandroid?useSSL=false");
+		dataSource.setUrl("jdbc:mysql://localhost:3306/flashstudy?useSSL=false");
 		dataSource.setUsername("root");
 		dataSource.setPassword("root");
 

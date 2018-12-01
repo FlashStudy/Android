@@ -92,11 +92,7 @@ public class CicloRepositoryOff {
 
             if (horarioRepositoryOff.salvarLista(horarios)) {
                 boolean res = new Salvar().execute(c).get();
-                if (res) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return res;
             } else {
                 return false;
             }

@@ -13,7 +13,6 @@ import java.util.List;
 
 import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.offline.model.FlashcardOff;
-import br.com.flashstudy.flashstudy_mobile.offline.model.PastaOff;
 
 public class FlashcardListAdapter extends BaseAdapter {
 
@@ -52,8 +51,8 @@ public class FlashcardListAdapter extends BaseAdapter {
         if (convertView == null)
             vi = inflater.inflate(R.layout.icone_texto_layout, parent, false);
 
-        TextView nome = (TextView) vi.findViewById(R.id.txtTitle); // title
-        ImageView icone = (ImageView) vi.findViewById(R.id.imgIcon); // thumb image
+        TextView nome = vi.findViewById(R.id.txtTitle); // title
+        ImageView icone = vi.findViewById(R.id.imgIcon); // thumb image
 
         nome.setText(flashcards.get(position).getTitulo());
         icone.setImageResource(R.drawable.ic_flashcard);

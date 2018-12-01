@@ -1,6 +1,5 @@
 package br.com.flashstudy.flashstudy_mobile.online.repository;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import br.com.flashstudy.flashstudy_mobile.offline.model.UsuarioOff;

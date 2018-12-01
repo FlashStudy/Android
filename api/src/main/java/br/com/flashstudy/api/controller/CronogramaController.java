@@ -6,7 +6,8 @@ import br.com.flashstudy.api.model.Disciplina;
 import br.com.flashstudy.api.repository.CronogramaRepository;
 import br.com.flashstudy.api.repository.DisciplinaRepository;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,15 +35,15 @@ public class CronogramaController {
         Cronograma c = new Cronograma(cronograma.getCodigo(), cronograma.getInicio(), cronograma.getFim(),
                 cronograma.getUsuario());
 
-        c.setDisciplinas(new ArrayList<>());
+        c.setDisciplinas(new HashSet<>());
 
         for (Disciplina disciplina : cronograma.getDisciplinas()) {
             disciplina.setUsuario(cronograma.getUsuario());
 
-            List<Assunto> assuntos = disciplina.getAssuntos();
+            Set<Assunto> assuntos = disciplina.getAssuntos();
 
             if (assuntos != null) {
-                disciplina.setAssuntos(new ArrayList<>());
+                disciplina.setAssuntos(new HashSet<>());
                 for (Assunto assunto : assuntos) {
                     disciplina.addAssunto(assunto);
                 }
@@ -56,10 +57,10 @@ public class CronogramaController {
     }
 
     // Busca o cronograma atual do usuário
-    @GetMapping(path = "/atual/{codigo}")
+    @GetMapping(path = "/atual/{codigo}", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
     public ResponseEntity<?> lista(@PathVariable("codigo") long codigo) {
 
-        return new ResponseEntity<>(cronogramaRepository.getByUsuarioCodigo(codigo), HttpStatus.OK);
+        return new ResponseEntity<>(cronogramaRepository.getByUsuario(codigo), HttpStatus.OK);
 
     }
 

@@ -4,7 +4,7 @@ package br.com.flashstudy.api.controller;
 import br.com.flashstudy.api.model.Assunto;
 import br.com.flashstudy.api.model.Disciplina;
 import br.com.flashstudy.api.repository.DisciplinaRepository;
-import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ public class DisciplinaController {
     // Lista as disciplinas de um usuário
     @GetMapping(value = "findallbyuser/{codigo}", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
     public ResponseEntity<?> findAll(@PathVariable("codigo") Long codigo) {
-        return new ResponseEntity<>(disciplinaRepository.getByUsuarioCodigo(codigo), HttpStatus.OK);
+        return new ResponseEntity<>(disciplinaRepository.getByUsuario(codigo), HttpStatus.OK);
     }
 
     // Salva/atualiza a disciplina
@@ -31,7 +31,7 @@ public class DisciplinaController {
 
         Disciplina d = new Disciplina(disciplina.getCodigo(), disciplina.getNome(), disciplina.getUsuario());
 
-        List<Assunto> assuntos = disciplina.getAssuntos();
+        Set<Assunto> assuntos = disciplina.getAssuntos();
 
         for (Assunto a : assuntos) {
             a.setUsuario(disciplina.getUsuario());
@@ -40,16 +40,7 @@ public class DisciplinaController {
 
         return new ResponseEntity<>(disciplinaRepository.save(d), HttpStatus.OK);
     }
-
-    // Salva/atualiza a disciplina
-    @PostMapping(value = "/salvarLista", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-    public ResponseEntity<?> salvarLista(@RequestBody List<Disciplina> disciplinas) {
-        for (Disciplina d : disciplinas) {
-            disciplinaRepository.save(d);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
+    
     // Deleta através do código da disciplina
     @DeleteMapping(value = "/deleta/{codigo}", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
     public ResponseEntity<?> deletar(@PathVariable("codigo") Long codigo) {

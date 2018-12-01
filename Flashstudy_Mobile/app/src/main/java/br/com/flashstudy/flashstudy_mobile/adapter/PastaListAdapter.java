@@ -51,8 +51,8 @@ public class PastaListAdapter extends BaseAdapter {
         if (convertView == null)
             vi = inflater.inflate(R.layout.icone_texto_layout, parent, false);
 
-        TextView nome = (TextView) vi.findViewById(R.id.txtTitle); // title
-        ImageView icone = (ImageView) vi.findViewById(R.id.imgIcon); // thumb image
+        TextView nome = vi.findViewById(R.id.txtTitle); // title
+        ImageView icone = vi.findViewById(R.id.imgIcon); // thumb image
 
         nome.setText(pastas.get(position).getNome());
         icone.setImageResource(R.drawable.ic_pasta);

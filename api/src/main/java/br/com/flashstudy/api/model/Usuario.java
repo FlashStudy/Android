@@ -4,103 +4,82 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@Entity
 @Table(name = "Usuario")
-@Entity(name = "Usuario")
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"codigo", "nome", "email", "senha"})
+@Inheritance(strategy = InheritanceType.JOINED)
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Usuario implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "codigo", unique = true, nullable = false)
-    @JsonProperty("codigo")
-    private Long codigo;
+	private static final long serialVersionUID = 1L;
 
-    @Column(name = "nome", nullable = false)
-    @JsonProperty("nome")
-    private String nome;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "codigo", unique = true, nullable = false)
+	private Long codigo;
 
-    @Column(name = "email", nullable = false, unique = true)
-    @JsonProperty("email")
-    private String email;
+	@Column(name = "nome", nullable = false)
+	private String nome;
 
-    @Column(name = "senha", nullable = false)
-    @JsonProperty("senha")
-    private String senha;
+	@Column(name = "email", nullable = false, unique = true)
+	private String email;
 
-    public Usuario() {
-        super();
-    }
+	@Column(name = "senha", nullable = false)
+	private String senha;
+        
+	public Usuario(String nome, String email, String senha) {
+		super();
+		this.nome = nome;
+		this.email = email;
+		this.senha = senha;
+	}
 
-    public Usuario(String email, String senha) {
-        super();
-        this.email = email;
-        this.senha = senha;
-    }
+	public Usuario(String email, String senha) {
+		super();
+		this.email = email;
+		this.senha = senha;
+	}
 
-    public Usuario(String nome, String email, String senha) {
-        super();
-        this.nome = nome;
-        this.email = email;
-        this.senha = senha;
-    }
+	public Usuario() {
+		super();
+	}
 
-    public Usuario(Long codigo, String nome, String email, String senha) {
-        this.codigo = codigo;
-        this.nome = nome;
-        this.email = email;
-        this.senha = senha;
-    }
+	public Long getCodigo() {
+		return codigo;
+	}
 
-    @JsonProperty("codigo")
-    public Long getCodigo() {
-        return codigo;
-    }
+	public void setCodigo(Long codigo) {
+		this.codigo = codigo;
+	}
 
-    @JsonProperty("codigo")
-    public void setCodigo(Long codigo) {
-        this.codigo = codigo;
-    }
+	public String getNome() {
+		return nome;
+	}
 
-    @JsonProperty("nome")
-    public String getNome() {
-        return nome;
-    }
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 
-    @JsonProperty("nome")
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    @JsonProperty("email")
-    public String getEmail() {
-        return email;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    @JsonProperty("email")
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public String getSenha() {
+		return senha;
+	}
 
-    @JsonProperty("senha")
-    public String getSenha() {
-        return senha;
-    }
-
-    @JsonProperty("senha")
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
 
     @Override
     public String toString() {
-        return "Usuario{"
-                + "codigo=" + codigo
-                + ", nome='" + nome + '\''
-                + ", email='" + email + '\''
-                + ", senha='" + senha + '\''
-                + '}';
+        return "Usuario{" + "codigo=" + codigo + ", nome=" + nome + ", email=" + email + ", senha=" + senha + '}';
     }
+
 }

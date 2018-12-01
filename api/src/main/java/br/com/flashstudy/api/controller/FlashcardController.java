@@ -18,7 +18,7 @@ public class FlashcardController {
 
     @GetMapping(value = "findallbyuser/{codigo}", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
     public ResponseEntity<?> findAll(@PathVariable("codigo") Long codigo) {
-        return new ResponseEntity<>(flashcardRepository.getByUsuarioCodigo(codigo), HttpStatus.OK);
+        return new ResponseEntity<>(flashcardRepository.getByUsuario(codigo), HttpStatus.OK);
     }
 
     // Salva/atualiza o flashcard

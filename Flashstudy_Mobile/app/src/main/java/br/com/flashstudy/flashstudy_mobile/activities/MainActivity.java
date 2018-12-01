@@ -1,8 +1,6 @@
 package br.com.flashstudy.flashstudy_mobile.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -51,7 +49,38 @@ public class MainActivity extends AppCompatActivity {
             usuarioOff.setEmail(campos.get(0).getText().toString());
             usuarioOff.setSenha(campos.get(1).getText().toString());
 
-            new Login().execute(usuarioOff);
+            UsuarioRepositoryOff usuarioRepositoryOff = new UsuarioRepositoryOff(this);
+            UsuarioRepository usuarioRepository = new UsuarioRepository();
+
+            long codigo = 0;
+            boolean encontrado = false;
+
+            try {
+                codigo = usuarioRepositoryOff.login(usuarioOff);
+
+                if (codigo == 0) {
+                    UsuarioOff usuarioOff1 = usuarioRepository.login(new Usuario(usuarioOff.getEmail(), usuarioOff.getSenha()));
+
+                    if (usuarioOff != null) {
+                        usuarioRepositoryOff.salvar(usuarioOff1);
+                        codigo = usuarioOff1.getCodigo();
+                        encontrado = true;
+                    }
+                } else {
+                    encontrado = true;
+                }
+            } catch (Exception e) {
+                Log.e("ERRO NO LOGIN", e.getMessage());
+                e.printStackTrace();
+            }
+
+            if (encontrado) {
+                Util.setLocalUserCodigo(this, codigo);
+                Intent intent = new Intent(this, TelaPrincipalActivity.class);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Nenhum usuário encontrado!", Toast.LENGTH_SHORT).show();
+            }
 
         }
     }
@@ -89,61 +118,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return false;
-    }
-
-    private class Login extends AsyncTask<UsuarioOff, Void, Void> {
-        ProgressDialog progressDialog;
-        boolean encontrado;
-        long codigo;
-
-        @Override
-        protected void onPreExecute() {
-            progressDialog = new ProgressDialog(MainActivity.this);
-            progressDialog.setMessage("Efetuando login");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(UsuarioOff... usuarioOffs) {
-            UsuarioRepositoryOff usuarioRepositoryOff = new UsuarioRepositoryOff(MainActivity.this);
-            UsuarioRepository usuarioRepository = new UsuarioRepository();
-
-            try {
-                codigo = usuarioRepositoryOff.login(usuarioOffs[0]);
-
-                if (codigo == 0) {
-                    UsuarioOff usuarioOff = usuarioRepository.login(new Usuario(usuarioOffs[0].getEmail(), usuarioOffs[0].getSenha()));
-
-                    if (usuarioOff != null) {
-                        usuarioRepositoryOff.salvar(usuarioOff);
-                        codigo = usuarioOff.getCodigo();
-                        encontrado = true;
-                    }
-                } else {
-                    encontrado = true;
-                }
-            } catch (Exception e) {
-                Log.i("ERRO NO LOGIN", e.getMessage());
-                cancel(true);
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            progressDialog.dismiss();
-
-            if (encontrado) {
-                Util.setLocalUserCodigo(MainActivity.this, codigo);
-
-                Intent intent = new Intent(MainActivity.this, TelaPrincipalActivity.class);
-                startActivity(intent);
-                finish();
-            } else {
-                Toast.makeText(MainActivity.this, "Nenhum usuário encontrado!", Toast.LENGTH_LONG).show();
-            }
-        }
     }
 }

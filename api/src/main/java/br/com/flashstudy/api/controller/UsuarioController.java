@@ -23,7 +23,7 @@ public class UsuarioController {
     }
 
     @GetMapping(value = "findid/{id}", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-    public ResponseEntity<?> find(@PathVariable("id") int id) {
+    public ResponseEntity<?> find(@PathVariable("id") Long id) {
         try {
             return new ResponseEntity<>(usuarioRepository.findById(id), HttpStatus.OK);
         } catch (Exception e) {
@@ -73,7 +73,7 @@ public class UsuarioController {
 
     @DeleteMapping(value = "/delete/{id}", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
     public @ResponseBody
-    ResponseEntity<?> delete(@PathVariable("id") int id) {
+    ResponseEntity<?> delete(@PathVariable("id") Long id) {
 
         try {
             usuarioRepository.deleteById(id);

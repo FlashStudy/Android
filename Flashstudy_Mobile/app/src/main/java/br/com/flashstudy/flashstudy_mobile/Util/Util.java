@@ -2,7 +2,6 @@ package br.com.flashstudy.flashstudy_mobile.Util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
@@ -47,6 +46,6 @@ public class Util {
     }
 
     public static UsuarioOff getLocalUser(Context context, long codigo){
-        return new UsuarioRepositoryOff().getLocaluserById(codigo, context);
+        return new UsuarioRepositoryOff(context).getLocaluserById(codigo);
     }
 }

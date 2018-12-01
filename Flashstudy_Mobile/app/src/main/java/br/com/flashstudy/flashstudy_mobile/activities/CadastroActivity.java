@@ -77,7 +77,15 @@ public class CadastroActivity extends AppCompatActivity {
                                 usuario.setEmail(email);
                                 usuario.setSenha(senha);
 
-                                new Cadastrar().execute(usuario);
+                                UsuarioOff usuarioOff = new Cadastrar().execute(usuario).get();
+
+                                usuarioRepositoryOff.salvar(usuarioOff);
+
+                                Util.setLocalUserCodigo(CadastroActivity.this, usuarioOff.getCodigo());
+
+                                Intent intent = new Intent(CadastroActivity.this, TelaPrincipalActivity.class);
+                                startActivity(intent);
+                                finish();
 
                             } catch (Exception e) {
                                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -98,7 +106,7 @@ public class CadastroActivity extends AppCompatActivity {
         }
     }
 
-    private class Cadastrar extends AsyncTask<Usuario, Void, Void> {
+    private class Cadastrar extends AsyncTask<Usuario, Void, UsuarioOff> {
         ProgressDialog progressDialog;
 
         @Override
@@ -110,30 +118,24 @@ public class CadastroActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Void doInBackground(Usuario... usuarios) {
+        protected UsuarioOff doInBackground(Usuario... usuarios) {
             try {
-                UsuarioOff usuarioOff = usuarioRepository.salvar(usuarios[0]);
-                usuarioRepositoryOff.salvar(usuarioOff);
-
-                Util.setLocalUserCodigo(CadastroActivity.this, usuarioOff.getCodigo());
+                return usuarioRepository.salvar(usuarios[0]);
 
             } catch (Exception e) {
-                Log.i("ERRO NO CADASTRO", e.getMessage());
+                Log.e("ERRO NO CADASTRO", e.getMessage());
 
                 progressDialog.dismiss();
                 cancel(true);
+                return null;
             }
 
-            return null;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute(UsuarioOff usuarioOff) {
             progressDialog.dismiss();
 
-            Intent intent = new Intent(CadastroActivity.this, TelaPrincipalActivity.class);
-            startActivity(intent);
-            finish();
         }
     }
 }

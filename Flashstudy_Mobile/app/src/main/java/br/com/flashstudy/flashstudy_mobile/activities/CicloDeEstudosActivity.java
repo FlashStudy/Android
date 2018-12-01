@@ -64,10 +64,10 @@ public class CicloDeEstudosActivity extends AppCompatActivity {
         tableLayout.removeAllViews();
 
         try {
-            List<HorarioOff> horarios = horarioRepositoryOff.listar(codigo);
             cicloOff = cicloRepositoryOff.buscarPorUsario(codigo);
-            cicloOff.setHorarios(horarios);
         } catch (Exception e) {
+            Log.e("ERRO INTENT", e.getMessage());
+            e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Houve um erro ao buscar o ciclo!", Toast.LENGTH_LONG).show();
             finish();
         }
@@ -79,6 +79,8 @@ public class CicloDeEstudosActivity extends AppCompatActivity {
 
             List<DisciplinaOff> disciplinas = new ArrayList<>();
 
+            List<HorarioOff> horarios = horarioRepositoryOff.listar(codigo);
+            cicloOff.setHorarios(horarios);
             try {
                 disciplinas = disciplinaRepositoryOff.listar(codigo);
             } catch (Exception e) {
