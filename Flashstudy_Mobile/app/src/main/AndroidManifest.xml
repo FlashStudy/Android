@@ -40,6 +40,10 @@
         <activity android:name=".activities.crud.CronogramaCrudActivity" />
         <activity android:name=".activities.crud.DisciplinaCrudActivity" />
         <activity android:name=".activities.crud.CicloDeEstudosCrudActivity"></activity>
+
+        <service android:name=".service.NotificationService">
+
+        </service>
     </application>
 
 </manifest>

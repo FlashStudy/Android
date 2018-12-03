@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.Util.Util;
+import br.com.flashstudy.flashstudy_mobile.service.NotificationService;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -19,6 +20,9 @@ public class TelaPrincipalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tela_principal);
 
         ButterKnife.bind(this);
+
+        Intent intent = new Intent(this, NotificationService.class);
+        startService(intent);
     }
 
     @OnClick({R.id.imageViewCiclo, R.id.textViewCiclo})
