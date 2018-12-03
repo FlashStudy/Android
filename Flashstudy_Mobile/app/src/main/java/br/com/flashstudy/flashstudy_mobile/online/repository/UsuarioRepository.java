@@ -1,5 +1,6 @@
 package br.com.flashstudy.flashstudy_mobile.online.repository;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import br.com.flashstudy.flashstudy_mobile.offline.model.UsuarioOff;
@@ -19,22 +20,32 @@ public class UsuarioRepository {
 
     public UsuarioOff login(Usuario usuario) {
         try {
-            Usuario usuario1 = new Usuario();
-            try {
-                usuario1 = usuarioRestClient.procuraPorEmail(usuario.getEmail());
-            } catch (Exception e) {
-                Log.i("ERRO CONSULTA SERVIDOR", e.getMessage());
-            }
-
-            if (usuario1 == null) {
-                return null;
-            } else {
-                return new UsuarioOff((int) (long) usuario1.getCodigo(),
-                        usuario1.getNome(), usuario1.getEmail(), usuario1.getSenha());
-            }
+            usuario = new Login().execute(usuario).get();
         } catch (Exception e) {
-            Log.i("ERRO NO LOGIN:", e.getMessage());
+            Log.e("ERRO CONSULTA", e.getMessage());
+            e.printStackTrace();
             return null;
+        }
+
+        if (usuario != null) {
+            return new UsuarioOff(usuario.getCodigo(),
+                    usuario.getNome(), usuario.getEmail(), usuario.getSenha());
+        }else{
+            return null;
+        }
+    }
+
+    private class Login extends AsyncTask<Usuario, Void, Usuario> {
+
+        @Override
+        protected Usuario doInBackground(Usuario... usuarios) {
+            try {
+                return usuarioRestClient.procuraPorEmail(usuarios[0].getEmail());
+            } catch (Exception e) {
+                Log.e("ERRO CONSULTA SERVIDOR", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
         }
     }
 }

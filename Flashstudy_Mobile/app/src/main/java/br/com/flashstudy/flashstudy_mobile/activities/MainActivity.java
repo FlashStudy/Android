@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 if (codigo == 0) {
                     UsuarioOff usuarioOff1 = usuarioRepository.login(new Usuario(usuarioOff.getEmail(), usuarioOff.getSenha()));
 
-                    if (usuarioOff != null) {
+                    if (usuarioOff1 != null) {
                         usuarioRepositoryOff.salvar(usuarioOff1);
                         codigo = usuarioOff1.getCodigo();
                         encontrado = true;

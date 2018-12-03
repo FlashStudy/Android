@@ -44,7 +44,7 @@ public class UsuarioController {
     public @ResponseBody
     ResponseEntity<?> login(@RequestBody Usuario usuario) {
         try {
-            return new ResponseEntity<>(usuarioRepository.findByEmail(usuario.getEmail()), HttpStatus.OK);
+            return new ResponseEntity<>(usuarioRepository.getByEmail(usuario.getEmail()), HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -53,10 +53,28 @@ public class UsuarioController {
     }
 
     // Verifica se o email já está cadastrado
-    @GetMapping(value = "/find/{email}", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+//    @GetMapping(value = "/find/{email}", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+//    public @ResponseBody
+//    ResponseEntity<?> verifica(@PathVariable("email") String email) {
+//        return new ResponseEntity<>(usuarioRepository.findByEmail(email), HttpStatus.OK);
+//
+//    }
+    @PostMapping(value = "/verifica/")
     public @ResponseBody
-    ResponseEntity<?> verifica(@PathVariable("email") String email) {
-        return new ResponseEntity<>(usuarioRepository.findByEmail(email), HttpStatus.OK);
+    ResponseEntity<?> verifica(@RequestBody String email) {
+        try {
+            
+            Usuario u = usuarioRepository.getByEmail(email);
+            
+            System.out.println(email);
+            System.out.println(u.toString());
+            
+            return new ResponseEntity<>(u, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);    
+        }
 
     }
 

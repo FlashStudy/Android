@@ -4,12 +4,12 @@ package br.com.flashstudy.flashstudy_mobile.online.clients;
 import android.util.Log;
 
 import org.json.JSONObject;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import br.com.flashstudy.flashstudy_mobile.Util.ConversaoDeClasse;
@@ -90,14 +90,20 @@ public class UsuarioRestClient {
 
     public Usuario procuraPorEmail(String email) {
         try {
-            return restTemplate.exchange(
-                    BASE_URL + "find/" + email,
-                    HttpMethod.GET,
-                    null,
-                    new ParameterizedTypeReference<Usuario>() {
-                    }
-            ).getBody();
+
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+            String url = BASE_URL + "verifica/";
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<String> entity = new HttpEntity<>(email, headers);
+
+            return restTemplate.postForEntity(url, entity, Usuario.class).getBody();
         } catch (Exception e) {
+            Log.e("ERRO USUARIO SERV", e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
