@@ -1,6 +1,5 @@
 package br.com.flashstudy.flashstudy_mobile.online.clients;
 
-import android.content.res.Resources;
 import android.util.Log;
 
 import org.json.JSONObject;
@@ -12,18 +11,12 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.online.model.Flashcard;
 
 public class FlashcardRestClient {
 
-    private String BASE_URL;
+    private String BASE_URL = "http://192.168.0.35:8000/usuario/";
     private RestTemplate restTemplate = new RestTemplate();
-
-    public FlashcardRestClient() {
-        Resources resources = Resources.getSystem();
-        BASE_URL = resources.getString(R.string.base_url) + "/flashcard/";
-    }
 
     public List<Flashcard> findAll(Long codigo) {
         try {
@@ -65,7 +58,7 @@ public class FlashcardRestClient {
         }
     }
 
-    public boolean deletar (long codigo){
+    public boolean deletar(long codigo) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);

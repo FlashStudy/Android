@@ -1,32 +1,24 @@
 package br.com.flashstudy.flashstudy_mobile.online.clients;
 
 
-import android.content.res.Resources;
 import android.util.Log;
 
 import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.Util.ConversaoDeClasse;
 import br.com.flashstudy.flashstudy_mobile.offline.model.UsuarioOff;
 import br.com.flashstudy.flashstudy_mobile.online.model.Usuario;
 
 public class UsuarioRestClient {
 
-    private String BASE_URL;
+    private String BASE_URL = "http://192.168.0.35:8000/usuario/";
     private RestTemplate restTemplate = new RestTemplate();
-
-    public UsuarioRestClient() {
-        Resources resources = Resources.getSystem();
-        BASE_URL = resources.getString(R.string.base_url) + "/usuario/";
-    }
 
     public UsuarioOff cadastro(Usuario usuario) {
         try {

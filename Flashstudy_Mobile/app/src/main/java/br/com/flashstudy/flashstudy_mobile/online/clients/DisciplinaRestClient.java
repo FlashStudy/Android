@@ -1,12 +1,10 @@
 package br.com.flashstudy.flashstudy_mobile.online.clients;
 
-import android.content.res.Resources;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONObject;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -17,20 +15,12 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-import br.com.flashstudy.flashstudy_mobile.R;
-import br.com.flashstudy.flashstudy_mobile.Util.ConversaoDeClasse;
-import br.com.flashstudy.flashstudy_mobile.offline.model.DisciplinaOff;
 import br.com.flashstudy.flashstudy_mobile.online.model.Disciplina;
 
 public class DisciplinaRestClient {
-    private String BASE_URL;
+    private String BASE_URL = "http://192.168.0.35:8000/disciplina/";
     private RestTemplate restTemplate = new RestTemplate();
     ObjectMapper objectMapper = new ObjectMapper();
-
-    public DisciplinaRestClient() {
-        Resources resources = Resources.getSystem();
-        BASE_URL = resources.getString(R.string.base_url) + "/disciplina/";
-    }
 
     public List<Disciplina> listar(Long codigo) {
         try {
@@ -81,7 +71,6 @@ public class DisciplinaRestClient {
             headers.setContentType(MediaType.APPLICATION_JSON);
 
 
-
             jsonObject.put("assuntos", mapper.writeValueAsString(disciplina.getAssuntos()));
             jsonObject.put("codigo", disciplina.getCodigo());
             jsonObject.put("nome", disciplina.getNome());
@@ -97,7 +86,7 @@ public class DisciplinaRestClient {
         }
     }
 
-    public boolean deletar (long codigo){
+    public boolean deletar(long codigo) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);

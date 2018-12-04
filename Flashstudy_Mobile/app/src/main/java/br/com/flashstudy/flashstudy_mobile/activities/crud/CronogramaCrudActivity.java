@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -27,11 +28,16 @@ import java.util.List;
 import java.util.Locale;
 
 import br.com.flashstudy.flashstudy_mobile.R;
+import br.com.flashstudy.flashstudy_mobile.Util.ConversaoDeClasse;
 import br.com.flashstudy.flashstudy_mobile.Util.Util;
 import br.com.flashstudy.flashstudy_mobile.offline.model.CronogramaOff;
 import br.com.flashstudy.flashstudy_mobile.offline.model.DisciplinaOff;
 import br.com.flashstudy.flashstudy_mobile.offline.repository.CronogramaRepositoryOff;
 import br.com.flashstudy.flashstudy_mobile.offline.repository.DisciplinaRepositoryOff;
+import br.com.flashstudy.flashstudy_mobile.online.model.Cronograma;
+import br.com.flashstudy.flashstudy_mobile.online.model.Disciplina;
+import br.com.flashstudy.flashstudy_mobile.online.model.Usuario;
+import br.com.flashstudy.flashstudy_mobile.online.repository.CronogramaRepository;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -50,6 +56,7 @@ public class CronogramaCrudActivity extends AppCompatActivity {
     @BindView(R.id.swipeMenuDisciplinas)
     public SwipeMenuListView swipeMenuListView;
 
+    private CronogramaRepository cronogramaRepository = new CronogramaRepository();
     private CronogramaRepositoryOff cronogramaRepositoryOff;
     private DisciplinaRepositoryOff disciplinaRepositoryOff;
 
@@ -142,6 +149,7 @@ public class CronogramaCrudActivity extends AppCompatActivity {
                 final DisciplinaOff disciplinaOff = disciplinaOffs.get(position);
                 switch (index) {
 
+                    //Atualizar
                     case 0:
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(CronogramaCrudActivity.this);
                         alertDialog.setTitle("Editar disciplina");
@@ -212,16 +220,50 @@ public class CronogramaCrudActivity extends AppCompatActivity {
     @OnClick(R.id.fab)
     public void salvarCronograma() {
 
+        long codigoinicial = cronograma.getCodigo();
+
         cronograma.setUsuarioCodigo(codigoUsuario);
         cronograma.setDisciplinas(disciplinaOffs);
         cronograma.setInicio(txtInicio.getText().toString().trim());
         cronograma.setFim(txtFim.getText().toString().trim());
 
+        Usuario usuario = ConversaoDeClasse.usuarioOffToUsuario(Util.getLocalUser(this, Util.getLocalUserCodigo(this)));
+
         try {
-            if (cronograma.getCodigo() == 0)
+            List<Disciplina> disciplinas = new ArrayList<>();
+
+            //Prepara as disciplinas para salvar no servidor
+            for (DisciplinaOff d : disciplinaOffs) {
+                disciplinas.add(ConversaoDeClasse.disciplinaOffToDisciplina(d, usuario));
+            }
+
+            //Prepara o cronograma para salvar no servidor
+            Cronograma cronograma1 = ConversaoDeClasse.cronogramaOffToCronograma(cronograma, usuario, disciplinas);
+
+            //Salva o cronograma no servidor
+            Cronograma cronograma2 = cronogramaRepository.salvar(cronograma1);
+
+            //Disciplinas com código
+            disciplinas = cronograma2.getDisciplinas();
+
+            //Prepara para salvar no dispositivo
+            cronograma = ConversaoDeClasse.cronogramaToCronogramaOff(cronograma2);
+
+            disciplinaOffs = new ArrayList<>();
+
+            //Prepara para salvar no dispositivo
+            for (Disciplina d : disciplinas) {
+                disciplinaOffs.add(ConversaoDeClasse.disciplinaToDisciplinaOff(d));
+            }
+            cronograma.setDisciplinas(disciplinaOffs);
+
+            if (codigoinicial == 0) {
                 cronogramaRepositoryOff.salvar(cronograma);
-            else
+            } else {
                 cronogramaRepositoryOff.atualizar(cronograma);
+            }
+
+            Log.e("CRONOGRAMA", cronograma1.toString());
 
             Toast.makeText(CronogramaCrudActivity.this, "Cronograma salvo com sucesso!", Toast.LENGTH_LONG).show();
             finish();

@@ -53,11 +53,9 @@ public class FlashcardOff implements Serializable {
     @ColumnInfo(name = "usuario_codigo")
     private long usuarioCodigo;
 
-    @NonNull
     @ColumnInfo(name = "disciplina_codigo")
     private long disciplinaCodigo;
 
-    @NonNull
     @ColumnInfo(name = "assunto_codigo")
     private long assuntoCodigo;
 

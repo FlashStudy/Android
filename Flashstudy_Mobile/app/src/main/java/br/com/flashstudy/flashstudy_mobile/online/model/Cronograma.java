@@ -43,18 +43,12 @@ public class Cronograma implements Serializable {
         this.usuario = usuario;
     }
 
-    public Cronograma(String inicio, String fim, Usuario usuario, List<Disciplina> disciplinas) {
-        this.inicio = inicio;
-        this.fim = fim;
-        this.usuario = usuario;
-        this.disciplinas = disciplinas;
-    }
-
-    public Cronograma(Long codigo, String inicio, String fim, Usuario usuario) {
+    public Cronograma(Long codigo, String inicio, String fim, Usuario usuario, List<Disciplina> disciplinas) {
         this.codigo = codigo;
         this.inicio = inicio;
         this.fim = fim;
         this.usuario = usuario;
+        this.disciplinas = disciplinas;
     }
 
     @JsonProperty("codigo")

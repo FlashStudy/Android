@@ -1,6 +1,5 @@
 package br.com.flashstudy.flashstudy_mobile.online.clients;
 
-import android.content.res.Resources;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,19 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.online.model.Cronograma;
 
 public class CronogramaRestClient {
 
-    private String BASE_URL;
+    private String BASE_URL = "http://192.168.0.35:8000/cronograma/";
     private RestTemplate restTemplate = new RestTemplate();
     ObjectMapper objectMapper = new ObjectMapper();
-
-    public CronogramaRestClient() {
-        Resources resources = Resources.getSystem();
-        BASE_URL = resources.getString(R.string.base_url) + "/cronograma/";
-    }
 
     public Cronograma salvar(Cronograma cronograma) {
         try {
@@ -42,7 +35,11 @@ public class CronogramaRestClient {
             jsonObject.put("usuario", objectMapper.writeValueAsString(cronograma.getUsuario()));
             jsonObject.put("disciplinas", objectMapper.writeValueAsString(cronograma.getDisciplinas()));
 
-            HttpEntity<String> entity = new HttpEntity<>(jsonObject.toString(), headers);
+            HttpEntity<String> entity = new HttpEntity<>(objectMapper.writeValueAsString(cronograma), headers);
+
+            Log.e("CRONOGRAMA", cronograma.toString());
+            Log.e("CRONOGRAMA JSON", jsonObject.toString());
+            Log.e("CRONOGRAMA MAPPER", objectMapper.writeValueAsString(cronograma));
 
             ResponseEntity<Cronograma> responseEntity = restTemplate.postForEntity(BASE_URL + "salvar", entity, Cronograma.class);
 
@@ -56,7 +53,7 @@ public class CronogramaRestClient {
         }
     }
 
-    public Cronograma buscarPorUsuarioCodigo(long codigo){
+    public Cronograma buscarPorUsuarioCodigo(long codigo) {
 
         try {
             return restTemplate.exchange(

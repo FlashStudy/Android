@@ -75,8 +75,6 @@
     <string name="lbl_materia">Matéria:</string>
     <string name="lbl_pasta">Pasta:</string>
 
-    <string name="base_url">http://192.168.0.35:8000/</string>
-
     <string-array name="numMateriasStr">
         <item>1</item>
         <item>2</item>

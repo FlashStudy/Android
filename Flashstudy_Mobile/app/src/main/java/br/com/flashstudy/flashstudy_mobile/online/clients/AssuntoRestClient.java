@@ -1,6 +1,5 @@
 package br.com.flashstudy.flashstudy_mobile.online.clients;
 
-import android.content.res.Resources;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,17 +10,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
-import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.online.model.Assunto;
 
 public class AssuntoRestClient {
-    private String BASE_URL;
+    private String BASE_URL = "http://192.168.0.35:8000/assunto/";
     private RestTemplate restTemplate = new RestTemplate();
-
-    public AssuntoRestClient() {
-        Resources resources = Resources.getSystem();
-        BASE_URL = resources.getString(R.string.base_url) + "/assunto/";
-    }
 
     public boolean delete(long codigo) {
         try {

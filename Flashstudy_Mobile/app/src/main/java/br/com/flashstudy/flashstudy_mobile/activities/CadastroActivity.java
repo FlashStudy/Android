@@ -1,12 +1,9 @@
 package br.com.flashstudy.flashstudy_mobile.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -77,7 +74,7 @@ public class CadastroActivity extends AppCompatActivity {
                                 usuario.setEmail(email);
                                 usuario.setSenha(senha);
 
-                                UsuarioOff usuarioOff = new Cadastrar().execute(usuario).get();
+                                UsuarioOff usuarioOff = usuarioRepository.salvar(usuario);
 
                                 usuarioRepositoryOff.salvar(usuarioOff);
 
@@ -103,39 +100,6 @@ public class CadastroActivity extends AppCompatActivity {
 
             dlg.setNeutralButton("OK", null);
             dlg.show();
-        }
-    }
-
-    private class Cadastrar extends AsyncTask<Usuario, Void, UsuarioOff> {
-        ProgressDialog progressDialog;
-
-        @Override
-        protected void onPreExecute() {
-            progressDialog = new ProgressDialog(CadastroActivity.this);
-            progressDialog.setMessage("Efetuando cadastro");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-
-        @Override
-        protected UsuarioOff doInBackground(Usuario... usuarios) {
-            try {
-                return usuarioRepository.salvar(usuarios[0]);
-
-            } catch (Exception e) {
-                Log.e("ERRO NO CADASTRO", e.getMessage());
-
-                progressDialog.dismiss();
-                cancel(true);
-                return null;
-            }
-
-        }
-
-        @Override
-        protected void onPostExecute(UsuarioOff usuarioOff) {
-            progressDialog.dismiss();
-
         }
     }
 }

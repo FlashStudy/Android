@@ -68,6 +68,7 @@ public class TelaPrincipalActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(TelaPrincipalActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
         dlg.show();

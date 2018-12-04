@@ -1,6 +1,5 @@
 package br.com.flashstudy.flashstudy_mobile.online.clients;
 
-import android.content.res.Resources;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,18 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.online.model.Ciclo;
 
 public class CicloRestClient {
-    private String BASE_URL;
+    private String BASE_URL = "http://192.168.0.35:8000/ciclo/";
     private RestTemplate restTemplate = new RestTemplate();
     ObjectMapper objectMapper = new ObjectMapper();
-
-    public CicloRestClient() {
-        Resources resources = Resources.getSystem();
-        BASE_URL = resources.getString(R.string.base_url) + "/ciclo/";
-    }
 
     public Ciclo salvar(Ciclo ciclo) {
         try {
