@@ -3,17 +3,15 @@ package br.com.flashstudy.flashstudy_mobile.online.repository;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import br.com.flashstudy.flashstudy_mobile.offline.model.CronogramaOff;
-import br.com.flashstudy.flashstudy_mobile.online.clients.CronogramaRestClient;
-import br.com.flashstudy.flashstudy_mobile.online.model.Cronograma;
+import br.com.flashstudy.flashstudy_mobile.online.clients.CicloRestClient;
+import br.com.flashstudy.flashstudy_mobile.online.model.Ciclo;
 
-public class CronogramaRepository {
+public class CicloRepository {
+    CicloRestClient cicloRestClient = new CicloRestClient();
 
-    CronogramaRestClient cronogramaRestClient = new CronogramaRestClient();
-
-    public Cronograma salvar(Cronograma cronograma){
+    public Ciclo salvar(Ciclo ciclo){
         try{
-            return new Salvar().execute(cronograma).get();
+            return new Salvar().execute(ciclo).get();
         }catch (Exception e){
             Log.e("ERRO REPO CRONO", e.getMessage());
             e.printStackTrace();
@@ -21,7 +19,7 @@ public class CronogramaRepository {
         }
     }
 
-    public Cronograma procurar(long codigo){
+    public Ciclo procurar(long codigo){
         try{
             return new Procurar().execute(codigo).get();
         }catch (Exception e){
@@ -31,12 +29,12 @@ public class CronogramaRepository {
         }
     }
 
-    private class Salvar extends AsyncTask<Cronograma, Void, Cronograma>{
+    private class Salvar extends AsyncTask<Ciclo, Void, Ciclo> {
 
         @Override
-        protected Cronograma doInBackground(Cronograma... cronogramas) {
+        protected Ciclo doInBackground(Ciclo... ciclos) {
             try{
-                return cronogramaRestClient.salvar(cronogramas[0]);
+                return cicloRestClient.salvar(ciclos[0]);
             }catch (Exception e){
                 Log.e("ERRO ASYNC CRONO", e.getMessage());
                 e.printStackTrace();
@@ -45,12 +43,12 @@ public class CronogramaRepository {
         }
     }
 
-    private class Procurar extends AsyncTask<Long, Void, Cronograma>{
+    private class Procurar extends AsyncTask<Long, Void, Ciclo>{
 
         @Override
-        protected Cronograma doInBackground(Long... longs) {
+        protected Ciclo doInBackground(Long... longs) {
             try{
-                return cronogramaRestClient.buscarPorUsuarioCodigo(longs[0]);
+                return cicloRestClient.buscarPorUsuarioCodigo(longs[0]);
             }catch (Exception e){
                 Log.e("ERRO ASYNC CRONO", e.getMessage());
                 e.printStackTrace();
@@ -58,6 +56,4 @@ public class CronogramaRepository {
             }
         }
     }
-
-
 }

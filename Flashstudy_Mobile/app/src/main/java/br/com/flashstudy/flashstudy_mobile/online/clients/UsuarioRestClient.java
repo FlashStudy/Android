@@ -1,6 +1,7 @@
 package br.com.flashstudy.flashstudy_mobile.online.clients;
 
 
+import android.content.res.Resources;
 import android.util.Log;
 
 import org.json.JSONObject;
@@ -12,14 +13,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.Util.ConversaoDeClasse;
 import br.com.flashstudy.flashstudy_mobile.offline.model.UsuarioOff;
 import br.com.flashstudy.flashstudy_mobile.online.model.Usuario;
 
 public class UsuarioRestClient {
 
-    private String BASE_URL = "http://192.168.0.35:8000/usuario/";
+    private String BASE_URL;
     private RestTemplate restTemplate = new RestTemplate();
+
+    public UsuarioRestClient() {
+        Resources resources = Resources.getSystem();
+        BASE_URL = resources.getString(R.string.base_url) + "/usuario/";
+    }
 
     public UsuarioOff cadastro(Usuario usuario) {
         try {
@@ -47,21 +54,22 @@ public class UsuarioRestClient {
         }
     }
 
-    public UsuarioOff login(Usuario usuario) {
+    public Usuario procuraPorEmail(String email) {
         try {
-            JSONObject jsonObject = new JSONObject();
+
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+            String url = BASE_URL + "verifica/";
+
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-            jsonObject.put("email", usuario.getEmail());
-            jsonObject.put("senha", usuario.getSenha());
+            HttpEntity<String> entity = new HttpEntity<>(email, headers);
 
-            HttpEntity<String> entity = new HttpEntity<>(jsonObject.toString(), headers);
-
-            Usuario usuario1 = (Usuario) restTemplate.postForEntity(BASE_URL + "login", entity, null).getBody();
-            Log.i("retorno do usuario", usuario1.toString());
-            return new UsuarioOff(usuario1.getCodigo(), usuario1.getNome(), usuario1.getEmail(), usuario1.getSenha());
+            return restTemplate.postForEntity(url, entity, Usuario.class).getBody();
         } catch (Exception e) {
+            Log.e("ERRO USUARIO SERV", e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
@@ -84,29 +92,33 @@ public class UsuarioRestClient {
 
             return true;
         } catch (Exception e) {
+            Log.e("ERRO USUARIO SERV", e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
 
-    public Usuario procuraPorEmail(String email) {
+
+    /*public UsuarioOff login(Usuario usuario) {
         try {
-
-            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-
-            String url = BASE_URL + "verifica/";
-
+            JSONObject jsonObject = new JSONObject();
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-            HttpEntity<String> entity = new HttpEntity<>(email, headers);
+            jsonObject.put("email", usuario.getEmail());
+            jsonObject.put("senha", usuario.getSenha());
 
-            return restTemplate.postForEntity(url, entity, Usuario.class).getBody();
+            HttpEntity<String> entity = new HttpEntity<>(jsonObject.toString(), headers);
+
+            Usuario usuario1 = (Usuario) restTemplate.postForEntity(BASE_URL + "login", entity, null).getBody();
+            Log.i("retorno do usuario", usuario1.toString());
+            return new UsuarioOff(usuario1.getCodigo(), usuario1.getNome(), usuario1.getEmail(), usuario1.getSenha());
         } catch (Exception e) {
-            Log.e("ERRO USUARIO SERV", e.getMessage());
-            e.printStackTrace();
             return null;
         }
-    }
+    }*/
+
+
 /*
     public List<UsuarioOff> findAll() {
         try {

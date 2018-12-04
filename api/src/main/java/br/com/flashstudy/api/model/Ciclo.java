@@ -40,6 +40,12 @@ public class Ciclo implements Serializable {
 		this.usuario = usuario;
 	}
 
+	public Ciclo(Integer numMaterias, Usuario usuario) {
+		super();
+		this.numMaterias = numMaterias;
+		this.usuario = usuario;
+	}
+        
 	public Long getCodigo() {
 		return codigo;
 	}

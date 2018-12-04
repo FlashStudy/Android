@@ -36,10 +36,18 @@ public class CicloController {
 
     // Salva/atualiza o cronograma do usuário
     @PostMapping(path = "/salvar")
-    public ResponseEntity<?> salvar(@RequestBody Ciclo ciclo, @RequestBody Usuario usuario) {
+    public ResponseEntity<?> salvar(@RequestBody Ciclo ciclo) {
         Random rand = new Random();
 
-        Ciclo c = new Ciclo(ciclo.getCodigo(), ciclo.getNumMaterias(), usuario);
+        Usuario usuario = ciclo.getUsuario();
+
+        Ciclo c;
+
+        if (ciclo.getCodigo() == 0) {
+            c = new Ciclo(ciclo.getNumMaterias(), usuario);
+        } else {
+            c = new Ciclo(ciclo.getCodigo(), ciclo.getNumMaterias(), usuario);
+        }
 
         Set<DiaDaSemana> dias = ciclo.getDias();
 

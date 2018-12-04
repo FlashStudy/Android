@@ -1,5 +1,6 @@
 package br.com.flashstudy.flashstudy_mobile.online.clients;
 
+import android.content.res.Resources;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,14 +15,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.online.model.Cronograma;
 
 public class CronogramaRestClient {
 
-    private String BASE_URL = "http://192.168.0.94:8000/cronograma/";
+    private String BASE_URL;
     private RestTemplate restTemplate = new RestTemplate();
     ObjectMapper objectMapper = new ObjectMapper();
 
+    public CronogramaRestClient() {
+        Resources resources = Resources.getSystem();
+        BASE_URL = resources.getString(R.string.base_url) + "/cronograma/";
+    }
 
     public Cronograma salvar(Cronograma cronograma) {
         try {
@@ -44,7 +50,8 @@ public class CronogramaRestClient {
 
             return cronograma;
         } catch (Exception e) {
-            Log.i("ERRO SERV CRONO", e.getMessage());
+            Log.e("ERRO SERV CRONO", e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
@@ -60,7 +67,8 @@ public class CronogramaRestClient {
                     }
             ).getBody();
         } catch (Exception e) {
-            Log.i("ERRO REQUISIÇÃO", e.getMessage());
+            Log.e("ERRO REQUISIÇÃO", e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }

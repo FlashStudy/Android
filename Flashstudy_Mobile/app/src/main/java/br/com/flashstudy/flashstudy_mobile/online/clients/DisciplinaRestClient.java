@@ -1,5 +1,6 @@
 package br.com.flashstudy.flashstudy_mobile.online.clients;
 
+import android.content.res.Resources;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,18 +11,45 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+import br.com.flashstudy.flashstudy_mobile.R;
+import br.com.flashstudy.flashstudy_mobile.Util.ConversaoDeClasse;
+import br.com.flashstudy.flashstudy_mobile.offline.model.DisciplinaOff;
 import br.com.flashstudy.flashstudy_mobile.online.model.Disciplina;
 
 public class DisciplinaRestClient {
-    private String BASE_URL = "http://192.168.0.94:8000/disciplina/";
+    private String BASE_URL;
     private RestTemplate restTemplate = new RestTemplate();
     ObjectMapper objectMapper = new ObjectMapper();
 
+    public DisciplinaRestClient() {
+        Resources resources = Resources.getSystem();
+        BASE_URL = resources.getString(R.string.base_url) + "/disciplina/";
+    }
+
+    public List<Disciplina> listar(Long codigo) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+
+            return restTemplate.exchange(
+                    BASE_URL + "findallbyuser/" + codigo,
+                    HttpMethod.GET,
+                    entity,
+                    List.class
+            ).getBody();
+        } catch (Exception e) {
+            Log.e("ERRO CONSULTA SERV", e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public List<Disciplina> salvarLista(List<Disciplina> disciplinaList) {
         try {
@@ -34,19 +62,53 @@ public class DisciplinaRestClient {
 
             HttpEntity<String> entity = new HttpEntity<>(jsonObject.toString(), headers);
 
-            restTemplate.postForEntity(BASE_URL + "salvarLista", entity, null);
+            ResponseEntity<?> responseEntity = restTemplate.postForEntity(BASE_URL + "salvar", entity, List.class);
 
-            return restTemplate.exchange(
-                    BASE_URL + "findallbyuser/" + disciplinaList.get(0).getUsuario().getCodigo(),
-                    HttpMethod.GET,
-                    null,
-                    new ParameterizedTypeReference<List<Disciplina>>() {
-                    }
-            ).getBody();
+            return (List<Disciplina>) responseEntity.getBody();
+
         } catch (Exception e) {
-            Log.i("ERRO SERV DISCIPLINA", e.getMessage());
+            Log.e("ERRO SERV DISCIPLINA", e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
 
+    public Disciplina salvar(Disciplina disciplina) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JSONObject jsonObject = new JSONObject();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+
+
+            jsonObject.put("assuntos", mapper.writeValueAsString(disciplina.getAssuntos()));
+            jsonObject.put("codigo", disciplina.getCodigo());
+            jsonObject.put("nome", disciplina.getNome());
+            jsonObject.put("usuario", mapper.writeValueAsString(disciplina.getUsuario()));
+
+            HttpEntity<String> entity = new HttpEntity<>(jsonObject.toString(), headers);
+
+            return restTemplate.postForEntity(BASE_URL + "salvar", entity, Disciplina.class).getBody();
+        } catch (Exception e) {
+            Log.e("ERRO USUARIO SERV", e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean deletar (long codigo){
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+
+            restTemplate.delete(BASE_URL + "delete/" + codigo, entity);
+            return true;
+        } catch (Exception e) {
+            Log.e("ERRO SERV DISCIPLINA", e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

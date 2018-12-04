@@ -12,8 +12,10 @@ public class UsuarioRepository {
 
     public UsuarioOff salvar(Usuario usuario) {
         try {
-            return usuarioRestClient.cadastro(usuario);
+            return new Cadastro().execute(usuario).get();
         } catch (Exception e) {
+            Log.e("ERRO REPO USUARIO", e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
@@ -35,6 +37,16 @@ public class UsuarioRepository {
         }
     }
 
+    public boolean atualizar(Usuario usuario){
+        try {
+            return new Atualizar().execute(usuario).get();
+        } catch (Exception e) {
+            Log.e("ERRO REPO USUARIO", e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     private class Login extends AsyncTask<Usuario, Void, Usuario> {
 
         @Override
@@ -45,6 +57,34 @@ public class UsuarioRepository {
                 Log.e("ERRO CONSULTA SERVIDOR", e.getMessage());
                 e.printStackTrace();
                 return null;
+            }
+        }
+    }
+
+    private class Cadastro extends AsyncTask <Usuario, Void, UsuarioOff>{
+
+        @Override
+        protected UsuarioOff doInBackground(Usuario... usuarios) {
+            try{
+                return usuarioRestClient.cadastro(usuarios[0]);
+            }catch (Exception e){
+                Log.e("ERRO CONSULTA SERVIDOR", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    private class Atualizar extends AsyncTask<Usuario, Void, Boolean>{
+
+        @Override
+        protected Boolean doInBackground(Usuario... usuarios) {
+            try{
+                return usuarioRestClient.atualizar(usuarios[0]);
+            }catch (Exception e){
+                Log.e("ERRO CONSULTA SERVIDOR", e.getMessage());
+                e.printStackTrace();
+                return false;
             }
         }
     }
