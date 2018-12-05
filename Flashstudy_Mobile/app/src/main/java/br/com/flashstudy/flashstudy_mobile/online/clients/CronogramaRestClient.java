@@ -1,11 +1,13 @@
 package br.com.flashstudy.flashstudy_mobile.online.clients;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONObject;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.ContentCodingType;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -13,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+
+import java.nio.charset.StandardCharsets;
 
 import br.com.flashstudy.flashstudy_mobile.online.model.Cronograma;
 
@@ -22,12 +26,16 @@ public class CronogramaRestClient {
     private RestTemplate restTemplate = new RestTemplate();
     ObjectMapper objectMapper = new ObjectMapper();
 
+    @SuppressLint("NewApi")
     public Cronograma salvar(Cronograma cronograma) {
         try {
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
             JSONObject jsonObject = new JSONObject();
             HttpHeaders headers = new HttpHeaders();
+
             headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+            headers.add(HttpHeaders.ACCEPT_CHARSET, StandardCharsets.UTF_8.name());
 
             jsonObject.put("codigo", cronograma.getCodigo());
             jsonObject.put("inicio", cronograma.getInicio());

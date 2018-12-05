@@ -1,10 +1,13 @@
 package br.com.flashstudy.flashstudy_mobile.activities.crud;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -151,64 +154,84 @@ public class CronogramaCrudActivity extends AppCompatActivity {
 
                     //Atualizar
                     case 0:
-                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(CronogramaCrudActivity.this);
-                        alertDialog.setTitle("Editar disciplina");
-                        alertDialog.setMessage(R.string.lbl_disciplina);
-                        final EditText input = new EditText(CronogramaCrudActivity.this);
-                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.MATCH_PARENT);
-                        input.setLayoutParams(lp);
-                        input.setText(disciplinaOff.getNome());
-                        alertDialog.setView(input);
-                        alertDialog.setIcon(R.drawable.ic_edit);
+                        if (isConectado()){
+                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(CronogramaCrudActivity.this);
+                            alertDialog.setTitle("Editar disciplina");
+                            alertDialog.setMessage(R.string.lbl_disciplina);
+                            final EditText input = new EditText(CronogramaCrudActivity.this);
+                            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.MATCH_PARENT);
+                            input.setLayoutParams(lp);
+                            input.setText(disciplinaOff.getNome());
+                            alertDialog.setView(input);
+                            alertDialog.setIcon(R.drawable.ic_edit);
 
-                        alertDialog.setPositiveButton("OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
+                            alertDialog.setPositiveButton("OK",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
 
-                                        disciplinaOff.setNome(input.getText().toString().trim());
+                                            disciplinaOff.setNome(input.getText().toString().trim());
 
-                                        if (disciplinaOff.getCodigo() != 0) {
-                                            try {
-                                                disciplinaRepositoryOff.atualizar(disciplinaOff);
-                                            } catch (Exception e) {
-                                                Toast.makeText(CronogramaCrudActivity.this, "Houve um erro ao atualizar a disciplina", Toast.LENGTH_LONG).show();
+                                            if (disciplinaOff.getCodigo() != 0) {
+                                                try {
+                                                    disciplinaRepositoryOff.atualizar(disciplinaOff);
+                                                } catch (Exception e) {
+                                                    Toast.makeText(CronogramaCrudActivity.this, "Houve um erro ao atualizar a disciplina", Toast.LENGTH_LONG).show();
+                                                }
                                             }
+                                            disciplinaOffs.get(position).setNome(disciplinaOff.getNome());
+                                            populaLista();
                                         }
-                                        disciplinaOffs.get(position).setNome(disciplinaOff.getNome());
-                                        populaLista();
-                                    }
-                                });
-                        alertDialog.show();
+                                    });
+                            alertDialog.show();
+                        }else {
+                            AlertDialog.Builder dlg = new AlertDialog.Builder(CronogramaCrudActivity.this);
+                            dlg.setTitle("AVISO!");
+                            dlg.setMessage("Só é possível atualizar quando há uma conexão com a internet!");
+
+                            dlg.setNeutralButton("Ok", null);
+                            dlg.show();
+                        }
+
 
                         break;
 
                     //deletar
                     case 1:
-                        AlertDialog.Builder dlg = new AlertDialog.Builder(CronogramaCrudActivity.this);
-                        dlg.setTitle("AVISO!");
-                        dlg.setMessage("Tem certeza em deletar essa disciplina?");
+                        if (isConectado()){
+                            AlertDialog.Builder dlg = new AlertDialog.Builder(CronogramaCrudActivity.this);
+                            dlg.setTitle("AVISO!");
+                            dlg.setMessage("Tem certeza em deletar essa disciplina?");
 
-                        dlg.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            dlg.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                                if (disciplinaOff.getCodigo() != 0) {
+                                    if (disciplinaOff.getCodigo() != 0) {
 
-                                    try {
-                                        disciplinaRepositoryOff.deletar(disciplinaOff);
-                                    } catch (Exception e) {
-                                        Toast.makeText(CronogramaCrudActivity.this, "Ocorreu um erro ao deletar a disciplina!", Toast.LENGTH_LONG).show();
+                                        try {
+                                            disciplinaRepositoryOff.deletar(disciplinaOff);
+                                        } catch (Exception e) {
+                                            Toast.makeText(CronogramaCrudActivity.this, "Ocorreu um erro ao deletar a disciplina!", Toast.LENGTH_LONG).show();
+                                        }
                                     }
-                                }
 
-                                disciplinaOffs.remove(position);
-                                populaLista();
-                                Toast.makeText(CronogramaCrudActivity.this, "Disciplina deletada com sucesso!", Toast.LENGTH_LONG).show();
-                            }
-                        });
-                        dlg.show();
+                                    disciplinaOffs.remove(position);
+                                    populaLista();
+                                    Toast.makeText(CronogramaCrudActivity.this, "Disciplina deletada com sucesso!", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                            dlg.show();
+                        }else {
+                            AlertDialog.Builder dlg = new AlertDialog.Builder(CronogramaCrudActivity.this);
+                            dlg.setTitle("AVISO!");
+                            dlg.setMessage("Só é possível deletar quando há uma conexão com a internet!");
+
+                            dlg.setNeutralButton("Ok", null);
+                            dlg.show();
+                        }
+
                         break;
                 }
                 // false : close the menu; true : not close the menu
@@ -220,75 +243,96 @@ public class CronogramaCrudActivity extends AppCompatActivity {
     @OnClick(R.id.fab)
     public void salvarCronograma() {
 
-        long codigoinicial = cronograma.getCodigo();
+        if (isConectado()){
+            long codigoinicial = cronograma.getCodigo();
 
-        cronograma.setUsuarioCodigo(codigoUsuario);
-        cronograma.setDisciplinas(disciplinaOffs);
-        cronograma.setInicio(txtInicio.getText().toString().trim());
-        cronograma.setFim(txtFim.getText().toString().trim());
-
-        Usuario usuario = ConversaoDeClasse.usuarioOffToUsuario(Util.getLocalUser(this, Util.getLocalUserCodigo(this)));
-
-        try {
-            List<Disciplina> disciplinas = new ArrayList<>();
-
-            //Prepara as disciplinas para salvar no servidor
-            for (DisciplinaOff d : disciplinaOffs) {
-                disciplinas.add(ConversaoDeClasse.disciplinaOffToDisciplina(d, usuario));
-            }
-
-            //Prepara o cronograma para salvar no servidor
-            Cronograma cronograma1 = ConversaoDeClasse.cronogramaOffToCronograma(cronograma, usuario, disciplinas);
-
-            //Salva o cronograma no servidor
-            Cronograma cronograma2 = cronogramaRepository.salvar(cronograma1);
-
-            //Disciplinas com código
-            disciplinas = cronograma2.getDisciplinas();
-
-            //Prepara para salvar no dispositivo
-            cronograma = ConversaoDeClasse.cronogramaToCronogramaOff(cronograma2);
-
-            disciplinaOffs = new ArrayList<>();
-
-            //Prepara para salvar no dispositivo
-            for (Disciplina d : disciplinas) {
-                disciplinaOffs.add(ConversaoDeClasse.disciplinaToDisciplinaOff(d));
-            }
+            cronograma.setUsuarioCodigo(codigoUsuario);
             cronograma.setDisciplinas(disciplinaOffs);
+            cronograma.setInicio(txtInicio.getText().toString().trim());
+            cronograma.setFim(txtFim.getText().toString().trim());
 
-            if (codigoinicial == 0) {
-                cronogramaRepositoryOff.salvar(cronograma);
-            } else {
-                cronogramaRepositoryOff.atualizar(cronograma);
+            Usuario usuario = ConversaoDeClasse.usuarioOffToUsuario(Util.getLocalUser(this, Util.getLocalUserCodigo(this)));
+
+            try {
+                List<Disciplina> disciplinas = new ArrayList<>();
+
+                //Prepara as disciplinas para salvar no servidor
+                for (DisciplinaOff d : disciplinaOffs) {
+                    disciplinas.add(ConversaoDeClasse.disciplinaOffToDisciplina(d, usuario));
+                }
+
+                //Prepara o cronograma para salvar no servidor
+                Cronograma cronograma1 = ConversaoDeClasse.cronogramaOffToCronograma(cronograma, usuario, disciplinas);
+
+                //Salva o cronograma no servidor
+                Cronograma cronograma2 = cronogramaRepository.salvar(cronograma1);
+
+                //Disciplinas com código
+                disciplinas = cronograma2.getDisciplinas();
+
+                //Prepara para salvar no dispositivo
+                cronograma = ConversaoDeClasse.cronogramaToCronogramaOff(cronograma2);
+
+                disciplinaOffs = new ArrayList<>();
+
+                //Prepara para salvar no dispositivo
+                for (Disciplina d : disciplinas) {
+                    disciplinaOffs.add(ConversaoDeClasse.disciplinaToDisciplinaOff(d));
+                }
+                cronograma.setDisciplinas(disciplinaOffs);
+
+                if (codigoinicial == 0) {
+                    cronogramaRepositoryOff.salvar(cronograma);
+                } else {
+                    cronogramaRepositoryOff.atualizar(cronograma);
+                }
+
+                Log.e("CRONOGRAMA", cronograma1.toString());
+
+                Toast.makeText(CronogramaCrudActivity.this, "Cronograma salvo com sucesso!", Toast.LENGTH_LONG).show();
+                finish();
+            } catch (Exception e) {
+                Toast.makeText(CronogramaCrudActivity.this, "Houve um erro ao salvar o cronograma!", Toast.LENGTH_LONG).show();
             }
+        }else{
+            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+            dlg.setTitle("AVISO!");
+            dlg.setMessage("Só é possível salvar quando há uma conexão com a internet!");
 
-            Log.e("CRONOGRAMA", cronograma1.toString());
-
-            Toast.makeText(CronogramaCrudActivity.this, "Cronograma salvo com sucesso!", Toast.LENGTH_LONG).show();
-            finish();
-        } catch (Exception e) {
-            Toast.makeText(CronogramaCrudActivity.this, "Houve um erro ao salvar o cronograma!", Toast.LENGTH_LONG).show();
+            dlg.setNeutralButton("Ok", null);
+            dlg.show();
         }
+
 
     }
 
     @OnClick(R.id.btnAddMateria)
     public void addMateria() {
 
-        if (!Util.isCampoVazio(txtDisciplina.getText().toString())) {
+        if (isConectado()){
+            if (!Util.isCampoVazio(txtDisciplina.getText().toString())) {
 
-            DisciplinaOff d = new DisciplinaOff();
-            d.setNome(txtDisciplina.getText().toString().trim());
-            d.setUsuarioCodigo(codigoUsuario);
-            txtDisciplina.setText("");
+                DisciplinaOff d = new DisciplinaOff();
+                d.setNome(txtDisciplina.getText().toString().trim());
+                d.setUsuarioCodigo(codigoUsuario);
+                txtDisciplina.setText("");
 
-            disciplinaOffs.add(d);
-            populaLista();
-        } else {
-            Toast.makeText(CronogramaCrudActivity.this, "O campo está vazio!", Toast.LENGTH_LONG).show();
-            finish();
+                disciplinaOffs.add(d);
+                populaLista();
+            } else {
+                Toast.makeText(CronogramaCrudActivity.this, "O campo está vazio!", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        }else{
+            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+            dlg.setTitle("AVISO!");
+            dlg.setMessage("Só é possível adicionar disciplinas quando há uma conexão com a internet!");
+
+            dlg.setNeutralButton("Ok", null);
+            dlg.show();
         }
+
+
     }
 
     @OnClick({R.id.txtInicio, R.id.txtFim})
@@ -320,4 +364,10 @@ public class CronogramaCrudActivity extends AppCompatActivity {
         return sdf.format(date.getTime());
     }
 
+    private boolean isConectado() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }

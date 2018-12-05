@@ -1,9 +1,12 @@
 package br.com.flashstudy.flashstudy_mobile.activities.crud;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -132,71 +135,90 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(final int position, SwipeMenu menu, int index) {
                 switch (index) {
+                    //editar
                     case 0:
-                        final AssuntoOff a = assuntos.get(position);
+                        if (isConectado()){
+                            final AssuntoOff a = assuntos.get(position);
 
-                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(DisciplinaCrudActivity.this);
-                        alertDialog.setTitle("Editar assunto");
-                        alertDialog.setMessage(R.string.lbl_assunto);
-                        final EditText input = new EditText(DisciplinaCrudActivity.this);
-                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.MATCH_PARENT);
-                        input.setLayoutParams(lp);
-                        input.setText(a.getTema());
-                        alertDialog.setView(input);
-                        alertDialog.setIcon(R.drawable.ic_edit);
+                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(DisciplinaCrudActivity.this);
+                            alertDialog.setTitle("Editar assunto");
+                            alertDialog.setMessage(R.string.lbl_assunto);
+                            final EditText input = new EditText(DisciplinaCrudActivity.this);
+                            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.MATCH_PARENT);
+                            input.setLayoutParams(lp);
+                            input.setText(a.getTema());
+                            alertDialog.setView(input);
+                            alertDialog.setIcon(R.drawable.ic_edit);
 
-                        alertDialog.setPositiveButton("OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
+                            alertDialog.setPositiveButton("OK",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
 
-                                        a.setTema(input.getText().toString().trim());
+                                            a.setTema(input.getText().toString().trim());
 
-                                        if (a.getCodigo() != 0) {
-                                            try {
-                                                assuntoRepositoryOff.atualizar(a);
-                                            } catch (Exception e) {
-                                                Toast.makeText(DisciplinaCrudActivity.this, "Houve um erro ao atualizar o assunto!", Toast.LENGTH_LONG).show();
-                                                finish();
+                                            if (a.getCodigo() != 0) {
+                                                try {
+                                                    assuntoRepositoryOff.atualizar(a);
+                                                } catch (Exception e) {
+                                                    Toast.makeText(DisciplinaCrudActivity.this, "Houve um erro ao atualizar o assunto!", Toast.LENGTH_LONG).show();
+                                                    finish();
+                                                }
                                             }
+                                            assuntos.get(position).setTema(a.getTema());
+                                            populaLista();
                                         }
-                                        assuntos.get(position).setTema(a.getTema());
-                                        populaLista();
-                                    }
-                                });
-                        alertDialog.show();
+                                    });
+                            alertDialog.show();
+                        }else{
+                            AlertDialog.Builder dlg1 = new AlertDialog.Builder(DisciplinaCrudActivity.this);
+                            dlg1.setTitle("AVISO!");
+                            dlg1.setMessage("Só é possível editar quando há uma conexão com a internet!");
+                            dlg1.setNeutralButton("Ok", null);
+                            dlg1.show();
+                        }
+
 
                         break;
 
                     //deletar
                     case 1:
-                        AlertDialog.Builder dlg = new AlertDialog.Builder(DisciplinaCrudActivity.this);
-                        dlg.setTitle("AVISO!");
-                        dlg.setMessage("Tem certeza em deletar esse assunto?");
+                        if (isConectado()){
+                            AlertDialog.Builder dlg = new AlertDialog.Builder(DisciplinaCrudActivity.this);
+                            dlg.setTitle("AVISO!");
+                            dlg.setMessage("Tem certeza em deletar esse assunto?");
 
-                        dlg.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            dlg.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                                if (assuntos.get(position).getCodigo() != 0) {
+                                    if (assuntos.get(position).getCodigo() != 0) {
 
-                                    try {
-                                        if (assuntoRepositoryOff.deletar(assuntos.get(position))) {
-                                            assuntos.remove(position);
-                                            Toast.makeText(getApplicationContext(), "Disciplina deletado com sucesso!", Toast.LENGTH_LONG).show();
+                                        try {
+                                            if (assuntoRepositoryOff.deletar(assuntos.get(position))) {
+                                                assuntos.remove(position);
+                                                Toast.makeText(getApplicationContext(), "Disciplina deletado com sucesso!", Toast.LENGTH_LONG).show();
+                                            }
+                                        } catch (Exception e) {
+                                            Toast.makeText(getApplicationContext(), "Houve um erro ao deletar a disciplina!", Toast.LENGTH_LONG).show();
                                         }
-                                    } catch (Exception e) {
-                                        Toast.makeText(getApplicationContext(), "Houve um erro ao deletar a disciplina!", Toast.LENGTH_LONG).show();
+                                        populaLista();
+                                    } else {
+                                        assuntos.remove(position);
+                                        populaLista();
                                     }
-                                    populaLista();
-                                } else {
-                                    assuntos.remove(position);
-                                    populaLista();
                                 }
-                            }
-                        });
-                        dlg.show();
+                            });
+                            dlg.show();
+                        }else{
+                            AlertDialog.Builder dlg1 = new AlertDialog.Builder(DisciplinaCrudActivity.this);
+                            dlg1.setTitle("AVISO!");
+                            dlg1.setMessage("Só é possível deletar quando há uma conexão com a internet!");
+                            dlg1.setNeutralButton("Ok", null);
+                            dlg1.show();
+                        }
+
                         break;
                 }
                 // false : close the menu; true : not close the menu
@@ -207,11 +229,21 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
 
     @OnClick(R.id.fab)
     public void salvarAssuntos() {
-        try {
-            assuntoRepositoryOff.salvarLista(assuntos);
-        } catch (Exception e) {
-            Toast.makeText(DisciplinaCrudActivity.this, "Houve um erro ao salvar o cronograma! Tente novamente!", Toast.LENGTH_LONG).show();
+        if (isConectado()){
+            try {
+                assuntoRepositoryOff.salvarLista(assuntos);
+                finish();
+            } catch (Exception e) {
+                Toast.makeText(DisciplinaCrudActivity.this, "Houve um erro ao salvar o cronograma! Tente novamente!", Toast.LENGTH_LONG).show();
+            }
+        }else{
+            AlertDialog.Builder dlg1 = new AlertDialog.Builder(DisciplinaCrudActivity.this);
+            dlg1.setTitle("AVISO!");
+            dlg1.setMessage("Só é possível salvar quando há uma conexão com a internet!");
+            dlg1.setNeutralButton("Ok", null);
+            dlg1.show();
         }
+
     }
 
     @OnClick(R.id.btnAddAssunto)
@@ -235,4 +267,10 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
         }
     }
 
+    private boolean isConectado() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }

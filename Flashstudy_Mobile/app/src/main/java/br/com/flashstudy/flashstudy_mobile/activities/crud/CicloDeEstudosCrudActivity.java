@@ -1,7 +1,11 @@
 package br.com.flashstudy.flashstudy_mobile.activities.crud;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CheckBox;
@@ -76,24 +80,38 @@ public class CicloDeEstudosCrudActivity extends AppCompatActivity {
     @OnClick(R.id.btnSalvarCiclo)
     public void salvarCiclo(View view) {
 
-        List<String> dias = new ArrayList<>();
-        for (CheckBox cb : cbDias) {
-            if (cb.isChecked()) {
-                dias.add(cb.getText().toString());
+        if (isConectado()) {
+            List<String> dias = new ArrayList<>();
+            for (CheckBox cb : cbDias) {
+                if (cb.isChecked()) {
+                    dias.add(cb.getText().toString());
+                }
             }
+
+            cicloOff.setNumMaterias(spinnerNumMaterias.getSelectedItemPosition() + 1);
+
+            try {
+                cicloRepositoryOff.salvar(cicloOff, dias);
+                Toast.makeText(this, "Ciclo salvo com sucesso!", Toast.LENGTH_LONG).show();
+                finish();
+            } catch (Exception e) {
+                Toast.makeText(this, "Ocorreu um erro ao salvar o ciclo!", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            AlertDialog.Builder dlg1 = new AlertDialog.Builder(this);
+            dlg1.setTitle("AVISO!");
+            dlg1.setMessage("Só é possível salvar quando há uma conexão com a internet!");
+            dlg1.setNeutralButton("Ok", null);
+            dlg1.show();
         }
 
-        cicloOff.setNumMaterias(spinnerNumMaterias.getSelectedItemPosition() + 1);
+    }
 
-        try {
-            cicloRepositoryOff.salvar(cicloOff, dias);
-            Toast.makeText(this, "Ciclo salvo com sucesso!", Toast.LENGTH_LONG).show();
-            finish();
-        } catch (Exception e) {
-            Toast.makeText(this, "Ocorreu um erro ao salvar o ciclo!", Toast.LENGTH_LONG).show();
-        }
-
-
+    private boolean isConectado() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 }

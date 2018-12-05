@@ -1,7 +1,10 @@
 package br.com.flashstudy.flashstudy_mobile.activities.crud;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -161,66 +164,86 @@ public class FlashcardCrudActivity extends AppCompatActivity {
 
         switch (id) {
             case SALVAR:
-                if (flashcardOff == null) {
-                    flashcardOff = new FlashcardOff();
-                    flashcardOff.setTitulo(campos.get(0).getText().toString());
-                    flashcardOff.setPergunta(campos.get(1).getText().toString());
-                    flashcardOff.setResposta(campos.get(2).getText().toString());
+                if (isConectado()) {
+                    if (flashcardOff == null) {
+                        flashcardOff = new FlashcardOff();
+                        flashcardOff.setTitulo(campos.get(0).getText().toString());
+                        flashcardOff.setPergunta(campos.get(1).getText().toString());
+                        flashcardOff.setResposta(campos.get(2).getText().toString());
 
-                    int discPosition = spinDisciplinas.getSelectedItemPosition();
-                    int assuntoPosition = spinAssuntos.getSelectedItemPosition();
-                    int pastaPosition = spinPastas.getSelectedItemPosition();
+                        int discPosition = spinDisciplinas.getSelectedItemPosition();
+                        int assuntoPosition = spinAssuntos.getSelectedItemPosition();
+                        int pastaPosition = spinPastas.getSelectedItemPosition();
 
-                    try {
-                        if (disciplinas.get(discPosition).getCodigo() != 0 && assuntos.get(assuntoPosition).getCodigo() != 0 && pastas.get(pastaPosition).getCodigo() != 0) {
-
-                            flashcardOff.setDisciplinaCodigo(disciplinas.get(discPosition).getCodigo());
-                            flashcardOff.setAssuntoCodigo(assuntos.get(assuntoPosition).getCodigo());
-                            flashcardOff.setPastaCodigo(pastas.get(pastaPosition).getCodigo());
-                            flashcardOff.setUsuarioCodigo(codigo);
-                            Log.e("FLASHCARD", flashcardOff.toStringCompleto());
-
-                            try {
-                                flashcardRepositoryOff.salvar(flashcardOff);
-                                Toast.makeText(getApplicationContext(), "Flashcard salvo!", Toast.LENGTH_SHORT).show();
-                            } catch (Exception e) {
-                                Toast.makeText(getApplicationContext(), "Houve um erro ao salvar o flashcard!", Toast.LENGTH_LONG).show();
-                            }
-                            return true;
-                        }
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        Toast.makeText(getApplicationContext(), "Selecione uma Disciplina e um Assunto válidos!", Toast.LENGTH_LONG).show();
-                    }
-
-                } else {
-                    flashcardOff.setTitulo(campos.get(0).getText().toString());
-                    flashcardOff.setPergunta(campos.get(1).getText().toString());
-                    flashcardOff.setResposta(campos.get(2).getText().toString());
-
-                    try {
-                        flashcardRepositoryOff.atualizar(flashcardOff);
-                    } catch (Exception e) {
-                        Toast.makeText(getApplicationContext(), "Houve um erro ao salvar o flashcard!", Toast.LENGTH_LONG).show();
-                    }
-                    return true;
-                }
-            case DELETAR:
-                AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-                dlg.setTitle("AVISO!");
-                dlg.setMessage("Tem certeza em deletar esse flashcard?");
-
-                dlg.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
                         try {
-                            flashcardRepositoryOff.deletar(flashcardOff);
-                        } catch (Exception e) {
-                            Log.i("ERRO DELETAR FLASH", e.getMessage());
-                            Toast.makeText(getApplicationContext(), "Houve um erro ao deletar o flashcard!", Toast.LENGTH_LONG).show();
+                            if (disciplinas.get(discPosition).getCodigo() != 0 && assuntos.get(assuntoPosition).getCodigo() != 0 && pastas.get(pastaPosition).getCodigo() != 0) {
+
+                                flashcardOff.setDisciplinaCodigo(disciplinas.get(discPosition).getCodigo());
+                                flashcardOff.setAssuntoCodigo(assuntos.get(assuntoPosition).getCodigo());
+                                flashcardOff.setPastaCodigo(pastas.get(pastaPosition).getCodigo());
+                                flashcardOff.setUsuarioCodigo(codigo);
+                                Log.e("FLASHCARD", flashcardOff.toStringCompleto());
+
+                                try {
+                                    flashcardRepositoryOff.salvar(flashcardOff);
+                                    Toast.makeText(getApplicationContext(), "Flashcard salvo!", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                } catch (Exception e) {
+                                    Toast.makeText(getApplicationContext(), "Houve um erro ao salvar o flashcard!", Toast.LENGTH_LONG).show();
+                                }
+                                return true;
+                            }
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            Toast.makeText(getApplicationContext(), "Selecione uma Disciplina e um Assunto válidos!", Toast.LENGTH_LONG).show();
                         }
+
+                    } else {
+                        flashcardOff.setTitulo(campos.get(0).getText().toString());
+                        flashcardOff.setPergunta(campos.get(1).getText().toString());
+                        flashcardOff.setResposta(campos.get(2).getText().toString());
+
+                        try {
+                            flashcardRepositoryOff.atualizar(flashcardOff);
+                        } catch (Exception e) {
+                            Toast.makeText(getApplicationContext(), "Houve um erro ao salvar o flashcard!", Toast.LENGTH_LONG).show();
+                        }
+                        return true;
                     }
-                });
-                dlg.show();
+                } else {
+                    AlertDialog.Builder dlg1 = new AlertDialog.Builder(this);
+                    dlg1.setTitle("AVISO!");
+                    dlg1.setMessage("Só é possível salvar quando há uma conexão com a internet!");
+                    dlg1.setNeutralButton("Ok", null);
+                    dlg1.show();
+                }
+
+            case DELETAR:
+                if (isConectado()) {
+                    AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+                    dlg.setTitle("AVISO!");
+                    dlg.setMessage("Tem certeza em deletar esse flashcard?");
+
+                    dlg.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            try {
+                                flashcardRepositoryOff.deletar(flashcardOff);
+                            } catch (Exception e) {
+                                Log.i("ERRO DELETAR FLASH", e.getMessage());
+                                Toast.makeText(getApplicationContext(), "Houve um erro ao deletar o flashcard!", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                    dlg.show();
+                } else {
+                    AlertDialog.Builder dlg1 = new AlertDialog.Builder(this);
+                    dlg1.setTitle("AVISO!");
+                    dlg1.setMessage("Só é possível deletar quando há uma conexão com a internet!");
+                    dlg1.setNeutralButton("Ok", null);
+                    dlg1.show();
+                }
+
+
                 return true;
 
             case CANCELAR:
@@ -234,10 +257,18 @@ public class FlashcardCrudActivity extends AppCompatActivity {
                 return true;
 
             case EDITAR:
-                campos.get(2).setText(flashcardOff.getResposta());
-                campos.get(0).setEnabled(true);
-                campos.get(1).setEnabled(true);
-                campos.get(2).setEnabled(true);
+                if (isConectado()) {
+                    campos.get(2).setText(flashcardOff.getResposta());
+                    campos.get(0).setEnabled(true);
+                    campos.get(1).setEnabled(true);
+                    campos.get(2).setEnabled(true);
+                } else {
+                    AlertDialog.Builder dlg1 = new AlertDialog.Builder(this);
+                    dlg1.setTitle("AVISO!");
+                    dlg1.setMessage("Só é possível editar quando há uma conexão com a internet!");
+                    dlg1.setNeutralButton("Ok", null);
+                    dlg1.show();
+                }
                 return true;
 
             case RESPOSTA:
@@ -276,5 +307,12 @@ public class FlashcardCrudActivity extends AppCompatActivity {
         } catch (Exception e) {
 
         }
+    }
+
+    private boolean isConectado() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

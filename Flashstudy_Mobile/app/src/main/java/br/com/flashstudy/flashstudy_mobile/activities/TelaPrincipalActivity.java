@@ -1,10 +1,14 @@
 package br.com.flashstudy.flashstudy_mobile.activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.Util.Util;
@@ -23,6 +27,10 @@ public class TelaPrincipalActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, NotificationService.class);
         startService(intent);
+
+        if (!isConectado()){
+            Toast.makeText(this, "Sem conexão com a internet!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @OnClick({R.id.imageViewCiclo, R.id.textViewCiclo})
@@ -72,5 +80,12 @@ public class TelaPrincipalActivity extends AppCompatActivity {
             }
         });
         dlg.show();
+    }
+
+    private boolean isConectado() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

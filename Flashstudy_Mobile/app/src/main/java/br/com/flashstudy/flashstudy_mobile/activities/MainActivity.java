@@ -1,6 +1,9 @@
 package br.com.flashstudy.flashstudy_mobile.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -59,13 +62,19 @@ public class MainActivity extends AppCompatActivity {
                 codigo = usuarioRepositoryOff.login(usuarioOff);
 
                 if (codigo == 0) {
-                    UsuarioOff usuarioOff1 = usuarioRepository.login(new Usuario(usuarioOff.getEmail(), usuarioOff.getSenha()));
+                    if (isConectado()) {
+                        UsuarioOff usuarioOff1 = usuarioRepository.login(new Usuario(usuarioOff.getEmail(), usuarioOff.getSenha()));
 
-                    if (usuarioOff1 != null) {
-                        usuarioRepositoryOff.salvar(usuarioOff1);
-                        codigo = usuarioOff1.getCodigo();
-                        encontrado = true;
+                        if (usuarioOff1 != null) {
+                            usuarioRepositoryOff.salvar(usuarioOff1);
+                            codigo = usuarioOff1.getCodigo();
+                            encontrado = true;
+                        }
+                    } else {
+                        Toast.makeText(this, "Sem conexão com a internet para login!", Toast.LENGTH_SHORT).show();
+                        return;
                     }
+
                 } else {
                     encontrado = true;
                 }
@@ -89,6 +98,14 @@ public class MainActivity extends AppCompatActivity {
     public void chamarTelaCadastro() {
         Intent intent = new Intent(MainActivity.this, CadastroActivity.class);
         startActivity(intent);
+    }
+
+
+    private boolean isConectado() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     private boolean validaCampos() {

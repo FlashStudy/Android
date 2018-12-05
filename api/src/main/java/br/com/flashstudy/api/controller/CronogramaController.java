@@ -27,7 +27,7 @@ public class CronogramaController {
     DisciplinaRepository disciplinaRepository;
 
     // Salva/atualiza o cronograma do usuário
-    @PostMapping(value = "/salvar", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+    @PostMapping(value = "/salvar", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json;charset=UTF-8")
     public ResponseEntity<?> salvar(@RequestBody Cronograma cronograma) {
 
         System.out.println(cronograma.toString());

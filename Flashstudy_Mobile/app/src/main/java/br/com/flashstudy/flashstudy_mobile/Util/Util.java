@@ -2,6 +2,8 @@ package br.com.flashstudy.flashstudy_mobile.Util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
