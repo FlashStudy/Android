@@ -29,6 +29,7 @@ public class CronogramaRestClient {
     @SuppressLint("NewApi")
     public Cronograma salvar(Cronograma cronograma) {
         try {
+            Log.e("TESTE", "TESTE");
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
             JSONObject jsonObject = new JSONObject();
             HttpHeaders headers = new HttpHeaders();
