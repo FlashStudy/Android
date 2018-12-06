@@ -21,7 +21,7 @@ import java.util.List;
 public class DisciplinaOff implements Serializable {
 
     @NonNull
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     private long codigo;
 
     @NonNull

@@ -9,10 +9,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serializable;
 
 
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"codigo", "tema", "disciplina", "usuario"})
-public class Assunto implements Serializable {
+@SuppressWarnings("serial")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Assunto implements java.io.Serializable {
 
     @JsonProperty("codigo")
     private Long codigo;
@@ -76,6 +77,22 @@ public class Assunto implements Serializable {
     @JsonProperty("usuario")
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Assunto)) {
+            return false;
+        }
+        return codigo != null && codigo.equals(((Assunto) o).codigo);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
     }
 
     @Override

@@ -39,21 +39,10 @@ public class CronogramaController {
 
         for (Disciplina disciplina : cronograma.getDisciplinas()) {
             disciplina.setUsuario(cronograma.getUsuario());
-
-            Set<Assunto> assuntos = disciplina.getAssuntos();
-
-            if (assuntos != null) {
-                disciplina.setAssuntos(new HashSet<>());
-                for (Assunto assunto : assuntos) {
-                    disciplina.addAssunto(assunto);
-                }
-            }
-
             c.addDisciplina(disciplina);
         }
 
         return new ResponseEntity<>(cronogramaRepository.save(c), HttpStatus.OK);
-
     }
 
     // Busca o cronograma atual do usuário

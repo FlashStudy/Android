@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "2b8c655a2ead77def2c551e58fb6d60f",
+    "identityHash": "2ecf3256ff3371c709871204ae78a7bd",
     "entities": [
       {
         "tableName": "assunto",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tema` TEXT NOT NULL, `disciplina_codigo` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`disciplina_codigo`) REFERENCES `disciplina`(`codigo`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER NOT NULL, `tema` TEXT NOT NULL, `disciplina_codigo` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, PRIMARY KEY(`codigo`), FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`disciplina_codigo`) REFERENCES `disciplina`(`codigo`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "codigo",
@@ -37,7 +37,7 @@
           "columnNames": [
             "codigo"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [
           {
@@ -153,7 +153,7 @@
       },
       {
         "tableName": "cronograma",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `inicio` TEXT NOT NULL, `fim` TEXT NOT NULL, `usuario_codigo` INTEGER NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER NOT NULL, `inicio` TEXT NOT NULL, `fim` TEXT NOT NULL, `usuario_codigo` INTEGER NOT NULL, PRIMARY KEY(`codigo`), FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "codigo",
@@ -184,7 +184,7 @@
           "columnNames": [
             "codigo"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [
           {
@@ -220,7 +220,7 @@
       },
       {
         "tableName": "disciplina",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nome` TEXT NOT NULL, `usuario_codigo` INTEGER NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER NOT NULL, `nome` TEXT NOT NULL, `usuario_codigo` INTEGER NOT NULL, PRIMARY KEY(`codigo`), FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "codigo",
@@ -245,7 +245,7 @@
           "columnNames": [
             "codigo"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [
           {
@@ -370,6 +370,14 @@
               "assunto_codigo"
             ],
             "createSql": "CREATE  INDEX `index_flashcard_assunto_codigo` ON `${TABLE_NAME}` (`assunto_codigo`)"
+          },
+          {
+            "name": "index_flashcard_pasta_codigo",
+            "unique": false,
+            "columnNames": [
+              "pasta_codigo"
+            ],
+            "createSql": "CREATE  INDEX `index_flashcard_pasta_codigo` ON `${TABLE_NAME}` (`pasta_codigo`)"
           }
         ],
         "foreignKeys": [
@@ -630,7 +638,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"2b8c655a2ead77def2c551e58fb6d60f\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"2ecf3256ff3371c709871204ae78a7bd\")"
     ]
   }
 }

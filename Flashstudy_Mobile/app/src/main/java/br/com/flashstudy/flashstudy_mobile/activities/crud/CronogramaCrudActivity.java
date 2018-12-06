@@ -41,6 +41,7 @@ import br.com.flashstudy.flashstudy_mobile.online.model.Cronograma;
 import br.com.flashstudy.flashstudy_mobile.online.model.Disciplina;
 import br.com.flashstudy.flashstudy_mobile.online.model.Usuario;
 import br.com.flashstudy.flashstudy_mobile.online.repository.CronogramaRepository;
+import br.com.flashstudy.flashstudy_mobile.online.repository.DisciplinaRepository;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -61,6 +62,7 @@ public class CronogramaCrudActivity extends AppCompatActivity {
 
     private CronogramaRepository cronogramaRepository = new CronogramaRepository();
     private CronogramaRepositoryOff cronogramaRepositoryOff;
+    private DisciplinaRepository disciplinaRepository = new DisciplinaRepository();
     private DisciplinaRepositoryOff disciplinaRepositoryOff;
 
     private CronogramaOff cronograma;
@@ -154,7 +156,7 @@ public class CronogramaCrudActivity extends AppCompatActivity {
 
                     //Atualizar
                     case 0:
-                        if (isConectado()){
+                        if (isConectado()) {
                             AlertDialog.Builder alertDialog = new AlertDialog.Builder(CronogramaCrudActivity.this);
                             alertDialog.setTitle("Editar disciplina");
                             alertDialog.setMessage(R.string.lbl_disciplina);
@@ -175,17 +177,23 @@ public class CronogramaCrudActivity extends AppCompatActivity {
 
                                             if (disciplinaOff.getCodigo() != 0) {
                                                 try {
-                                                    disciplinaRepositoryOff.atualizar(disciplinaOff);
+                                                    Usuario usuario = ConversaoDeClasse.usuarioOffToUsuario(Util.getLocalUser(CronogramaCrudActivity.this, codigoUsuario));
+                                                    if (disciplinaRepository.atualizar(ConversaoDeClasse.disciplinaOffToDisciplina(disciplinaOff, usuario))) {
+                                                        disciplinaRepositoryOff.atualizar(disciplinaOff);
+                                                        disciplinaOffs.get(position).setNome(disciplinaOff.getNome());
+                                                    } else
+                                                        Toast.makeText(CronogramaCrudActivity.this, "Houve um erro!", Toast.LENGTH_SHORT).show();
                                                 } catch (Exception e) {
                                                     Toast.makeText(CronogramaCrudActivity.this, "Houve um erro ao atualizar a disciplina", Toast.LENGTH_LONG).show();
                                                 }
+                                            } else {
+                                                disciplinaOffs.get(position).setNome(disciplinaOff.getNome());
                                             }
-                                            disciplinaOffs.get(position).setNome(disciplinaOff.getNome());
                                             populaLista();
                                         }
                                     });
                             alertDialog.show();
-                        }else {
+                        } else {
                             AlertDialog.Builder dlg = new AlertDialog.Builder(CronogramaCrudActivity.this);
                             dlg.setTitle("AVISO!");
                             dlg.setMessage("Só é possível atualizar quando há uma conexão com a internet!");
@@ -199,7 +207,7 @@ public class CronogramaCrudActivity extends AppCompatActivity {
 
                     //deletar
                     case 1:
-                        if (isConectado()){
+                        if (isConectado()) {
                             AlertDialog.Builder dlg = new AlertDialog.Builder(CronogramaCrudActivity.this);
                             dlg.setTitle("AVISO!");
                             dlg.setMessage("Tem certeza em deletar essa disciplina?");
@@ -209,21 +217,22 @@ public class CronogramaCrudActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int which) {
 
                                     if (disciplinaOff.getCodigo() != 0) {
-
                                         try {
-                                            disciplinaRepositoryOff.deletar(disciplinaOff);
+                                            if (disciplinaRepository.deletar(disciplinaOff.getCodigo())) {
+                                                disciplinaRepositoryOff.deletar(disciplinaOff);
+                                                disciplinaOffs.remove(position);
+                                            }
                                         } catch (Exception e) {
                                             Toast.makeText(CronogramaCrudActivity.this, "Ocorreu um erro ao deletar a disciplina!", Toast.LENGTH_LONG).show();
                                         }
+                                    } else {
+                                        disciplinaOffs.remove(position);
                                     }
-
-                                    disciplinaOffs.remove(position);
                                     populaLista();
-                                    Toast.makeText(CronogramaCrudActivity.this, "Disciplina deletada com sucesso!", Toast.LENGTH_LONG).show();
                                 }
                             });
                             dlg.show();
-                        }else {
+                        } else {
                             AlertDialog.Builder dlg = new AlertDialog.Builder(CronogramaCrudActivity.this);
                             dlg.setTitle("AVISO!");
                             dlg.setMessage("Só é possível deletar quando há uma conexão com a internet!");
@@ -243,7 +252,7 @@ public class CronogramaCrudActivity extends AppCompatActivity {
     @OnClick(R.id.fab)
     public void salvarCronograma() {
 
-        if (isConectado()){
+        if (isConectado()) {
             long codigoinicial = cronograma.getCodigo();
 
             cronograma.setUsuarioCodigo(codigoUsuario);
@@ -294,7 +303,7 @@ public class CronogramaCrudActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Toast.makeText(CronogramaCrudActivity.this, "Houve um erro ao salvar o cronograma!", Toast.LENGTH_LONG).show();
             }
-        }else{
+        } else {
             AlertDialog.Builder dlg = new AlertDialog.Builder(this);
             dlg.setTitle("AVISO!");
             dlg.setMessage("Só é possível salvar quando há uma conexão com a internet!");
@@ -309,7 +318,7 @@ public class CronogramaCrudActivity extends AppCompatActivity {
     @OnClick(R.id.btnAddMateria)
     public void addMateria() {
 
-        if (isConectado()){
+        if (isConectado()) {
             if (!Util.isCampoVazio(txtDisciplina.getText().toString())) {
 
                 DisciplinaOff d = new DisciplinaOff();
@@ -323,7 +332,7 @@ public class CronogramaCrudActivity extends AppCompatActivity {
                 Toast.makeText(CronogramaCrudActivity.this, "O campo está vazio!", Toast.LENGTH_LONG).show();
                 finish();
             }
-        }else{
+        } else {
             AlertDialog.Builder dlg = new AlertDialog.Builder(this);
             dlg.setTitle("AVISO!");
             dlg.setMessage("Só é possível adicionar disciplinas quando há uma conexão com a internet!");

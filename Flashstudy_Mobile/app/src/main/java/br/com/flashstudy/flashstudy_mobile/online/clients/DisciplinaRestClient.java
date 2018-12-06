@@ -41,6 +41,24 @@ public class DisciplinaRestClient {
         }
     }
 
+    public boolean atualizar(Disciplina disciplina){
+        try {
+
+            ObjectMapper mapper = new ObjectMapper();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<String> entity = new HttpEntity<>(mapper.writeValueAsString(disciplina), headers);
+
+            restTemplate.put(BASE_URL + "atualizar/", entity);
+            return true;
+        } catch (Exception e) {
+            Log.e("ERRO SERV DISCIPLINA", e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public List<Disciplina> salvarLista(List<Disciplina> disciplinaList) {
         try {
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
@@ -70,8 +88,6 @@ public class DisciplinaRestClient {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-
-            jsonObject.put("assuntos", mapper.writeValueAsString(disciplina.getAssuntos()));
             jsonObject.put("codigo", disciplina.getCodigo());
             jsonObject.put("nome", disciplina.getNome());
             jsonObject.put("usuario", mapper.writeValueAsString(disciplina.getUsuario()));
@@ -100,4 +116,6 @@ public class DisciplinaRestClient {
             return false;
         }
     }
+
+
 }

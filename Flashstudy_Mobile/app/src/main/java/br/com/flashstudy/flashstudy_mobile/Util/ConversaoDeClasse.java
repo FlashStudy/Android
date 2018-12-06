@@ -2,9 +2,11 @@ package br.com.flashstudy.flashstudy_mobile.Util;
 
 import java.util.List;
 
+import br.com.flashstudy.flashstudy_mobile.offline.model.AssuntoOff;
 import br.com.flashstudy.flashstudy_mobile.offline.model.CronogramaOff;
 import br.com.flashstudy.flashstudy_mobile.offline.model.DisciplinaOff;
 import br.com.flashstudy.flashstudy_mobile.offline.model.UsuarioOff;
+import br.com.flashstudy.flashstudy_mobile.online.model.Assunto;
 import br.com.flashstudy.flashstudy_mobile.online.model.Cronograma;
 import br.com.flashstudy.flashstudy_mobile.online.model.Disciplina;
 import br.com.flashstudy.flashstudy_mobile.online.model.Usuario;
@@ -34,4 +36,11 @@ public class ConversaoDeClasse {
         return new Disciplina(off.getCodigo(), off.getNome(), usuario);
     }
 
+    public static AssuntoOff assuntoToAssuntoOff(Assunto assunto){
+        return new AssuntoOff(assunto.getCodigo(), assunto.getTema(), assunto.getDisciplina().getCodigo(), assunto.getUsuario().getCodigo());
+    }
+
+    public static Assunto assuntoOffToAssunto(AssuntoOff assuntoOff, Usuario usuario, Disciplina disciplina){
+        return new Assunto(assuntoOff.getCodigo(), assuntoOff.getTema(), disciplina, usuario);
+    }
 }

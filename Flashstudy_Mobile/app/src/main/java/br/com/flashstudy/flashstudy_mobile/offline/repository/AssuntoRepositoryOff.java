@@ -19,14 +19,8 @@ public class AssuntoRepositoryOff {
     }
 
     public boolean salvarLista(List<AssuntoOff> assuntoOffs) {
-        List<AssuntoOff> salvar = new ArrayList<>();
-
-        for (AssuntoOff a : assuntoOffs) {
-            if (a.getCodigo() == 0)
-                salvar.add(a);
-        }
         try {
-            return new SalvarLista().execute(salvar).get();
+            return new SalvarLista().execute(assuntoOffs).get();
         } catch (Exception e) {
             Log.e("ERRO SALVAR ASSUNTOS", e.getMessage());
             e.printStackTrace();
@@ -47,6 +41,15 @@ public class AssuntoRepositoryOff {
     public List<AssuntoOff> listarPorDisciplinaCodigo(long codigo) {
         try {
             return new ListarPorDisciplina().execute(codigo).get();
+        } catch (Exception e) {
+            Log.e("ERRO LISTAR ASSUNTOS", e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public List<AssuntoOff> listar() {
+        try {
+            return new Listar().execute().get();
         } catch (Exception e) {
             Log.e("ERRO LISTAR ASSUNTOS", e.getMessage());
             e.printStackTrace();
@@ -114,6 +117,20 @@ public class AssuntoRepositoryOff {
         protected List<AssuntoOff> doInBackground(Long... longs) {
             try {
                 return AppDatabase.getAppDatabase(context).assuntoDao().getAllAssuntosByDisciplina(longs[0]);
+            } catch (Exception e) {
+                Log.e("ERRO LISTAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    private class Listar extends AsyncTask<Void, Void, List<AssuntoOff>> {
+
+        @Override
+        protected List<AssuntoOff> doInBackground(Void... voids) {
+            try {
+                return AppDatabase.getAppDatabase(context).assuntoDao().getAll();
             } catch (Exception e) {
                 Log.e("ERRO LISTAR ASYNC", e.getMessage());
                 e.printStackTrace();

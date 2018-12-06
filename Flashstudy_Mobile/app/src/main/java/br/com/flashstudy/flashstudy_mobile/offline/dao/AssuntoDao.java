@@ -37,4 +37,8 @@ public interface AssuntoDao {
     @Query("SELECT * FROM assunto WHERE disciplina_codigo = :codigoDisciplina ORDER BY codigo ASC")
     List<AssuntoOff> getAllAssuntosByDisciplina(long codigoDisciplina);
 
+    //Procura Assuntos de uma Disciplina de um Usuario
+    @Query("SELECT * FROM assunto ORDER BY codigo ASC")
+    List<AssuntoOff> getAll();
+
 }

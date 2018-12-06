@@ -25,7 +25,7 @@ import java.io.Serializable;
 public class AssuntoOff implements Serializable {
 
     @NonNull
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     private long codigo;
 
     @NonNull
@@ -45,6 +45,14 @@ public class AssuntoOff implements Serializable {
 
     @Ignore
     public AssuntoOff(@NonNull String tema, @NonNull long disciplinaCodigo, @NonNull long usuarioCodigo) {
+        this.tema = tema;
+        this.disciplinaCodigo = disciplinaCodigo;
+        this.usuarioCodigo = usuarioCodigo;
+    }
+
+    @Ignore
+    public AssuntoOff(@NonNull long codigo, @NonNull String tema, @NonNull long disciplinaCodigo, @NonNull long usuarioCodigo) {
+        this.codigo = codigo;
         this.tema = tema;
         this.disciplinaCodigo = disciplinaCodigo;
         this.usuarioCodigo = usuarioCodigo;

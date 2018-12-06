@@ -10,6 +10,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -25,10 +26,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.flashstudy.flashstudy_mobile.R;
+import br.com.flashstudy.flashstudy_mobile.Util.ConversaoDeClasse;
 import br.com.flashstudy.flashstudy_mobile.Util.Util;
 import br.com.flashstudy.flashstudy_mobile.offline.model.AssuntoOff;
 import br.com.flashstudy.flashstudy_mobile.offline.model.DisciplinaOff;
 import br.com.flashstudy.flashstudy_mobile.offline.repository.AssuntoRepositoryOff;
+import br.com.flashstudy.flashstudy_mobile.online.model.Assunto;
+import br.com.flashstudy.flashstudy_mobile.online.model.Disciplina;
+import br.com.flashstudy.flashstudy_mobile.online.model.Usuario;
+import br.com.flashstudy.flashstudy_mobile.online.repository.AssuntoRepository;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -44,6 +50,7 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
     @BindView(R.id.swipeMenuAssuntos)
     public SwipeMenuListView swipeMenuListView;
 
+    private AssuntoRepository assuntoRepository = new AssuntoRepository();
     private AssuntoRepositoryOff assuntoRepositoryOff;
 
     private DisciplinaOff disciplinaOff;
@@ -80,6 +87,8 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
             finish();
         }
 
+        Log.e("DISCIPLINA", disciplinaOff.toStringCompleto());
+        Log.e("ASSUNTOS", assuntos.toString());
 
         if (disciplinaOff != null) {
             textViewDisciplina.setText(disciplinaOff.getNome());
@@ -135,9 +144,10 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(final int position, SwipeMenu menu, int index) {
                 switch (index) {
+
                     //editar
                     case 0:
-                        if (isConectado()){
+                        if (isConectado()) {
                             final AssuntoOff a = assuntos.get(position);
 
                             AlertDialog.Builder alertDialog = new AlertDialog.Builder(DisciplinaCrudActivity.this);
@@ -160,18 +170,29 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
 
                                             if (a.getCodigo() != 0) {
                                                 try {
-                                                    assuntoRepositoryOff.atualizar(a);
+
+                                                    Usuario usuario = ConversaoDeClasse.usuarioOffToUsuario(Util.getLocalUser(DisciplinaCrudActivity.this, codigoUsuario));
+                                                    Disciplina disciplina = ConversaoDeClasse.disciplinaOffToDisciplina(disciplinaOff, usuario);
+                                                    Assunto assunto = ConversaoDeClasse.assuntoOffToAssunto(a, usuario, disciplina);
+
+                                                    if (assuntoRepository.atualizar(assunto)) {
+                                                        assuntoRepositoryOff.atualizar(a);
+                                                        assuntos.get(position).setTema(a.getTema());
+                                                    } else {
+                                                        Toast.makeText(DisciplinaCrudActivity.this, "Houve um erro ao atualizar o assunto!", Toast.LENGTH_LONG).show();
+                                                    }
                                                 } catch (Exception e) {
                                                     Toast.makeText(DisciplinaCrudActivity.this, "Houve um erro ao atualizar o assunto!", Toast.LENGTH_LONG).show();
                                                     finish();
                                                 }
+                                            } else {
+                                                assuntos.get(position).setTema(a.getTema());
                                             }
-                                            assuntos.get(position).setTema(a.getTema());
                                             populaLista();
                                         }
                                     });
                             alertDialog.show();
-                        }else{
+                        } else {
                             AlertDialog.Builder dlg1 = new AlertDialog.Builder(DisciplinaCrudActivity.this);
                             dlg1.setTitle("AVISO!");
                             dlg1.setMessage("Só é possível editar quando há uma conexão com a internet!");
@@ -184,7 +205,7 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
 
                     //deletar
                     case 1:
-                        if (isConectado()){
+                        if (isConectado()) {
                             AlertDialog.Builder dlg = new AlertDialog.Builder(DisciplinaCrudActivity.this);
                             dlg.setTitle("AVISO!");
                             dlg.setMessage("Tem certeza em deletar esse assunto?");
@@ -194,24 +215,24 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int which) {
 
                                     if (assuntos.get(position).getCodigo() != 0) {
-
                                         try {
-                                            if (assuntoRepositoryOff.deletar(assuntos.get(position))) {
-                                                assuntos.remove(position);
-                                                Toast.makeText(getApplicationContext(), "Disciplina deletado com sucesso!", Toast.LENGTH_LONG).show();
+                                            if (assuntoRepository.deletar(assuntos.get(position).getCodigo())) {
+                                                if (assuntoRepositoryOff.deletar(assuntos.get(position))) {
+                                                    assuntos.remove(position);
+                                                }
                                             }
+
                                         } catch (Exception e) {
                                             Toast.makeText(getApplicationContext(), "Houve um erro ao deletar a disciplina!", Toast.LENGTH_LONG).show();
                                         }
-                                        populaLista();
                                     } else {
                                         assuntos.remove(position);
-                                        populaLista();
                                     }
+                                    populaLista();
                                 }
                             });
                             dlg.show();
-                        }else{
+                        } else {
                             AlertDialog.Builder dlg1 = new AlertDialog.Builder(DisciplinaCrudActivity.this);
                             dlg1.setTitle("AVISO!");
                             dlg1.setMessage("Só é possível deletar quando há uma conexão com a internet!");
@@ -229,14 +250,43 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
 
     @OnClick(R.id.fab)
     public void salvarAssuntos() {
-        if (isConectado()){
+        if (isConectado()) {
             try {
-                assuntoRepositoryOff.salvarLista(assuntos);
-                finish();
+
+                List<Assunto> assuntosOn = new ArrayList<>();
+
+                Usuario usuario = ConversaoDeClasse.usuarioOffToUsuario(Util.getLocalUser(DisciplinaCrudActivity.this, codigoUsuario));
+                Disciplina disciplina = ConversaoDeClasse.disciplinaOffToDisciplina(disciplinaOff, usuario);
+
+                for (AssuntoOff assuntoOff : assuntos) {
+                    Assunto assunto = ConversaoDeClasse.assuntoOffToAssunto(assuntoOff, usuario, disciplina);
+                    assuntosOn.add(assunto);
+                }
+
+                List<Assunto> assuntosSalvos = assuntoRepository.salvar(assuntosOn);
+
+                List<AssuntoOff> assuntoOffsSalvar = new ArrayList<>();
+
+                Log.e("ASSUNTOS ANTES", assuntosOn.toString());
+                Log.e("ASSUNTOS", assuntosSalvos.toString());
+
+                for (int i = 0; i < assuntosSalvos.size(); i++) {
+                    AssuntoOff assuntoOff = ConversaoDeClasse.assuntoToAssuntoOff(assuntosSalvos.get(i));
+                    assuntoOffsSalvar.add(assuntoOff);
+                }
+
+                Log.e("ASSUNTOS OFF", assuntoOffsSalvar.get(0).toStringCompleto());
+
+                if (assuntoRepositoryOff.salvarLista(assuntoOffsSalvar)) {
+                    Toast.makeText(this, "Assuntos salvos!", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
             } catch (Exception e) {
+                Log.e("ERRO SALVAR ASSUNTOS", e.getMessage());
+                e.printStackTrace();
                 Toast.makeText(DisciplinaCrudActivity.this, "Houve um erro ao salvar o cronograma! Tente novamente!", Toast.LENGTH_LONG).show();
             }
-        }else{
+        } else {
             AlertDialog.Builder dlg1 = new AlertDialog.Builder(DisciplinaCrudActivity.this);
             dlg1.setTitle("AVISO!");
             dlg1.setMessage("Só é possível salvar quando há uma conexão com a internet!");

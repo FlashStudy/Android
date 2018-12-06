@@ -3,15 +3,17 @@ package br.com.flashstudy.flashstudy_mobile.online.repository;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.util.List;
+
 import br.com.flashstudy.flashstudy_mobile.online.clients.AssuntoRestClient;
 import br.com.flashstudy.flashstudy_mobile.online.model.Assunto;
 
 public class AssuntoRepository {
     AssuntoRestClient client = new AssuntoRestClient();
 
-    public Assunto salvar(Assunto assunto) {
+    public List<Assunto> salvar(List<Assunto> assuntos) {
         try {
-            return new Salvar().execute(assunto).get();
+            return new Salvar().execute(assuntos).get();
         } catch (Exception e) {
             Log.e("ERRO REPO ASSUNTO", e.getMessage());
             e.printStackTrace();
@@ -29,12 +31,23 @@ public class AssuntoRepository {
         }
     }
 
-    private class Salvar extends AsyncTask<Assunto, Void, Assunto> {
+    public boolean atualizar(Assunto assunto) {
+        try {
+            return new Atualizar().execute(assunto).get();
+        } catch (Exception e) {
+            Log.e("ERRO REPO ASSUNTO", e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private class Salvar extends AsyncTask<List<Assunto>, Void, List<Assunto>> {
 
         @Override
-        protected Assunto doInBackground(Assunto... assuntos) {
+        protected List<Assunto> doInBackground(List<Assunto>... lists) {
             try {
-                return client.salvar(assuntos[0]);
+                List<Assunto> assuntos = lists[0];
+                return client.salvar(assuntos);
             } catch (Exception e) {
                 Log.e("ERRO ASYNC ASSUNTO", e.getMessage());
                 e.printStackTrace();
@@ -49,6 +62,20 @@ public class AssuntoRepository {
         protected Boolean doInBackground(Long... longs) {
             try {
                 return client.delete(longs[0]);
+            } catch (Exception e) {
+                Log.e("ERRO ASYNC ASSUNTO", e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
+
+    private class Atualizar extends AsyncTask<Assunto, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Assunto... assuntos) {
+            try {
+                return client.atualizar(assuntos[0]);
             } catch (Exception e) {
                 Log.e("ERRO ASYNC ASSUNTO", e.getMessage());
                 e.printStackTrace();

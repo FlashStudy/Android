@@ -27,7 +27,8 @@ import java.io.Serializable;
         indices = {@Index(value = {"codigo"}, unique = true),
                 @Index(value = {"usuario_codigo"}),
                 @Index(value = {"disciplina_codigo"}),
-                @Index(value = {"assunto_codigo"})})
+                @Index(value = {"assunto_codigo"}),
+                @Index(value = {"pasta_codigo"})})
 public class FlashcardOff implements Serializable {
 
     @NonNull

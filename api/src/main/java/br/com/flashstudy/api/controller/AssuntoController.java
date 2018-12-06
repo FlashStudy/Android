@@ -2,6 +2,7 @@ package br.com.flashstudy.api.controller;
 
 import br.com.flashstudy.api.model.Assunto;
 import br.com.flashstudy.api.repository.AssuntoRepository;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,13 @@ public class AssuntoController {
 
     // Deleta os assuntos selecinados
     @PostMapping(value = "/salvar", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-    public ResponseEntity<?> salvar(@RequestBody Assunto assunto) {
+    public ResponseEntity<?> salvar(@RequestBody List<Assunto> assuntos) {
+        return new ResponseEntity<>(assuntoRepository.saveAll(assuntos), HttpStatus.OK);
+    }
+    
+    // Deleta os assuntos selecinados
+    @PutMapping(value = "/atualizar", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+    public ResponseEntity<?> atualizar(@RequestBody Assunto assunto) {
         return new ResponseEntity<>(assuntoRepository.save(assunto), HttpStatus.OK);
     }
     

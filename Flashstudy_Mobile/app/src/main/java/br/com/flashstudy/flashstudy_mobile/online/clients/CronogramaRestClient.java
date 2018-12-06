@@ -3,7 +3,9 @@ package br.com.flashstudy.flashstudy_mobile.online.clients;
 import android.annotation.SuppressLint;
 import android.util.Log;
 
+import com.fasterxml.jackson.core.io.UTF8Writer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationConfig;
 
 import org.json.JSONObject;
 import org.springframework.core.ParameterizedTypeReference;
@@ -34,9 +36,10 @@ public class CronogramaRestClient {
             JSONObject jsonObject = new JSONObject();
             HttpHeaders headers = new HttpHeaders();
 
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+            headers.setContentEncoding(new ContentCodingType("UTF-8"));
+
             headers.add(HttpHeaders.ACCEPT_CHARSET, StandardCharsets.UTF_8.name());
+            headers.setContentType(MediaType.APPLICATION_JSON);
 
             jsonObject.put("codigo", cronograma.getCodigo());
             jsonObject.put("inicio", cronograma.getInicio());

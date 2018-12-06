@@ -21,7 +21,7 @@ import java.util.List;
 public class CronogramaOff implements Serializable {
 
     @NonNull
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     private long codigo;
 
     @NonNull
