@@ -27,9 +27,9 @@ public class HorarioRepositoryOff {
         }
     }
 
-    public boolean deletarLista(List<HorarioOff> horarioOffs) {
+    public boolean deletarLista(long usuario_codigo) {
         try {
-            return new DeletarLista().execute(horarioOffs).get();
+            return new DeletarLista().execute(usuario_codigo).get();
         } catch (Exception e) {
             Log.e("ERRO DELETAR HORARIOS", e.getMessage());
             e.printStackTrace();
@@ -61,13 +61,11 @@ public class HorarioRepositoryOff {
         }
     }
 
-    private class DeletarLista extends AsyncTask<List<HorarioOff>, Void, Boolean> {
-
+    private class DeletarLista extends AsyncTask<Long, Void, Boolean> {
         @Override
-        protected Boolean doInBackground(List<HorarioOff>... lists) {
-            List<HorarioOff> horarioOffs = lists[0];
+        protected Boolean doInBackground(Long... longs) {
             try {
-                AppDatabase.getAppDatabase(context).horarioDao().deletarLista(horarioOffs);
+                AppDatabase.getAppDatabase(context).horarioDao().deleteHorariosFromUsuario(longs[0]);
                 return true;
             } catch (Exception e) {
                 Log.e("ERRO DELETAR LIST ASYNC", e.getMessage());

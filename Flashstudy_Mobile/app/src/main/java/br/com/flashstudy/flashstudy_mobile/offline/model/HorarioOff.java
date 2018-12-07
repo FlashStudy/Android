@@ -25,7 +25,7 @@ import java.io.Serializable;
 public class HorarioOff implements Serializable {
 
     @NonNull
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     private long codigo;
 
     @NonNull

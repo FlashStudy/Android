@@ -36,4 +36,8 @@ public interface HorarioDao {
     //Procura Horarios de um Usuario
     @Query("SELECT * FROM horario WHERE usuario_codigo = :codigo ORDER BY tempo ASC")
     List<HorarioOff> getAllHorariosByUsuario(long codigo);
+
+    //Procura Horarios de um Usuario
+    @Query("DELETE FROM horario WHERE usuario_codigo = :usuario_codigo")
+    void deleteHorariosFromUsuario(long usuario_codigo);
 }

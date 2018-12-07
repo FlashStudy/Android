@@ -6,13 +6,13 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import br.com.flashstudy.flashstudy_mobile.Util.Util;
 import br.com.flashstudy.flashstudy_mobile.offline.database.AppDatabase;
 import br.com.flashstudy.flashstudy_mobile.offline.model.CicloOff;
-import br.com.flashstudy.flashstudy_mobile.offline.model.DisciplinaOff;
 import br.com.flashstudy.flashstudy_mobile.offline.model.HorarioOff;
+import br.com.flashstudy.flashstudy_mobile.online.model.Ciclo;
+import br.com.flashstudy.flashstudy_mobile.online.model.DiaDaSemana;
+import br.com.flashstudy.flashstudy_mobile.online.model.Horario;
 
 public class CicloRepositoryOff {
 
@@ -51,13 +51,37 @@ public class CicloRepositoryOff {
         }
     }
 
-    public boolean salvar(CicloOff cicloOff, List<String> dias) {
+    public boolean salvar(Ciclo ciclo) {
 
-        long codigo_usuario = Util.getLocalUserCodigo(context);
+        long usuario_codigo = ciclo.getUsuario().getCodigo();
 
-        if (cicloOff.getCodigo() != 0) {
+        CicloOff cicloOff = new CicloOff();
+        cicloOff.setCodigo(ciclo.getCodigo());
+        cicloOff.setNumMaterias(ciclo.getNumMaterias());
+        cicloOff.setUsuarioCodigo(usuario_codigo);
+
+        List<HorarioOff> horarioOffs = new ArrayList<>();
+
+        for (DiaDaSemana diaDaSemana : ciclo.getDias()) {
+            for (Horario horario : diaDaSemana.getHorarios()) {
+                HorarioOff horarioOff = new HorarioOff();
+                horarioOff.setCodigo(horario.getCodigo());
+                horarioOff.setDia(diaDaSemana.getNome());
+                horarioOff.setDisciplinaCodigo(horario.getDisciplina().getCodigo());
+                horarioOff.setUsuarioCodigo(usuario_codigo);
+                horarioOff.setTempo(horario.getTempo());
+
+                horarioOffs.add(horarioOff);
+            }
+        }
+
+        if (ciclo.getCodigo() != 0) {
             try {
                 new Deletar().execute(cicloOff).get();
+                boolean res = horarioRepositoryOff.deletarLista(usuario_codigo);
+
+                if (!res)
+                    return false;
             } catch (Exception e) {
                 Log.e("ERRO DELETAR CICLO", e.getMessage());
                 e.printStackTrace();
@@ -66,37 +90,11 @@ public class CicloRepositoryOff {
         }
 
         try {
-            Random rand = new Random();
-
-            CicloOff c = new CicloOff(cicloOff.getNumMaterias(), Util.getLocalUserCodigo(context));
-
-            List<DisciplinaOff> disciplinas = disciplinaRepositoryOff.listar(codigo_usuario);
-
-            int arrLength = disciplinas.size();
-
-            List<HorarioOff> horarios = new ArrayList<>();
-
-            if (cicloOff.getHorarios() != null) {
-                horarioRepositoryOff.deletarLista(cicloOff.getHorarios());
-            }
-
-            for (int i = 0; i < dias.size(); i++) {
-                for (int j = 0; j < cicloOff.getNumMaterias(); j++) {
-                    HorarioOff horarioOff = new HorarioOff(j + 1, disciplinas.get(rand.nextInt(arrLength)).getCodigo(), Util.getLocalUserCodigo(context), dias.get(i));
-                    horarios.add(horarioOff);
-                }
-            }
-
-            Log.i("HORARIOS", horarios.toString());
-
-
-            if (horarioRepositoryOff.salvarLista(horarios)) {
-                boolean res = new Salvar().execute(c).get();
-                return res;
+            if (horarioRepositoryOff.salvarLista(horarioOffs)) {
+                return new Salvar().execute(cicloOff).get();
             } else {
                 return false;
             }
-
         } catch (Exception e) {
             Log.e("ERRO SALVAR CICLO", e.getMessage());
             e.printStackTrace();

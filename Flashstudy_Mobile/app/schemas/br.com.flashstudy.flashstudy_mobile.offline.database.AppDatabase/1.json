@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "2ecf3256ff3371c709871204ae78a7bd",
+    "identityHash": "f226020db822116a3106061ac9be7621",
     "entities": [
       {
         "tableName": "assunto",
@@ -92,7 +92,7 @@
       },
       {
         "tableName": "ciclo",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `numero_de_materias` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER NOT NULL, `numero_de_materias` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, PRIMARY KEY(`codigo`), FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "codigo",
@@ -117,7 +117,7 @@
           "columnNames": [
             "codigo"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [
           {
@@ -429,7 +429,7 @@
       },
       {
         "tableName": "horario",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tempo` INTEGER NOT NULL, `disciplina_codigo` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, `dia` TEXT NOT NULL, FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`disciplina_codigo`) REFERENCES `disciplina`(`codigo`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER NOT NULL, `tempo` INTEGER NOT NULL, `disciplina_codigo` INTEGER NOT NULL, `usuario_codigo` INTEGER NOT NULL, `dia` TEXT NOT NULL, PRIMARY KEY(`codigo`), FOREIGN KEY(`usuario_codigo`) REFERENCES `usuario`(`codigo`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`disciplina_codigo`) REFERENCES `disciplina`(`codigo`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "codigo",
@@ -466,7 +466,7 @@
           "columnNames": [
             "codigo"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [
           {
@@ -638,7 +638,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"2ecf3256ff3371c709871204ae78a7bd\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"f226020db822116a3106061ac9be7621\")"
     ]
   }
 }

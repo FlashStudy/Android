@@ -13,13 +13,20 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import br.com.flashstudy.flashstudy_mobile.R;
+import br.com.flashstudy.flashstudy_mobile.Util.ConversaoDeClasse;
 import br.com.flashstudy.flashstudy_mobile.Util.Util;
 import br.com.flashstudy.flashstudy_mobile.offline.model.CicloOff;
 import br.com.flashstudy.flashstudy_mobile.offline.model.HorarioOff;
 import br.com.flashstudy.flashstudy_mobile.offline.repository.CicloRepositoryOff;
+import br.com.flashstudy.flashstudy_mobile.online.model.Ciclo;
+import br.com.flashstudy.flashstudy_mobile.online.model.DiaDaSemana;
+import br.com.flashstudy.flashstudy_mobile.online.model.Usuario;
+import br.com.flashstudy.flashstudy_mobile.online.repository.CicloRepository;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
@@ -37,6 +44,7 @@ public class CicloDeEstudosCrudActivity extends AppCompatActivity {
 
     private CicloOff cicloOff;
 
+    private CicloRepository cicloRepository = new CicloRepository();
     private CicloRepositoryOff cicloRepositoryOff;
 
     @Override
@@ -77,6 +85,11 @@ public class CicloDeEstudosCrudActivity extends AppCompatActivity {
 
     }
 
+
+    // Ciclo
+    // Dias
+    // Horarios
+
     @OnClick(R.id.btnSalvarCiclo)
     public void salvarCiclo(View view) {
 
@@ -88,12 +101,34 @@ public class CicloDeEstudosCrudActivity extends AppCompatActivity {
                 }
             }
 
+            Usuario usuario = ConversaoDeClasse.usuarioOffToUsuario(Util.getLocalUser(this, usuarioCodigo));
+
             cicloOff.setNumMaterias(spinnerNumMaterias.getSelectedItemPosition() + 1);
 
+            Set<DiaDaSemana> semanaSet = new HashSet<>();
+
+            for (String nomeDia : dias) {
+                DiaDaSemana diaDaSemana = new DiaDaSemana();
+                diaDaSemana.setNome(nomeDia);
+                diaDaSemana.setUsuario(usuario);
+                semanaSet.add(diaDaSemana);
+            }
+
+            Ciclo ciclo = new Ciclo();
+            ciclo.setCodigo(cicloOff.getCodigo());
+            ciclo.setNumMaterias(cicloOff.getNumMaterias());
+            ciclo.setDias(semanaSet);
+            ciclo.setUsuario(usuario);
+
             try {
-                cicloRepositoryOff.salvar(cicloOff, dias);
-                Toast.makeText(this, "Ciclo salvo com sucesso!", Toast.LENGTH_LONG).show();
-                finish();
+                Ciclo cicloSalvo = cicloRepository.salvar(ciclo);
+
+                if (cicloRepositoryOff.salvar(cicloSalvo)) {
+                    finish();
+                } else {
+                    Toast.makeText(this, "Ocorreu um erro ao salvar o ciclo!", Toast.LENGTH_LONG).show();
+                }
+
             } catch (Exception e) {
                 Toast.makeText(this, "Ocorreu um erro ao salvar o ciclo!", Toast.LENGTH_LONG).show();
             }

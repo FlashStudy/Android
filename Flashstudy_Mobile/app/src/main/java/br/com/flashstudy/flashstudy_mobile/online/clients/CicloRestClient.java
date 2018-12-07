@@ -31,13 +31,10 @@ public class CicloRestClient {
             jsonObject.put("dias", objectMapper.writeValueAsString(ciclo.getDias()));
             jsonObject.put("numMaterias", ciclo.getNumMaterias());
             jsonObject.put("usuario", objectMapper.writeValueAsString(ciclo.getUsuario()));
-            HttpEntity<String> entity = new HttpEntity<>(jsonObject.toString(), headers);
 
-            ResponseEntity<Ciclo> responseEntity = restTemplate.postForEntity(BASE_URL + "salvar", entity, Ciclo.class);
+            HttpEntity<String> entity = new HttpEntity<>(objectMapper.writeValueAsString(ciclo), headers);
 
-            ciclo = responseEntity.getBody();
-
-            return ciclo;
+            return restTemplate.postForEntity(BASE_URL + "salvar", entity, Ciclo.class).getBody();
         } catch (Exception e) {
             Log.e("ERRO SERV CICLO", e.getMessage());
             e.printStackTrace();
