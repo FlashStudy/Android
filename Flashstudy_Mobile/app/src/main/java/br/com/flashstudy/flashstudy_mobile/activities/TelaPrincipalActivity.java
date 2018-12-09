@@ -8,10 +8,12 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.Util.Util;
+import br.com.flashstudy.flashstudy_mobile.offline.Sincronizacao.Sincronizar;
 import br.com.flashstudy.flashstudy_mobile.service.NotificationService;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -28,8 +30,23 @@ public class TelaPrincipalActivity extends AppCompatActivity {
         Intent intent = new Intent(this, NotificationService.class);
         startService(intent);
 
-        if (!isConectado()){
+        if (!isConectado()) {
             Toast.makeText(this, "Sem conexão com a internet!", Toast.LENGTH_SHORT).show();
+        } else {
+            boolean sincronizacao = false;
+            try {
+                Log.e("INICIANDO SINCRO", "INICIANDO");
+                sincronizacao = new Sincronizar(this).sincronizar();
+            } catch (Exception e) {
+                Log.e("ERRO SINCRO", e.getMessage());
+                e.printStackTrace();
+            }
+
+            if (sincronizacao) {
+                Toast.makeText(this, "Sincronização concluida", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Ocorreu um erro durante a sincronização", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -88,4 +105,6 @@ public class TelaPrincipalActivity extends AppCompatActivity {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
+
 }

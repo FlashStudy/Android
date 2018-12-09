@@ -11,14 +11,13 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-import br.com.flashstudy.flashstudy_mobile.online.model.Flashcard;
+import br.com.flashstudy.flashstudy_mobile.online.model.Pasta;
 
-public class FlashcardRestClient {
-
-    private String BASE_URL = "http://192.168.0.35:8000/flashcard/";
+public class PastaRestClient {
+    private String BASE_URL = "http://192.168.0.35:8000/usuario/";
     private RestTemplate restTemplate = new RestTemplate();
 
-    public List<Flashcard> findAll(Long codigo) {
+    public List<Pasta> findAll(Long codigo) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -37,20 +36,17 @@ public class FlashcardRestClient {
         }
     }
 
-    public Flashcard salvar(Flashcard flashcard) {
+    public Pasta salvar(Pasta pasta) {
         try {
             JSONObject jsonObject = new JSONObject();
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-            jsonObject.put("titulo", flashcard.getTitulo());
-            jsonObject.put("pergunta", flashcard.getPergunta());
-            jsonObject.put("resposta", flashcard.getResposta());
-            jsonObject.put("usuario", flashcard.getUsuario());
-
+            jsonObject.put("nome", pasta.getNome());
+            jsonObject.put("usuario", pasta.getUsuario());
 
             HttpEntity<String> entity = new HttpEntity<>(jsonObject.toString(), headers);
-            return restTemplate.postForEntity(BASE_URL + "salvar", entity, Flashcard.class).getBody();
+            return restTemplate.postForEntity(BASE_URL + "salvar", entity, Pasta.class).getBody();
         } catch (Exception e) {
             Log.e("ERRO CONSULTA SERV", e.getMessage());
             e.printStackTrace();
@@ -72,4 +68,5 @@ public class FlashcardRestClient {
             return false;
         }
     }
+
 }

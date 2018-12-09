@@ -74,6 +74,18 @@ public class FlashcardOff implements Serializable {
         this.titulo = titulo;
     }
 
+    @Ignore
+    public FlashcardOff(@NonNull long codigo, @NonNull String pergunta, @NonNull String resposta, @NonNull String titulo, @NonNull long usuarioCodigo, long disciplinaCodigo, long assuntoCodigo, long pastaCodigo) {
+        this.codigo = codigo;
+        this.pergunta = pergunta;
+        this.resposta = resposta;
+        this.titulo = titulo;
+        this.usuarioCodigo = usuarioCodigo;
+        this.disciplinaCodigo = disciplinaCodigo;
+        this.assuntoCodigo = assuntoCodigo;
+        this.pastaCodigo = pastaCodigo;
+    }
+
     @NonNull
     public long getCodigo() {
         return codigo;

@@ -47,6 +47,16 @@ public class FlashcardRepositoryOff {
         }
     }
 
+    public boolean salvarLista(List<FlashcardOff> flashcardOffs) {
+        try {
+            return new SalvarLista().execute(flashcardOffs).get();
+        } catch (Exception e) {
+            Log.e("ERRO SALVAR FLASHs", e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean deletar(FlashcardOff flashcardOff) {
         try {
             return new Deletar().execute(flashcardOff).get();
@@ -60,6 +70,16 @@ public class FlashcardRepositoryOff {
     public boolean atualizar(FlashcardOff flashcardOff) {
         try {
             return new Atualizar().execute(flashcardOff).get();
+        } catch (Exception e) {
+            Log.e("ERRO ATUALIZAR FLASH ", e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean atualizarLista(List<FlashcardOff> flashcardOffs) {
+        try {
+            return new AtualizarLista().execute(flashcardOffs).get();
         } catch (Exception e) {
             Log.e("ERRO ATUALIZAR FLASH ", e.getMessage());
             e.printStackTrace();
@@ -110,12 +130,42 @@ public class FlashcardRepositoryOff {
         }
     }
 
+    private class SalvarLista extends AsyncTask<List<FlashcardOff>, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(List<FlashcardOff>... lists) {
+            try {
+                AppDatabase.getAppDatabase(context).flashcardDao().salvarLista(lists[0]);
+                return true;
+            } catch (Exception e) {
+                Log.e("ERRO SALVAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
+
     private class Atualizar extends AsyncTask<FlashcardOff, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(FlashcardOff... flashcardOffs) {
             try {
                 AppDatabase.getAppDatabase(context).flashcardDao().atualizar(flashcardOffs[0]);
+                return true;
+            } catch (Exception e) {
+                Log.e("ERRO ATUALIZAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
+
+    private class AtualizarLista extends AsyncTask<List<FlashcardOff>, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(List<FlashcardOff>... lists) {
+            try {
+                AppDatabase.getAppDatabase(context).flashcardDao().atualizarLista(lists[0]);
                 return true;
             } catch (Exception e) {
                 Log.e("ERRO ATUALIZAR ASYNC", e.getMessage());

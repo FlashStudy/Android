@@ -29,6 +29,9 @@ public interface DisciplinaDao {
     @Update
     void atualizar(DisciplinaOff disciplinaOff);
 
+    @Update
+    void atualizarLista(List<DisciplinaOff> disciplinaOffs);
+
     //Procura todas as disciplinas
     @Query("SELECT * FROM disciplina ORDER BY codigo ASC")
     List<DisciplinaOff> getAllDisciplinas();

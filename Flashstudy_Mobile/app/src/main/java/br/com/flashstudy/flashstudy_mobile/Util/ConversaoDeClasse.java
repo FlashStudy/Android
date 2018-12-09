@@ -5,10 +5,12 @@ import java.util.List;
 import br.com.flashstudy.flashstudy_mobile.offline.model.AssuntoOff;
 import br.com.flashstudy.flashstudy_mobile.offline.model.CronogramaOff;
 import br.com.flashstudy.flashstudy_mobile.offline.model.DisciplinaOff;
+import br.com.flashstudy.flashstudy_mobile.offline.model.FlashcardOff;
 import br.com.flashstudy.flashstudy_mobile.offline.model.UsuarioOff;
 import br.com.flashstudy.flashstudy_mobile.online.model.Assunto;
 import br.com.flashstudy.flashstudy_mobile.online.model.Cronograma;
 import br.com.flashstudy.flashstudy_mobile.online.model.Disciplina;
+import br.com.flashstudy.flashstudy_mobile.online.model.Flashcard;
 import br.com.flashstudy.flashstudy_mobile.online.model.Usuario;
 
 public class ConversaoDeClasse {
@@ -42,5 +44,13 @@ public class ConversaoDeClasse {
 
     public static Assunto assuntoOffToAssunto(AssuntoOff assuntoOff, Usuario usuario, Disciplina disciplina){
         return new Assunto(assuntoOff.getCodigo(), assuntoOff.getTema(), disciplina, usuario);
+    }
+
+    public static Flashcard flashcardOffToFlashcard(){
+        return null;
+    }
+
+    public static FlashcardOff flashcardToFlashcardOff(Flashcard flashcard){
+        return new FlashcardOff(flashcard.getCodigo(), flashcard.getPergunta(), flashcard.getResposta(), flashcard.getTitulo(), flashcard.getUsuario().getCodigo(), flashcard.getDisciplina().getCodigo(), flashcard.getAssunto().getCodigo(), 0);
     }
 }

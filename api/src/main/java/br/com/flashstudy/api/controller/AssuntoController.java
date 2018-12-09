@@ -12,15 +12,24 @@ import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
 
 //Controller de Assuntos
-@Component
 @RestController
-@RequestMapping(value = "/assunto")
+@RequestMapping("assunto")
 public class AssuntoController {
     
     @Autowired
     private AssuntoRepository assuntoRepository;
-
-    // Deleta os assuntos selecinados
+    
+    @GetMapping(value = "listar/{codigo}", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+    public ResponseEntity<?> listar(@PathVariable("codigo") Long codigo) {
+        return new ResponseEntity<>(assuntoRepository.getByUsuario(codigo), HttpStatus.OK);
+    }
+    
+    @GetMapping(value = "listarPorDisciplina/{codigo}", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+    public ResponseEntity<?> listarPOrDisciplina(@PathVariable("codigo") Long codigo) {
+        return new ResponseEntity<>(assuntoRepository.getByDisciplina(codigo), HttpStatus.OK);
+    }
+    
+// Deleta os assuntos selecinados
     @PostMapping(value = "/salvar", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
     public ResponseEntity<?> salvar(@RequestBody List<Assunto> assuntos) {
         return new ResponseEntity<>(assuntoRepository.saveAll(assuntos), HttpStatus.OK);

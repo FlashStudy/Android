@@ -11,6 +11,25 @@ import br.com.flashstudy.flashstudy_mobile.online.model.Assunto;
 public class AssuntoRepository {
     AssuntoRestClient client = new AssuntoRestClient();
 
+    public List<Assunto> listar(long codigo) {
+        try {
+            return new Listar().execute(codigo).get();
+        } catch (Exception e) {
+            Log.e("ERRO REPO ASSUNTO", e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public List<Assunto> listarPorDisciplina(long codigo) {
+        try {
+            return new ListarPorDisciplina().execute(codigo).get();
+        } catch (Exception e) {
+            Log.e("ERRO REPO ASSUNTO", e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public List<Assunto> salvar(List<Assunto> assuntos) {
         try {
             return new Salvar().execute(assuntos).get();
@@ -38,6 +57,34 @@ public class AssuntoRepository {
             Log.e("ERRO REPO ASSUNTO", e.getMessage());
             e.printStackTrace();
             return false;
+        }
+    }
+
+    private class Listar extends AsyncTask<Long, Void, List<Assunto>> {
+
+        @Override
+        protected List<Assunto> doInBackground(Long... longs) {
+            try {
+                return client.findAll(longs[0]);
+            } catch (Exception e) {
+                Log.e("ERRO ASYNC ASSUNTO", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    private class ListarPorDisciplina extends AsyncTask<Long, Void, List<Assunto>> {
+
+        @Override
+        protected List<Assunto> doInBackground(Long... longs) {
+            try {
+                return client.findByDisciplina(longs[0]);
+            } catch (Exception e) {
+                Log.e("ERRO ASYNC ASSUNTO", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
         }
     }
 

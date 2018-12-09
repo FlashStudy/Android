@@ -47,6 +47,16 @@ public class DisciplinaRepositoryOff {
         }
     }
 
+    public boolean atualizarLista(List<DisciplinaOff> disciplinaOffs) {
+        try {
+            return new AtualizarLista().execute(disciplinaOffs).get();
+        } catch (Exception e) {
+            Log.e("ERRO ATUALIZAR DISC", e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean deletar(DisciplinaOff disciplinaOff) {
         try {
             return new Deletar().execute(disciplinaOff).get();
@@ -95,6 +105,21 @@ public class DisciplinaRepositoryOff {
         protected Boolean doInBackground(DisciplinaOff... disciplinaOffs) {
             try {
                 AppDatabase.getAppDatabase(context).disciplinaDao().atualizar(disciplinaOffs[0]);
+                return true;
+            } catch (Exception e) {
+                Log.e("ERRO ATUALIZAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
+
+    private class AtualizarLista extends AsyncTask<List<DisciplinaOff>, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(List<DisciplinaOff>... lists) {
+            try {
+                AppDatabase.getAppDatabase(context).disciplinaDao().atualizarLista(lists[0]);
                 return true;
             } catch (Exception e) {
                 Log.e("ERRO ATUALIZAR ASYNC", e.getMessage());

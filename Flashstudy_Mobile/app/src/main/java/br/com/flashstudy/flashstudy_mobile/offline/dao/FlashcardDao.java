@@ -17,6 +17,10 @@ public interface FlashcardDao {
     @Insert
     void salvar(FlashcardOff flashcardOff);
 
+    //Insere
+    @Insert
+    void salvarLista(List<FlashcardOff> flashcardOffs);
+
     //Deleta
     @Delete
     void deletar(FlashcardOff flashcardOff);
@@ -24,6 +28,10 @@ public interface FlashcardDao {
     //Atualiza
     @Update
     void atualizar(FlashcardOff flashcardOff);
+
+    //Atualiza
+    @Update
+    void atualizarLista(List<FlashcardOff> flashcardOffs);
 
     //Procura Flashcards de um Usuario que não estão em uma pasta
     @Query("SELECT * FROM flashcard WHERE usuario_codigo = :codigo AND pasta_codigo IN (0) ORDER BY titulo ASC")

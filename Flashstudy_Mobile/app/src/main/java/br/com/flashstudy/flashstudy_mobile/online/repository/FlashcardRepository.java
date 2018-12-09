@@ -11,7 +11,7 @@ import br.com.flashstudy.flashstudy_mobile.online.model.Flashcard;
 public class FlashcardRepository {
     private FlashcardRestClient flashcardRestClient = new FlashcardRestClient();
 
-    public List<Flashcard> listarFlashcards(int codigo) {
+    public List<Flashcard> listarFlashcards(long codigo) {
         try {
             return new ListaFlashcardsAsync().execute(codigo).get();
         } catch (Exception e) {
@@ -38,18 +38,19 @@ public class FlashcardRepository {
         }
     }
 
-    private class ListaFlashcardsAsync extends AsyncTask<Integer, Void, List<Flashcard>> {
-
-
-        @Override
-        protected List<Flashcard> doInBackground(Integer... integers) {
-            return null;
-        }
+    private class ListaFlashcardsAsync extends AsyncTask<Long, Void, List<Flashcard>> {
 
         @Override
-        protected void onPostExecute(List<Flashcard> flashcards) {
-            super.onPostExecute(flashcards);
+        protected List<Flashcard> doInBackground(Long... longs) {
+            try{
+                return flashcardRestClient.findAll(longs[0]);
+            }catch (Exception e){
+                Log.e("ERRO ASYNC", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
         }
+
     }
 
     private class SalvaFlashcardAsync extends AsyncTask<Flashcard, Void, Flashcard> {
@@ -59,23 +60,14 @@ public class FlashcardRepository {
             return null;
         }
 
-        @Override
-        protected void onPostExecute(Flashcard flashcard) {
-            super.onPostExecute(flashcard);
-        }
     }
 
     private class DeletarFlashcardAsync extends AsyncTask<Flashcard, Void, Boolean> {
-
 
         @Override
         protected Boolean doInBackground(Flashcard... flashcards) {
             return null;
         }
 
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-        }
     }
 }
