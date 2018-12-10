@@ -38,6 +38,15 @@ public class FlashcardRepository {
         }
     }
 
+    public boolean deletarLista(List<Flashcard> flashcard) {
+        try {
+            return new DeletarLista().execute(flashcard).get();
+        } catch (Exception e) {
+            Log.i("ERRO AO DELETAR", e.getMessage());
+            return false;
+        }
+    }
+
     private class ListaFlashcardsAsync extends AsyncTask<Long, Void, List<Flashcard>> {
 
         @Override
@@ -57,7 +66,13 @@ public class FlashcardRepository {
 
         @Override
         protected Flashcard doInBackground(Flashcard... flashcards) {
-            return null;
+            try{
+                return flashcardRestClient.salvar(flashcards[0]);
+            }catch (Exception e){
+                Log.e("ERRO ASYNC", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
         }
 
     }
@@ -66,8 +81,28 @@ public class FlashcardRepository {
 
         @Override
         protected Boolean doInBackground(Flashcard... flashcards) {
-            return null;
+            try{
+                return flashcardRestClient.deletar(flashcards[0].getCodigo());
+            }catch (Exception e){
+                Log.e("ERRO ASYNC", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
         }
 
+    }
+
+    private class DeletarLista extends AsyncTask<List<Flashcard>, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(List<Flashcard>... lists) {
+            try{
+                return flashcardRestClient.deletarLista(lists[0]);
+            }catch (Exception e){
+                Log.e("ERRO ASYNC", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
+        }
     }
 }

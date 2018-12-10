@@ -14,6 +14,10 @@ import android.widget.Toast;
 import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.Util.Util;
 import br.com.flashstudy.flashstudy_mobile.offline.Sincronizacao.Sincronizar;
+import br.com.flashstudy.flashstudy_mobile.offline.model.PastaOff;
+import br.com.flashstudy.flashstudy_mobile.offline.repository.PastaRepositoryOff;
+import br.com.flashstudy.flashstudy_mobile.online.model.Pasta;
+import br.com.flashstudy.flashstudy_mobile.online.repository.PastaRepository;
 import br.com.flashstudy.flashstudy_mobile.service.NotificationService;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -37,14 +41,18 @@ public class TelaPrincipalActivity extends AppCompatActivity {
             try {
                 Log.e("INICIANDO SINCRO", "INICIANDO");
                 sincronizacao = new Sincronizar(this).sincronizar();
+
+                if (new PastaRepositoryOff(this).listar(Util.getLocalUserCodigo(this)).size() == 0){
+                    PastaOff pastaOff = new PastaOff("Sem categoria", Util.getLocalUserCodigo(this));
+                    new PastaRepositoryOff(this).salvar(pastaOff);
+                }
+
             } catch (Exception e) {
                 Log.e("ERRO SINCRO", e.getMessage());
                 e.printStackTrace();
             }
 
-            if (sincronizacao) {
-                Toast.makeText(this, "Sincronização concluida", Toast.LENGTH_SHORT).show();
-            } else {
+            if (!sincronizacao) {
                 Toast.makeText(this, "Ocorreu um erro durante a sincronização", Toast.LENGTH_SHORT).show();
             }
         }

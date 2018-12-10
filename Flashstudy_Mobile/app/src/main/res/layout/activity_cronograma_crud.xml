@@ -172,7 +172,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="24dp"
-                    android:background="@drawable/dark_layout_bg"
                     app:fontFamily="@font/comfortaa_bold">
 
                 </com.baoyz.swipemenulistview.SwipeMenuListView>

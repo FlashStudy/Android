@@ -12,6 +12,6 @@ import org.springframework.data.repository.CrudRepository;
 public interface DisciplinaRepository extends CrudRepository<Disciplina, Long> {
 
 	// Lista as dsiciplinas do usuário
-        @Query(value = "SELECT * FROM Disciplina WHERE codigo_usuario = ?1", nativeQuery = true)
+        @Query(value = "SELECT * FROM Disciplina WHERE usuario_codigo = ?1", nativeQuery = true)
 	List<Disciplina> getByUsuario(Long codigo);
 }

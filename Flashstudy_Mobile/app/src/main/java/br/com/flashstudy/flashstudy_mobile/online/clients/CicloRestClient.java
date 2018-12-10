@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import br.com.flashstudy.flashstudy_mobile.online.model.Ciclo;
 
 public class CicloRestClient {
-    private String BASE_URL = "http://192.168.0.35:8000/ciclo/";
+    private String BASE_URL = "http://192.168.0.11:7000/ciclo/";
     private RestTemplate restTemplate = new RestTemplate();
     ObjectMapper objectMapper = new ObjectMapper();
 

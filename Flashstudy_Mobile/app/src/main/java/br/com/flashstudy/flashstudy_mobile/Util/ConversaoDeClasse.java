@@ -46,8 +46,8 @@ public class ConversaoDeClasse {
         return new Assunto(assuntoOff.getCodigo(), assuntoOff.getTema(), disciplina, usuario);
     }
 
-    public static Flashcard flashcardOffToFlashcard(){
-        return null;
+    public static Flashcard flashcardOffToFlashcard(FlashcardOff off, Usuario usuario, Disciplina disciplina, Assunto assunto){
+        return new Flashcard(off.getCodigo(), off.getPergunta(), off.getResposta(), off.getTitulo(), usuario, disciplina, assunto);
     }
 
     public static FlashcardOff flashcardToFlashcardOff(Flashcard flashcard){

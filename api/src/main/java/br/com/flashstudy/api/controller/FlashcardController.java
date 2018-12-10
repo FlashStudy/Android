@@ -2,6 +2,7 @@ package br.com.flashstudy.api.controller;
 
 import br.com.flashstudy.api.model.Flashcard;
 import br.com.flashstudy.api.repository.FlashcardRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,4 +43,16 @@ public class FlashcardController {
         }
     }
 
+    // Deleta através do código do flashcard
+    @DeleteMapping(value = "/deleteLista", produces = MimeTypeUtils.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+    public @ResponseBody
+    ResponseEntity<?> deleteLista(@RequestBody List<Flashcard> flashcards ) {
+
+        try {
+            flashcardRepository.deleteAll(flashcards);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }

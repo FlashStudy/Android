@@ -24,7 +24,7 @@ import br.com.flashstudy.flashstudy_mobile.online.model.Cronograma;
 
 public class CronogramaRestClient {
 
-    private String BASE_URL = "http://192.168.0.35:8000/cronograma/";
+    private String BASE_URL = "http://192.168.0.11:7000/cronograma/";
     private RestTemplate restTemplate = new RestTemplate();
     ObjectMapper objectMapper = new ObjectMapper();
 

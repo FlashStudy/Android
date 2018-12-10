@@ -26,7 +26,6 @@ public class Cronograma implements java.io.Serializable {
 	private String fim;
 
 	@ManyToOne
-        @JoinColumn(name = "codigo_usuario")
 	private Usuario usuario;
 
 	@ManyToMany(cascade = CascadeType.ALL)

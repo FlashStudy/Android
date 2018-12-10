@@ -14,7 +14,7 @@ import java.util.List;
 import br.com.flashstudy.flashstudy_mobile.online.model.Pasta;
 
 public class PastaRestClient {
-    private String BASE_URL = "http://192.168.0.35:8000/usuario/";
+    private String BASE_URL = "http://192.168.0.11:7000/usuario/";
     private RestTemplate restTemplate = new RestTemplate();
 
     public List<Pasta> findAll(Long codigo) {

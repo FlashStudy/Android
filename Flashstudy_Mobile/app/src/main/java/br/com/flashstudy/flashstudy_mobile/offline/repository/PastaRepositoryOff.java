@@ -27,6 +27,16 @@ public class PastaRepositoryOff {
         }
     }
 
+    public List<PastaOff> pesquisar(long codigo, String filtro) {
+        try {
+            return new Pesquisar("%" + filtro + "%").execute(codigo).get();
+        } catch (Exception e) {
+            Log.e("ERRO LISTAR PASTAS", e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public boolean salvar(PastaOff pastaOff) {
         try {
             return new Salvar().execute(pastaOff).get();
@@ -36,6 +46,28 @@ public class PastaRepositoryOff {
             return false;
         }
     }
+
+    public boolean atualizar(PastaOff pastaOff) {
+        try {
+            return new Atualizar().execute(pastaOff).get();
+        } catch (Exception e) {
+            Log.e("ERRO SALVAR PASTA", e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deletarLista(List<PastaOff> pastaOff) {
+        try {
+            return new DeletarLista().execute(pastaOff).get();
+        } catch (Exception e) {
+            Log.e("ERRO SALVAR PASTA", e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 
     private class Salvar extends AsyncTask<PastaOff, Void, Boolean> {
 
@@ -52,7 +84,7 @@ public class PastaRepositoryOff {
         }
     }
 
-    private class AtualizarLista extends AsyncTask<PastaOff, Void, Boolean> {
+    private class Atualizar extends AsyncTask<PastaOff, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(PastaOff... pastaOffs) {
@@ -67,12 +99,47 @@ public class PastaRepositoryOff {
         }
     }
 
+    private class DeletarLista extends AsyncTask<List<PastaOff>, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(List<PastaOff>... lists) {
+            try {
+                AppDatabase.getAppDatabase(context).pastaDao().deletarLista(lists[0]);
+                return true;
+            } catch (Exception e) {
+                Log.e("ERRO DELETAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
+
     private class Listar extends AsyncTask<Long, Void, List<PastaOff>> {
 
         @Override
         protected List<PastaOff> doInBackground(Long... longs) {
             try {
                 return AppDatabase.getAppDatabase(context).pastaDao().getAllPastasByUsuario(longs[0]);
+            } catch (Exception e) {
+                Log.e("ERRO LISTAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    private class Pesquisar extends AsyncTask<Long, Void, List<PastaOff>> {
+
+        String filtro;
+
+        public Pesquisar(String filtro) {
+            this.filtro = filtro;
+        }
+
+        @Override
+        protected List<PastaOff> doInBackground(Long... longs) {
+            try {
+                return AppDatabase.getAppDatabase(context).pastaDao().pesquisar(longs[0], filtro);
             } catch (Exception e) {
                 Log.e("ERRO LISTAR ASYNC", e.getMessage());
                 e.printStackTrace();

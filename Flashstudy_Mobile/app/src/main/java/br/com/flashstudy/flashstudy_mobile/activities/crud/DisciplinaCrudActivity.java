@@ -11,9 +11,11 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +30,7 @@ import java.util.List;
 import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.Util.ConversaoDeClasse;
 import br.com.flashstudy.flashstudy_mobile.Util.Util;
+import br.com.flashstudy.flashstudy_mobile.adapter.AssuntoListAdapter;
 import br.com.flashstudy.flashstudy_mobile.offline.model.AssuntoOff;
 import br.com.flashstudy.flashstudy_mobile.offline.model.DisciplinaOff;
 import br.com.flashstudy.flashstudy_mobile.offline.repository.AssuntoRepositoryOff;
@@ -101,7 +104,7 @@ public class DisciplinaCrudActivity extends AppCompatActivity {
 
 
     public void populaLista() {
-        ArrayAdapter adapter = new ArrayAdapter(DisciplinaCrudActivity.this, android.R.layout.simple_list_item_1, assuntos);
+        AssuntoListAdapter adapter = new AssuntoListAdapter(this, this, assuntos);
         swipeMenuListView.setAdapter(adapter);
 
         SwipeMenuCreator creator = new SwipeMenuCreator() {

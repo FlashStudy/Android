@@ -2,6 +2,8 @@ package br.com.flashstudy.flashstudy_mobile.online.clients;
 
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,7 +17,7 @@ import br.com.flashstudy.flashstudy_mobile.online.model.Flashcard;
 
 public class FlashcardRestClient {
 
-    private String BASE_URL = "http://192.168.0.35:8000/flashcard/";
+    private String BASE_URL = "http://192.168.0.11:7000/flashcard/";
     private RestTemplate restTemplate = new RestTemplate();
 
     public List<Flashcard> findAll(Long codigo) {
@@ -65,6 +67,25 @@ public class FlashcardRestClient {
             HttpEntity<String> entity = new HttpEntity<>(headers);
 
             restTemplate.delete(BASE_URL + "delete/" + codigo, entity);
+            return true;
+        } catch (Exception e) {
+            Log.e("ERRO SERV DISCIPLINA", e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deletarLista(List<Flashcard> flashcards) {
+        try {
+            Log.e("FLASHCARDS", flashcards.toString());
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            HttpEntity<String> entity = new HttpEntity<>(mapper.writeValueAsString(flashcards), headers);
+
+            restTemplate.delete(BASE_URL + "deleteLista", entity);
             return true;
         } catch (Exception e) {
             Log.e("ERRO SERV DISCIPLINA", e.getMessage());

@@ -37,6 +37,12 @@ public class PastaOff implements Serializable {
     }
 
     @Ignore
+    public PastaOff(@NonNull String nome, @NonNull long usuarioCodigo) {
+        this.nome = nome;
+        this.usuarioCodigo = usuarioCodigo;
+    }
+
+    @Ignore
     public PastaOff(@NonNull String nome, @NonNull long usuarioCodigo, List<FlashcardOff> flashcards) {
         this.nome = nome;
         this.usuarioCodigo = usuarioCodigo;

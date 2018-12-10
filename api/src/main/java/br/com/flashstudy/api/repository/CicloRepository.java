@@ -9,6 +9,6 @@ import org.springframework.data.repository.CrudRepository;
 public interface CicloRepository extends CrudRepository<Ciclo, Long> {
 
 	// Solicita o ciclo do usuário
-        @Query(value = "SELECT * FROM Ciclo WHERE codigo_usuario = ?1", nativeQuery = true)
+        @Query(value = "SELECT * FROM Ciclo WHERE usuario_codigo = ?1", nativeQuery = true)
 	Ciclo getByUsuario(Long codigo);
 }

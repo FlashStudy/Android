@@ -15,6 +15,7 @@ import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.Util.Util;
 import br.com.flashstudy.flashstudy_mobile.activities.crud.CronogramaCrudActivity;
 import br.com.flashstudy.flashstudy_mobile.activities.crud.DisciplinaCrudActivity;
+import br.com.flashstudy.flashstudy_mobile.adapter.CronogramaAdapter;
 import br.com.flashstudy.flashstudy_mobile.offline.model.CronogramaOff;
 import br.com.flashstudy.flashstudy_mobile.offline.model.DisciplinaOff;
 import br.com.flashstudy.flashstudy_mobile.offline.repository.CronogramaRepositoryOff;
@@ -86,7 +87,7 @@ public class CronogramaActivity extends AppCompatActivity {
                 finish();
             }
 
-            ArrayAdapter adapter = new ArrayAdapter(CronogramaActivity.this, android.R.layout.simple_list_item_1, offs);
+            CronogramaAdapter adapter = new CronogramaAdapter(this, this, offs);
 
             listView.setAdapter(adapter);
 

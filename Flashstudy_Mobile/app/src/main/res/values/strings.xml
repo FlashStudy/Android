@@ -74,6 +74,7 @@
     <string name="lbl_dias_estudos">Dias para estudo:</string>
     <string name="lbl_materia">Matéria:</string>
     <string name="lbl_pasta">Pasta:</string>
+    <string name="hint_txt_filtro">Pesquisar</string>
 
     <string-array name="numMateriasStr">
         <item>1</item>

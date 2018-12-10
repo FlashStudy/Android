@@ -17,7 +17,7 @@ import java.util.List;
 import br.com.flashstudy.flashstudy_mobile.online.model.Assunto;
 
 public class AssuntoRestClient {
-    private String BASE_URL = "http://192.168.0.35:8000/assunto/";
+    private String BASE_URL = "http://192.168.0.11:7000/assunto/";
     private RestTemplate restTemplate = new RestTemplate();
 
     public List<Assunto> findAll(Long codigo) {

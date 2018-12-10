@@ -12,9 +12,11 @@ import android.widget.Toast;
 import java.util.List;
 
 import br.com.flashstudy.flashstudy_mobile.R;
+import br.com.flashstudy.flashstudy_mobile.Util.ConversaoDeClasse;
 import br.com.flashstudy.flashstudy_mobile.Util.Util;
 import br.com.flashstudy.flashstudy_mobile.offline.model.UsuarioOff;
 import br.com.flashstudy.flashstudy_mobile.offline.repository.UsuarioRepositoryOff;
+import br.com.flashstudy.flashstudy_mobile.online.repository.UsuarioRepository;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
@@ -27,6 +29,9 @@ public class PerfilActivity extends AppCompatActivity {
 
     @BindViews({R.id.btnConfirmar, R.id.btnCancelar})
     public List<Button> btns;
+
+    @BindView(R.id.btnEditar)
+    public Button btnEditar;
 
     @BindView(R.id.txtEmail)
     public EditText txtEmail;
@@ -77,13 +82,45 @@ public class PerfilActivity extends AppCompatActivity {
     public void editar() {
         ButterKnife.apply(campos, ENABLED, true);
         ButterKnife.apply(btns, VISIBILITY, true);
+        btnEditar.setEnabled(false);
     }
 
     @OnClick(R.id.btnCancelar)
     public void cancelar() {
         ButterKnife.apply(campos, ENABLED, false);
         ButterKnife.apply(btns, VISIBILITY, false);
+        btnEditar.setEnabled(true);
         resetaCampos();
+    }
+
+    @OnClick(R.id.btnConfirmar)
+    public void atualizar() {
+
+        String nome = campos.get(0).getText().toString().trim();
+        String senha = campos.get(1).getText().toString().trim();
+        String confirma = campos.get(2).getText().toString().trim();
+
+
+        if (!Util.isCampoVazio(nome) && !Util.isCampoVazio(senha) && !Util.isCampoVazio(confirma)) {
+            if (senha.equals(confirma)) {
+                usuarioOff.setNome(nome);
+                usuarioOff.setSenha(senha);
+            } else {
+                Toast.makeText(this, "As senhas diferem", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        UsuarioRepository usuarioRepository = new UsuarioRepository();
+        if (usuarioRepository.atualizar(ConversaoDeClasse.usuarioOffToUsuario(usuarioOff))) {
+            if (usuarioRepositoryOff.atualizar(usuarioOff)) {
+                Toast.makeText(this, "Dados salvos", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                Toast.makeText(this, "Ocorreu um erro", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Ocorreu um erro", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void resetaCampos() {

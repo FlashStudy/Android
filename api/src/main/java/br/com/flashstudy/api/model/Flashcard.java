@@ -21,17 +21,16 @@ public class Flashcard implements java.io.Serializable {
 	@Column(name = "resposta", nullable = false)
 	private String resposta;
 
-	@Column(name = "nivel", nullable = false)
+	@Column(name = "nivel")
 	private String nivel;
 
 	@Column(name = "titulo", nullable = false)
 	private String titulo;
 
-	@Column(name = "publico", nullable = false)
+	@Column(name = "publico")
 	private boolean publico;
 
 	@ManyToOne
-	@JoinColumn(name = "codigo_usuario")
 	@JsonBackReference
 	private Usuario usuario;
 

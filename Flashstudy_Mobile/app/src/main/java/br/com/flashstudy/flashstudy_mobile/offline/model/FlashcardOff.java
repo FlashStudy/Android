@@ -7,6 +7,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.io.Serializable;
 
@@ -61,6 +62,7 @@ public class FlashcardOff implements Serializable {
     private long assuntoCodigo;
 
     @ColumnInfo(name = "pasta_codigo")
+    @Nullable
     private long pastaCodigo;
 
     public FlashcardOff() {
@@ -197,10 +199,6 @@ public class FlashcardOff implements Serializable {
 
     @Override
     public String toString() {
-        return titulo;
-    }
-
-    public String toStringCompleto() {
         return "FlashcardOff{" +
                 "codigo=" + codigo +
                 ", pergunta='" + pergunta + '\'' +

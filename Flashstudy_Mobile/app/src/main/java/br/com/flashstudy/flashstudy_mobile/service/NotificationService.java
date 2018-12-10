@@ -75,7 +75,7 @@ public class NotificationService extends Service {
         builder.setSmallIcon(R.mipmap.ic_launcher);
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
         builder.setContentTitle(getString(R.string.app_name));
-        builder.setContentText("Sample");
+        builder.setContentText("Bem vindo ao Flashstudy!");
         builder.setAutoCancel(true);
         builder.setPriority(Notification.PRIORITY_MAX);
         builder.setDefaults(Notification.DEFAULT_VIBRATE);

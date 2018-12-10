@@ -35,6 +35,16 @@ public class UsuarioRepositoryOff {
         }
     }
 
+    public boolean atualizar(UsuarioOff usuarioOff) {
+        try {
+            return new Atualizar().execute(usuarioOff).get();
+        } catch (Exception e) {
+            Log.e("ERRO ATUALIZAR USUARIO", e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public long login(UsuarioOff usuarioOff) {
         try {
             UsuarioOff usuarioOff1;
@@ -81,6 +91,21 @@ public class UsuarioRepositoryOff {
         protected Boolean doInBackground(UsuarioOff... usuarioOffs) {
             try {
                 AppDatabase.getAppDatabase(context).usuarioDao().salvar(usuarioOffs[0]);
+                return true;
+            } catch (Exception e) {
+                Log.e("ERRO SALVAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
+
+    private class Atualizar extends AsyncTask<UsuarioOff, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(UsuarioOff... usuarioOffs) {
+            try {
+                AppDatabase.getAppDatabase(context).usuarioDao().atualizar(usuarioOffs[0]);
                 return true;
             } catch (Exception e) {
                 Log.e("ERRO SALVAR ASYNC", e.getMessage());

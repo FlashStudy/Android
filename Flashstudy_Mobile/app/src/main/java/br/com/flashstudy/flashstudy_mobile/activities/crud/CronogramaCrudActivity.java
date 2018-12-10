@@ -33,6 +33,7 @@ import java.util.Locale;
 import br.com.flashstudy.flashstudy_mobile.R;
 import br.com.flashstudy.flashstudy_mobile.Util.ConversaoDeClasse;
 import br.com.flashstudy.flashstudy_mobile.Util.Util;
+import br.com.flashstudy.flashstudy_mobile.adapter.CronogramaAdapter;
 import br.com.flashstudy.flashstudy_mobile.offline.model.CronogramaOff;
 import br.com.flashstudy.flashstudy_mobile.offline.model.DisciplinaOff;
 import br.com.flashstudy.flashstudy_mobile.offline.repository.CronogramaRepositoryOff;
@@ -109,7 +110,7 @@ public class CronogramaCrudActivity extends AppCompatActivity {
     }
 
     public void populaLista() {
-        ArrayAdapter adapter = new ArrayAdapter(CronogramaCrudActivity.this, android.R.layout.simple_list_item_1, disciplinaOffs);
+        CronogramaAdapter adapter = new CronogramaAdapter(this, this, disciplinaOffs);
         swipeMenuListView.setAdapter(adapter);
 
         SwipeMenuCreator creator = new SwipeMenuCreator() {

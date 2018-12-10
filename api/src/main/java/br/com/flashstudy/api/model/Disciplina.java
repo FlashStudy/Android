@@ -20,7 +20,6 @@ public class Disciplina implements java.io.Serializable {
     private String nome;
 
     @ManyToOne
-    @JoinColumn(name = "codigo_usuario")
     private Usuario usuario;
 
     public Disciplina() {

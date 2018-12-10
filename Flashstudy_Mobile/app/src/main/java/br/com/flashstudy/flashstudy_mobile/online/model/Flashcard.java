@@ -1,6 +1,9 @@
 package br.com.flashstudy.flashstudy_mobile.online.model;
 
 
+import android.arch.persistence.room.Ignore;
+import android.support.annotation.NonNull;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -46,15 +49,11 @@ public class Flashcard implements Serializable {
         super();
     }
 
-    public Flashcard(Long codigo, String pergunta, String resposta, String nivel, String titulo, boolean publico,
-                     Usuario usuario, Disciplina disciplina, Assunto assunto) {
-        super();
+    public Flashcard(Long codigo, String pergunta, String resposta, String titulo, Usuario usuario, Disciplina disciplina, Assunto assunto) {
         this.codigo = codigo;
         this.pergunta = pergunta;
         this.resposta = resposta;
-        this.nivel = nivel;
         this.titulo = titulo;
-        this.publico = publico;
         this.usuario = usuario;
         this.disciplina = disciplina;
         this.assunto = assunto;

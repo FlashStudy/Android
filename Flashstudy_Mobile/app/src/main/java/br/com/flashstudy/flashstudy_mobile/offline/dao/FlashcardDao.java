@@ -25,6 +25,10 @@ public interface FlashcardDao {
     @Delete
     void deletar(FlashcardOff flashcardOff);
 
+    //Deleta
+    @Delete
+    void deletarLista(List<FlashcardOff> flashcardOff);
+
     //Atualiza
     @Update
     void atualizar(FlashcardOff flashcardOff);
@@ -34,12 +38,18 @@ public interface FlashcardDao {
     void atualizarLista(List<FlashcardOff> flashcardOffs);
 
     //Procura Flashcards de um Usuario que não estão em uma pasta
-    @Query("SELECT * FROM flashcard WHERE usuario_codigo = :codigo AND pasta_codigo IN (0) ORDER BY titulo ASC")
+    @Query("SELECT * FROM flashcard WHERE usuario_codigo = :codigo ORDER BY titulo ASC")
     List<FlashcardOff> getAllFlashcardsByUsuario(long codigo);
 
     //Procura Flashcards de uma Pasta do Usuario
     @Query("SELECT * FROM flashcard WHERE pasta_codigo = :codigoPasta ORDER BY codigo ASC")
     List<FlashcardOff> getAllFlashcardOffsByPasta(long codigoPasta);
+
+    //Procura Flashcards de uma Pasta do Usuario
+    @Query("SELECT * FROM flashcard WHERE pasta_codigo = :pasta_codigo AND titulo LIKE :filtro ORDER BY codigo ASC")
+    List<FlashcardOff> getAllFlashcardOffsByPastaPesquisa(long pasta_codigo, String filtro);
+
+
 
     /*//Procura Flashcards de uma Disciplina de um Usuário
     @Query("SELECT * FROM flashcard WHERE disciplina_codigo = :codigoDisciplina AND usuario_codigo = :codigoUsuario ORDER BY codigo ASC")

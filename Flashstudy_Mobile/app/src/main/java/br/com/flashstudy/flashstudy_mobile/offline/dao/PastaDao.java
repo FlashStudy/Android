@@ -20,6 +20,10 @@ public interface PastaDao {
     @Delete
     void deletar(PastaOff pastaOff);
 
+    //Deleta
+    @Delete
+    void deletarLista(List<PastaOff> pastaOff);
+
     //Atualiza
     @Update
     void atualizar(PastaOff pastaOff);
@@ -27,5 +31,9 @@ public interface PastaDao {
     //Procura Pastas de um Usuario
     @Query("SELECT * FROM pasta WHERE usuario_codigo = :codigo ORDER BY codigo ASC")
     List<PastaOff> getAllPastasByUsuario(long codigo);
+
+    //Procura Pastas de um Usuario
+    @Query("SELECT * FROM pasta WHERE usuario_codigo = :codigo AND nome LIKE :filtro ORDER BY codigo ASC")
+    List<PastaOff> pesquisar(long codigo, String filtro);
 
 }

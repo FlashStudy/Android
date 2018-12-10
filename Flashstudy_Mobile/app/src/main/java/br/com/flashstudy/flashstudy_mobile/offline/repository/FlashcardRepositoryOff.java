@@ -37,6 +37,16 @@ public class FlashcardRepositoryOff {
         }
     }
 
+    public List<FlashcardOff> listarPorPasta(long codigo, String filtro) {
+        try {
+            return new Pesquisar(filtro).execute(codigo).get();
+        } catch (Exception e) {
+            Log.e("ERRO LISTAR FLASH", e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public boolean salvar(FlashcardOff flashcardOff) {
         try {
             return new Salvar().execute(flashcardOff).get();
@@ -60,6 +70,16 @@ public class FlashcardRepositoryOff {
     public boolean deletar(FlashcardOff flashcardOff) {
         try {
             return new Deletar().execute(flashcardOff).get();
+        } catch (Exception e) {
+            Log.e("ERRO DELETAR FLASH", e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deletarLista(List<FlashcardOff> flashcardOff) {
+        try {
+            return new DeletarLista().execute(flashcardOff).get();
         } catch (Exception e) {
             Log.e("ERRO DELETAR FLASH", e.getMessage());
             e.printStackTrace();
@@ -107,6 +127,29 @@ public class FlashcardRepositoryOff {
         protected List<FlashcardOff> doInBackground(Long... longs) {
             try {
                 return AppDatabase.getAppDatabase(context).flashcardDao().getAllFlashcardOffsByPasta(longs[0]);
+            } catch (Exception e) {
+                Log.e("ERRO LISTAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    private class Pesquisar extends AsyncTask<Long, Void, List<FlashcardOff>> {
+
+        String filtro;
+
+        public Pesquisar(String filtro) {
+            this.filtro = filtro;
+        }
+
+        @Override
+        protected List<FlashcardOff> doInBackground(Long... longs) {
+            try {
+
+                String filro2 = "%" + filtro + "%";
+
+                return AppDatabase.getAppDatabase(context).flashcardDao().getAllFlashcardOffsByPastaPesquisa(longs[0], filro2);
             } catch (Exception e) {
                 Log.e("ERRO LISTAR ASYNC", e.getMessage());
                 e.printStackTrace();
@@ -181,6 +224,21 @@ public class FlashcardRepositoryOff {
         protected Boolean doInBackground(FlashcardOff... flashcardOffs) {
             try {
                 AppDatabase.getAppDatabase(context).flashcardDao().deletar(flashcardOffs[0]);
+                return true;
+            } catch (Exception e) {
+                Log.e("ERRO DELETAR ASYNC", e.getMessage());
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
+
+    private class DeletarLista extends AsyncTask<List<FlashcardOff>, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(List<FlashcardOff>... lists) {
+            try {
+                AppDatabase.getAppDatabase(context).flashcardDao().deletarLista(lists[0]);
                 return true;
             } catch (Exception e) {
                 Log.e("ERRO DELETAR ASYNC", e.getMessage());

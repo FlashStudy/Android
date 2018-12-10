@@ -111,8 +111,7 @@
                     android:id="@+id/swipeMenuAssuntos"
                     android:layout_width="match_parent"
                     android:layout_height="330dp"
-                    android:layout_margin="24dp"
-                    android:background="@drawable/dark_layout_bg">
+                    android:layout_margin="24dp">
 
                 </com.baoyz.swipemenulistview.SwipeMenuListView>
             </LinearLayout>

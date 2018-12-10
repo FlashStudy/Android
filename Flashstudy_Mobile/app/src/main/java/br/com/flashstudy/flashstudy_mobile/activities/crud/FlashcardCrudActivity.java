@@ -73,8 +73,9 @@ public class FlashcardCrudActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flashcard_crud);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
+        toolbar.setTitle("Flashcard");
+        setSupportActionBar(toolbar);
         codigo = Util.getLocalUserCodigo(this);
 
         flashcardRepositoryOff = new FlashcardRepositoryOff(this);
@@ -104,7 +105,7 @@ public class FlashcardCrudActivity extends AppCompatActivity {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinPastas.setAdapter(adapter);
 
-            if (flashcardOff.getCodigo() != 0) {
+            if (flashcardOff != null) {
                 campos.get(0).setText(flashcardOff.getTitulo());
                 campos.get(1).setText(flashcardOff.getPergunta());
                 campos.get(2).setText("Clique no botão 'Ver resposta' !");
@@ -113,7 +114,7 @@ public class FlashcardCrudActivity extends AppCompatActivity {
                 campos.get(1).setEnabled(false);
                 campos.get(2).setEnabled(false);
 
-                Log.e("FLASHCARD", flashcardOff.toStringCompleto());
+                Log.e("FLASHCARD", flashcardOff.toString());
 
                 int discPosition = 0;
                 for (int i = 0; i < disciplinas.size(); i++) {
@@ -134,7 +135,6 @@ public class FlashcardCrudActivity extends AppCompatActivity {
             Log.e("ERRO", e.getMessage());
             e.printStackTrace();
         }
-
 
     }
 
@@ -176,13 +176,18 @@ public class FlashcardCrudActivity extends AppCompatActivity {
                         int pastaPosition = spinPastas.getSelectedItemPosition();
 
                         try {
-                            if (disciplinas.get(discPosition).getCodigo() != 0 && assuntos.get(assuntoPosition).getCodigo() != 0 && pastas.get(pastaPosition).getCodigo() != 0) {
+                            if (disciplinas.get(discPosition).getCodigo() != 0 && assuntos.get(assuntoPosition).getCodigo() != 0) {
 
                                 flashcardOff.setDisciplinaCodigo(disciplinas.get(discPosition).getCodigo());
                                 flashcardOff.setAssuntoCodigo(assuntos.get(assuntoPosition).getCodigo());
-                                flashcardOff.setPastaCodigo(pastas.get(pastaPosition).getCodigo());
+
+                                if (pastas.size() > 0) {
+                                    flashcardOff.setPastaCodigo(pastas.get(pastaPosition).getCodigo());
+                                }else{
+                                    flashcardOff.setPastaCodigo(0);
+                                }
                                 flashcardOff.setUsuarioCodigo(codigo);
-                                Log.e("FLASHCARD", flashcardOff.toStringCompleto());
+                                Log.e("FLASHCARD", flashcardOff.toString());
 
                                 try {
                                     flashcardRepositoryOff.salvar(flashcardOff);
@@ -194,6 +199,8 @@ public class FlashcardCrudActivity extends AppCompatActivity {
                                 return true;
                             }
                         } catch (ArrayIndexOutOfBoundsException e) {
+                            Log.e("ERRO" , e.getMessage());
+                            e.printStackTrace();
                             Toast.makeText(getApplicationContext(), "Selecione uma Disciplina e um Assunto válidos!", Toast.LENGTH_LONG).show();
                         }
 
@@ -216,7 +223,7 @@ public class FlashcardCrudActivity extends AppCompatActivity {
                     dlg1.setNeutralButton("Ok", null);
                     dlg1.show();
                 }
-
+                break;
             case DELETAR:
                 if (isConectado()) {
                     AlertDialog.Builder dlg = new AlertDialog.Builder(this);

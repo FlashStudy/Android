@@ -10,7 +10,7 @@ import org.springframework.data.repository.CrudRepository;
 public interface FlashcardRepository extends CrudRepository<Flashcard, Long> {
 
     // Lista os flashcards do usuário
-    @Query(value = "SELECT * FROM Flashcard WHERE codigo_usuario = ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM Flashcard WHERE usuario_codigo = ?1", nativeQuery = true)
     List<Flashcard> getByUsuario(Long codigo);
 
 }

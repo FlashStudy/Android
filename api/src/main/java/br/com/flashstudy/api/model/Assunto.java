@@ -22,7 +22,6 @@ public class Assunto implements java.io.Serializable {
     private Disciplina disciplina;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "codigo_usuario")
     private Usuario usuario;
 
     public Assunto() {

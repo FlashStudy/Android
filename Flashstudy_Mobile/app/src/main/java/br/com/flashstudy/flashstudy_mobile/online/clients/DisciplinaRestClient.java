@@ -18,7 +18,7 @@ import java.util.List;
 import br.com.flashstudy.flashstudy_mobile.online.model.Disciplina;
 
 public class DisciplinaRestClient {
-    private String BASE_URL = "http://192.168.0.35:8000/disciplina/";
+    private String BASE_URL = "http://192.168.0.11:7000/disciplina/";
     private RestTemplate restTemplate = new RestTemplate();
     ObjectMapper objectMapper = new ObjectMapper();
 

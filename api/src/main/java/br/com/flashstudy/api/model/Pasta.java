@@ -17,7 +17,6 @@ public class Pasta implements java.io.Serializable {
 	private String nome;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "codigo_usuario")
 	private Usuario usuario;
 
 	@OneToMany

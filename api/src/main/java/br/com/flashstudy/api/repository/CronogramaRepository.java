@@ -9,7 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 public interface CronogramaRepository extends CrudRepository<Cronograma, Long> {
 
 	// Procura o cronograma atual do usuário
-        @Query(value = "SELECT * FROM Cronograma WHERE codigo_usuario = ?1", nativeQuery = true)
+        @Query(value = "SELECT * FROM Cronograma WHERE usuario_codigo = ?1", nativeQuery = true)
 	Cronograma getByUsuario(Long codigo);
 
 }

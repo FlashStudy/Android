@@ -26,7 +26,6 @@ public class Ciclo implements Serializable {
 	private Integer numMaterias;
 
 	@ManyToOne
-        @JoinColumn(name = "codigo_usuario")
 	private Usuario usuario;
 
 	public Ciclo() {
